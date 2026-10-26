@@ -381,10 +381,10 @@
                     <ul class="nav-menu">
                         <li><a href="#">صفحه اصلی</a></li>
                         <li class="dropdown">
-                            <a class="toggle-link" onclick="this.parentElement.classList.toggle('open')">دسته‌بندی محصولات <span class="arrow">▼</span></a>
+                            <a class="toggle-link">دسته‌بندی محصولات <span class="arrow">▼</span></a>
                             <ul class="dropdown-content">
                                 <li class="sub-dropdown">
-                                    <a class="toggle-link" onclick="this.parentElement.classList.toggle('open')">ابزارهای برقی <span class="arrow">▼</span></a>
+                                    <a class="toggle-link">ابزارهای برقی <span class="arrow">▼</span></a>
                                     <ul class="sub-dropdown-content">
                                         <li><a href="#">دریل و پیچ‌گوشتی</a></li>
                                         <li><a href="#">فرز و مینی‌فرز</a></li>
@@ -669,8 +669,12 @@
     </div>
 
     <script>
-            // ۱. ترنزیشن اولیه صفحه
-            window.addEventListener('pageshow', () => document.getElementById('pageTransition').classList.add('loaded'));
+            // ۱. ترنزیشن اولیه صفحه (اصلاح باگ دکمه Back)
+            window.addEventListener('pageshow', (event) => {
+                const transition = document.getElementById('pageTransition');
+                transition.classList.remove('active');
+                transition.classList.add('loaded');
+            });
 
             let isDragging = false;
 
@@ -751,16 +755,16 @@
                 const track = document.getElementById(trackId);
                 const firstCard = track.firstElementChild;
                 if (!firstCard) return;
-                
+
                 // عرض یک کارت + 10 پیکسل فاصله (gap)
                 const scrollAmount = firstCard.offsetWidth + 10;
-                
+
                 // اصلاح جهت: فلش راست (1) به سمت مثبت، فلش چپ (-1) به سمت منفی
-                const move = direction * scrollAmount; 
-                
+                const move = direction * scrollAmount;
+
                 track.scrollBy({ left: move, behavior: 'smooth' });
             }
-
+            
             // ۷. سیستم اسکرول کاملاً آزاد با موس (Momentum & Free Drag)
             const scrollTracks = document.querySelectorAll('.h-scroll-track');
             let isDown = false;
