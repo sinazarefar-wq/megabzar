@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="fa" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>دریل چکشی دیوالت | مگا ابزار</title>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* استفاده از متغیرهای رنگی قبلی برای یکپارچگی */
+        :root, [data-theme="dark"] {
+            --bg-color: #121212; --secondary-bg: #1a1a1a; --card-bg: #222222;
+            --accent-color: #e53935; --text-color: #ffffff; --text-muted: #b0b0b0;
+            --border-color: #333333; --image-bg: #2a2a2a;
+        }
+        body { font-family: 'Vazirmatn', Tahoma, sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; }
+
+        .page-transition {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: var(--bg-color); z-index: 9999;
+            display: flex; justify-content: center; align-items: center;
+            opacity: 1; visibility: visible;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+        .page-transition.loaded { opacity: 0; visibility: hidden; pointer-events: none; }
+        .transition-logo { width: 120px; animation: pulse 1s infinite alternate; }
+        @keyframes pulse { from { transform: scale(1); } to { transform: scale(1.15); } }
+
+        /* استایل اختصاصی صفحه محصول */
+        .header { background-color: var(--secondary-bg); border-bottom: 2px solid var(--accent-color); padding: 15px 30px; display: flex; justify-content: space-between; }
+        .back-btn { color: var(--text-color); text-decoration: none; display: flex; align-items: center; gap: 8px; font-weight: bold; }
+
+        .product-detail-container { max-width: 1200px; margin: 50px auto; padding: 0 30px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+        .product-gallery { background-color: var(--image-bg); border: 1px solid var(--border-color); border-radius: 15px; padding: 40px; display: flex; justify-content: center; align-items: center; }
+        .product-gallery img { max-width: 100%; animation: floatIn 0.8s ease-out; }
+        @keyframes floatIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        .product-specs h1 { font-size: 32px; margin-top: 0; }
+        .brand-badge { display: inline-block; background: var(--card-bg); border: 1px solid var(--border-color); padding: 5px 15px; border-radius: 20px; font-weight: bold; margin-bottom: 15px; color: var(--text-muted); }
+        .price-box { margin: 30px 0; font-size: 28px; font-weight: bold; color: var(--accent-color); }
+        .btn-large-buy { width: 100%; background: var(--accent-color); color: #fff; border: none; padding: 15px; border-radius: 10px; font-size: 18px; font-weight: bold; cursor: pointer; transition: opacity 0.3s; }
+        .btn-large-buy:hover { opacity: 0.9; }
+
+        @media (max-width: 992px) {
+            .product-detail-container { grid-template-columns: 1fr; margin: 20px auto; padding: 0 15px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- لایه ترنزیشن برای ورود نرم به این صفحه -->
+    <div class="page-transition" id="pageTransition">
+        <img src="image.png" alt="مگا ابزار" class="transition-logo">
+    </div>
+
+    <header class="header">
+        <a href="index.html" class="back-btn">❮ بازگشت به فروشگاه</a>
+        <img src="image.png" alt="مگا ابزار" style="height: 40px;">
+    </header>
+
+    <main class="product-detail-container">
+        <div class="product-gallery">
+            <!-- تصویر بزرگ محصول -->
+            <img src="https://images.unsplash.com/photo-1504148455328-c376907d081c?q=80&w=800&auto=format&fit=crop" alt="دریل چکشی">
+        </div>
+        <div class="product-specs">
+            <span class="brand-badge">برند: DEWALT</span>
+            <h1>دریل چکشی دیوالت مدل DWD024 سه نظام آچاری</h1>
+            <p style="color: var(--text-muted); line-height: 1.8; margin-bottom: 30px;">
+                این دریل با موتور قدرتمند ۷۵۰ وات و قابلیت چکشی، انتخابی ایده‌آل برای مصارف سنگین صنعتی و سوراخ‌کاری در بتن و فلز است. دارای سیستم خنک‌کننده پیشرفته و طراحی ارگونومیک برای جلوگیری از خستگی کاربر.
+            </p>
+            <ul style="color: var(--text-muted); line-height: 2.2;">
+                <li>توان خروجی: ۷۵۰ وات واقعی</li>
+                <li>سرعت در حالت آزاد: ۰ تا ۲۸۰۰ دور در دقیقه</li>
+                <li>وزن دستگاه: ۱.۸ کیلوگرم (بسیار سبک)</li>
+                <li>گارانتی: ۱۲ ماه شرکتی</li>
+            </ul>
+            <div class="price-box">۳,۸۲۵,۰۰۰ تومان</div>
+            <button class="btn-large-buy">افزودن به سبد خرید</button>
+        </div>
+    </main>
+
+    <script>
+        // با لود شدن این صفحه، لایه ترنزیشن محو می‌شود و محتوای صفحه با یک افکت نرم نمایان می‌گردد
+        window.addEventListener('load', () => {
+            document.getElementById('pageTransition').classList.add('loaded');
+        });
+    </script>
+</body>
+</html>
