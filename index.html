@@ -6,7 +6,7 @@
     <title>مگا ابزار | فروشگاه تخصصی ابزارآلات</title>
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        /* ================= متغیرهای رنگی (سیستم تم‌بندی) ================= */
+        /* ================= متغیرهای رنگی ================= */
         :root, [data-theme="dark"] {
             --bg-color: #121212; --secondary-bg: #1a1a1a; --card-bg: #222222;
             --accent-color: #e53935; --text-color: #ffffff; --text-muted: #b0b0b0;
@@ -28,7 +28,7 @@
             transition: background-color 0.4s ease, color 0.4s ease;
         }
 
-        /* ================= لایه ترنزیشن صفحه (اصلاح شده) ================= */
+        /* ================= لایه ترنزیشن صفحه ================= */
         .page-transition {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-color: var(--bg-color); z-index: 9999;
@@ -41,17 +41,20 @@
         .transition-logo { width: 120px; animation: pulse 1s infinite alternate; }
         @keyframes pulse { from { transform: scale(1); } to { transform: scale(1.15); } }
 
-        /* ================= استایل‌های هدر و منو ================= */
+        /* ================= هدر و منو ================= */
         .header { background-color: var(--secondary-bg); border-bottom: 2px solid var(--accent-color); position: sticky; top: 0; z-index: 1000; transition: background-color 0.4s ease, border-color 0.4s ease; }
         .header-container { display: flex; align-items: center; justify-content: space-between; padding: 10px 30px; max-width: 1400px; margin: 0 auto; flex-wrap: wrap; }
         .logo-img { height: 75px; width: auto; object-fit: contain; transition: transform 0.3s; }
         .menu-toggle { display: none; font-size: 28px; cursor: pointer; color: var(--text-color); user-select: none; }
+        
+        /* آیکون‌های موبایل (سبد خرید و ورود در نوار اصلی) */
+        .mobile-actions { display: none; }
+        
         .nav-wrapper { display: flex; align-items: center; flex-grow: 1; justify-content: space-between; margin-right: 40px; }
         .nav-menu { display: flex; gap: 20px; list-style: none; margin: 0; padding: 0; }
         .nav-menu > li > a { color: var(--text-color); text-decoration: none; font-size: 15px; padding: 10px 0; display: flex; align-items: center; gap: 5px; cursor: pointer; }
         .nav-menu > li > a:hover { color: var(--accent-color); }
-
-        /* منوهای آبشاری */
+        
         .dropdown, .sub-dropdown { position: relative; }
         .dropdown-content, .sub-dropdown-content { display: none; background-color: var(--secondary-bg); border: 1px solid var(--border-color); list-style: none; padding: 0; margin: 0; min-width: 220px; }
         @media (min-width: 993px) {
@@ -80,7 +83,13 @@
         .slide { flex: 0 0 100%; width: 100%; height: 100%; position: relative; scroll-snap-align: start; scroll-snap-stop: always; overflow: hidden; }
         .hero-media { width: 100%; height: 100%; object-fit: cover; pointer-events: none; user-select: none; }
         .hero-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); }
-        .hero-content { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: #ffffff; width: 90%; max-width: 800px; z-index: 3; pointer-events: auto; }
+        
+        /* اصلاح کادر متن اسلایدر برای مرکزیت دقیق */
+        .hero-content { 
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); 
+            text-align: center; color: #ffffff; width: 100%; max-width: 800px; 
+            padding: 0 20px; box-sizing: border-box; z-index: 3; pointer-events: auto; 
+        }
         .hero-title { font-size: 38px; font-weight: bold; margin-bottom: 15px; text-shadow: 2px 2px 4px rgba(0,0,0,0.8); }
         .hero-subtitle { font-size: 17px; color: #e0e0e0; margin-bottom: 30px; line-height: 1.8; text-shadow: 1px 1px 3px rgba(0,0,0,0.8); }
         .hero-buttons { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; }
@@ -96,7 +105,7 @@
         .dot.active { background-color: var(--accent-color); }
 
         /* ================= کانتینرهای اسکرول افقی (برای دسته‌ها، برندها و محصولات) ================= */
-        .section-wrapper { padding: 40px 30px; max-width: 1400px; margin: 0 auto; }
+        .section-wrapper { padding: 40px 30px; max-width: 1400px; margin: 0 auto; user-select: none; }
         .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; }
         .section-title { font-size: 24px; font-weight: bold; margin: 0; display: flex; align-items: center; gap: 10px; }
         .section-title::before { content: ''; display: inline-block; width: 5px; height: 24px; background-color: var(--accent-color); border-radius: 3px; }
@@ -104,13 +113,17 @@
         .view-all:hover { color: var(--accent-color); }
 
         .h-scroll-container { position: relative; display: flex; align-items: center; }
+        
+        /* اضافه کردن استایل برای کشیدن موس (Grab) */
         .h-scroll-track {
             display: flex; overflow-x: auto; scroll-snap-type: x mandatory;
             scroll-behavior: smooth; gap: 20px; padding: 15px 0;
             scrollbar-width: none; width: 100%; -webkit-overflow-scrolling: touch;
+            cursor: grab;
         }
+        .h-scroll-track:active { cursor: grabbing; }
         .h-scroll-track::-webkit-scrollbar { display: none; }
-
+        
         .h-scroll-arrow {
             position: absolute; top: 50%; transform: translateY(-50%);
             background: var(--secondary-bg); border: 1px solid var(--border-color);
@@ -124,39 +137,25 @@
         @media (min-width: 993px) { .h-scroll-container:hover .h-scroll-arrow { display: flex; } }
 
         /* --- کارت دسته‌بندی --- */
-        .category-card {
-            flex: 0 0 260px; scroll-snap-align: start; position: relative; height: 160px;
-            border-radius: 12px; overflow: hidden; text-decoration: none; border: 1px solid var(--border-color);
-            transition: transform 0.3s, border-color 0.3s; display: flex; align-items: flex-end; padding: 20px;
-        }
+        .category-card { flex: 0 0 260px; scroll-snap-align: start; position: relative; height: 160px; border-radius: 12px; overflow: hidden; text-decoration: none; border: 1px solid var(--border-color); transition: transform 0.3s, border-color 0.3s; display: flex; align-items: flex-end; padding: 20px; }
         .category-card:hover { transform: translateY(-5px); border-color: var(--accent-color); }
-        .category-card img { position: absolute; top: 0; right: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; }
+        .category-card img { position: absolute; top: 0; right: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; pointer-events: none; }
         .category-card:hover img { transform: scale(1.1); }
-        .category-overlay { position: absolute; top: 0; right: 0; width: 100%; height: 100%; background: linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0.2)); z-index: 1; }
+        .category-overlay { position: absolute; top: 0; right: 0; width: 100%; height: 100%; background: linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0.2)); z-index: 1; pointer-events: none;}
         .category-name { position: relative; z-index: 2; color: #ffffff; font-size: 16px; font-weight: bold; text-shadow: 1px 1px 3px rgba(0,0,0,0.8); }
 
         /* --- کارت برند --- */
-        .brand-card {
-            flex: 0 0 160px; scroll-snap-align: start; height: 60px;
-            background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 10px;
-            display: flex; align-items: center; justify-content: center; font-weight: bold; color: var(--text-muted);
-            transition: all 0.3s; cursor: pointer; letter-spacing: 1px;
-        }
+        .brand-card { flex: 0 0 160px; scroll-snap-align: start; height: 60px; background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: bold; color: var(--text-muted); transition: all 0.3s; cursor: pointer; letter-spacing: 1px; }
         .brand-card:hover { border-color: var(--accent-color); color: var(--accent-color); transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
 
         /* --- کارت محصول --- */
-        .product-card {
-            flex: 0 0 280px; scroll-snap-align: start;
-            background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px;
-            overflow: hidden; transition: transform 0.3s, box-shadow 0.3s; position: relative;
-            display: flex; flex-direction: column; cursor: pointer;
-        }
+        .product-card { flex: 0 0 280px; scroll-snap-align: start; background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; transition: transform 0.3s, box-shadow 0.3s; position: relative; display: flex; flex-direction: column; cursor: pointer; }
         .product-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.2); border-color: var(--accent-color); }
         .badge-discount { position: absolute; top: 10px; right: 10px; background-color: var(--accent-color); color: #fff; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; z-index: 2; }
-        .product-image-wrapper { background-color: var(--image-bg); padding: 20px; text-align: center; border-bottom: 1px solid var(--border-color); position: relative; aspect-ratio: 1 / 1; display: flex; align-items: center; justify-content: center; }
+        .product-image-wrapper { background-color: var(--image-bg); padding: 20px; text-align: center; border-bottom: 1px solid var(--border-color); position: relative; aspect-ratio: 1 / 1; display: flex; align-items: center; justify-content: center; pointer-events: none;}
         .product-image { max-width: 100%; max-height: 100%; object-fit: contain; transition: transform 0.4s ease; }
         .product-card:hover .product-image { transform: scale(1.1); }
-        .product-info { padding: 20px; display: flex; flex-direction: column; flex-grow: 1; }
+        .product-info { padding: 20px; display: flex; flex-direction: column; flex-grow: 1; pointer-events: none;}
         .product-brand { color: var(--text-muted); font-size: 12px; margin-bottom: 5px; text-transform: uppercase; }
         .product-name { font-size: 16px; font-weight: bold; color: var(--text-color); margin: 0 0 15px 0; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
         .product-specs { list-style: none; padding: 0; margin: 0 0 20px 0; font-size: 13px; color: var(--text-muted); }
@@ -165,7 +164,9 @@
         .product-price { display: flex; flex-direction: column; align-items: flex-end; margin-bottom: 15px; margin-top: auto; }
         .old-price { color: var(--text-muted); text-decoration: line-through; font-size: 13px; margin-bottom: 3px; }
         .new-price { color: var(--text-color); font-size: 18px; font-weight: bold; }
-        .btn-add-cart { width: 100%; background-color: transparent; color: var(--accent-color); border: 1px solid var(--accent-color); padding: 10px; border-radius: 8px; font-size: 14px; font-weight: bold; cursor: pointer; transition: all 0.3s; z-index: 5; position: relative; display: flex; justify-content: center; align-items: center; gap: 8px;}
+        
+        /* دکمه سبد خرید قابلیت کلیک را پس می‌گیرد */
+        .btn-add-cart { width: 100%; background-color: transparent; color: var(--accent-color); border: 1px solid var(--accent-color); padding: 10px; border-radius: 8px; font-size: 14px; font-weight: bold; cursor: pointer; transition: all 0.3s; z-index: 5; position: relative; display: flex; justify-content: center; align-items: center; gap: 8px; pointer-events: auto;}
         .btn-add-cart:hover { background-color: var(--accent-color); color: #fff; }
 
         /* ================= استایل سبد خرید کشویی ================= */
@@ -193,6 +194,12 @@
         /* ================= ریسپانسیو (موبایل) ================= */
         @media (max-width: 992px) {
             .header-container { padding: 10px 15px; }
+            
+            /* آیکون‌های موبایل در نوار اصلی */
+            .mobile-actions { display: flex; align-items: center; gap: 15px; margin-right: auto; margin-left: 15px; }
+            .mobile-icon-btn { background: none; border: none; color: var(--text-color); font-size: 22px; cursor: pointer; position: relative; padding: 0; }
+            .mobile-cart-badge { position: absolute; top: -5px; right: -8px; background-color: var(--accent-color); color: #fff; font-size: 10px; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+
             .nav-wrapper { display: none; width: 100%; flex-direction: column; margin-top: 15px; background-color: var(--secondary-bg); padding: 15px 0; border-top: 1px solid var(--border-color);}
             .nav-wrapper.active { display: flex; }
             .logo-img { height: 60px; }
@@ -201,12 +208,15 @@
             .nav-menu > li > a { padding: 15px 20px; border-bottom: 1px solid var(--border-color); }
             .dropdown-content, .sub-dropdown-content { position: static; width: 100%; box-shadow: none; border: none; border-bottom: 1px solid var(--border-color); background-color: var(--bg-color); }
             .search-container { max-width: 100%; margin: 15px 20px; }
-            .header-actions { width: calc(100% - 40px); margin: 0 20px; justify-content: space-between; }
+            .header-actions { width: calc(100% - 40px); margin: 0 20px; justify-content: center; }
+            
+            /* مخفی کردن دکمه‌های متنی در موبایل چون آیکون دارند */
+            .header-actions .btn-primary, .header-actions .btn-action:not(#themeSelector) { display: none; }
             select.btn-action { margin-bottom: 10px; width: 100%; text-align: center; }
 
             .hero-section { height: 400px; }
-            .hero-title { font-size: 26px; }
-            .hero-subtitle { font-size: 14px; }
+            .hero-title { font-size: 24px; }
+            .hero-subtitle { font-size: 13px; margin-bottom: 20px;}
             .hero-buttons { flex-direction: column; width: 100%; }
             .btn-hero { width: 100%; justify-content: center; }
             .slider-arrow { display: none; }
@@ -214,7 +224,7 @@
             .section-wrapper { padding: 30px 15px; }
             .section-title { font-size: 20px; }
             .product-card { flex: 0 0 230px; }
-            .product-specs { display: none; } /* خلوت کردن کارت در موبایل */
+            .product-specs { display: none; }
             .category-card { flex: 0 0 200px; height: 130px; }
             .brand-card { flex: 0 0 130px; height: 45px; font-size: 14px; }
         }
@@ -222,17 +232,23 @@
 </head>
 <body>
 
-    <!-- ================= لایه ترنزیشن/لودینگ ================= -->
+    <!-- لایه ترنزیشن/لودینگ -->
     <div class="page-transition" id="pageTransition">
         <img src="image.png" alt="مگا ابزار" class="transition-logo">
     </div>
 
-    <!-- ================= هدر ================= -->
+    <!-- هدر -->
     <header class="header">
         <div class="header-container">
             <a href="#" class="logo">
                 <img src="image.png" alt="مگا ابزار" class="logo-img">
             </a>
+
+            <!-- دکمه‌های موبایل (خارج از منوی همبرگری) -->
+            <div class="mobile-actions">
+                <button class="mobile-icon-btn">👤</button>
+                <button class="mobile-icon-btn" onclick="toggleCart()">🛒<span class="mobile-cart-badge" id="cartCountMobile">۰</span></button>
+            </div>
 
             <div class="menu-toggle" onclick="toggleMobileMenu()">☰</div>
 
@@ -267,14 +283,15 @@
                         <option value="light">☀️ روشن</option>
                         <option value="navy">👷‍♂️ سرمه‌ای</option>
                     </select>
-                    <button class="btn-action">ورود</button>
+                    <!-- این دکمه‌های متنی در دسکتاپ دیده میشن و در موبایل مخفی میشن -->
+                    <button class="btn-action">ورود / ثبت‌نام</button>
                     <button class="btn-action btn-primary" onclick="toggleCart()">سبد خرید (<span id="cartCount">۰</span>)</button>
                 </div>
             </div>
         </div>
     </header>
 
-    <!-- ================= اسلایدر LTR ================= -->
+    <!-- اسلایدر LTR -->
     <div class="hero-section" dir="ltr">
         <div class="hero-slider" id="sliderContainer">
             <div class="slide" dir="rtl">
@@ -301,24 +318,13 @@
                     </div>
                 </div>
             </div>
-            <div class="slide" dir="rtl">
-                <img class="hero-media" src="https://images.unsplash.com/photo-1504148455328-c376907d081c?q=80&w=1920&auto=format&fit=crop" alt="بنر سوم">
-                <div class="hero-overlay"></div>
-                <div class="hero-content">
-                    <h1 class="hero-title">ابزار دقیق و اندازه‌گیری</h1>
-                    <p class="hero-subtitle">دقت در حد میلیمتر، برای کارهایی که جای هیچ خطایی ندارند.</p>
-                    <div class="hero-buttons">
-                        <a href="#" class="btn-hero btn-hero-primary">خرید ابزار دقیق</a>
-                    </div>
-                </div>
-            </div>
         </div>
         <button class="slider-arrow slider-prev" onclick="changeSlide(-1)">❮</button>
         <button class="slider-arrow slider-next" onclick="changeSlide(1)">❯</button>
         <div class="slider-dots" id="sliderDots"></div>
     </div>
 
-    <!-- ================= دسته‌بندی‌های گرافیکی ================= -->
+    <!-- دسته‌بندی‌های گرافیکی -->
     <section class="section-wrapper">
         <div class="section-header">
             <h2 class="section-title">دسته‌بندی‌های اصلی</h2>
@@ -326,22 +332,22 @@
         <div class="h-scroll-container">
             <button class="h-scroll-arrow arrow-right" onclick="scrollTrack('catsTrack', 1)">❯</button>
             <div class="h-scroll-track" id="catsTrack">
-                <a href="#" class="category-card">
+                <a href="#" class="category-card clickable-category">
                     <img src="https://images.unsplash.com/photo-1504148455328-c376907d081c?q=80&w=500&auto=format&fit=crop" alt="ابزار برقی">
                     <div class="category-overlay"></div>
                     <span class="category-name">ابزار برقی و شارژی</span>
                 </a>
-                <a href="#" class="category-card">
+                <a href="#" class="category-card clickable-category">
                     <img src="https://images.unsplash.com/photo-1530124566582-a618bc2615dc?q=80&w=500&auto=format&fit=crop" alt="ابزار دستی">
                     <div class="category-overlay"></div>
                     <span class="category-name">ابزارهای دستی</span>
                 </a>
-                <a href="#" class="category-card">
+                <a href="#" class="category-card clickable-category">
                     <img src="https://images.unsplash.com/photo-1581092335397-9583eb92d232?q=80&w=500&auto=format&fit=crop" alt="ابزار دقیق">
                     <div class="category-overlay"></div>
                     <span class="category-name">ابزار دقیق و اندازه‌گیری</span>
                 </a>
-                <a href="#" class="category-card">
+                <a href="#" class="category-card clickable-category">
                     <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=500&auto=format&fit=crop" alt="تجهیزات ایمنی">
                     <div class="category-overlay"></div>
                     <span class="category-name">ایمنی و حفاظت فردی</span>
@@ -351,7 +357,7 @@
         </div>
     </section>
 
-    <!-- ================= برندهای معتبر ================= -->
+    <!-- برندهای معتبر -->
     <section class="section-wrapper">
         <div class="section-header">
             <h2 class="section-title">برندهای معتبر</h2>
@@ -372,7 +378,7 @@
         </div>
     </section>
 
-    <!-- ================= محصولات ================= -->
+    <!-- محصولات -->
     <main class="section-wrapper">
         <div class="section-header">
             <h2 class="section-title">پرفروش‌ترین ابزارها</h2>
@@ -381,7 +387,7 @@
         <div class="h-scroll-container">
             <button class="h-scroll-arrow arrow-right" onclick="scrollTrack('productsTrack', 1)">❯</button>
             <div class="h-scroll-track" id="productsTrack">
-
+                
                 <div class="product-card clickable-product">
                     <span class="badge-discount">۱۵٪ تخفیف</span>
                     <div class="product-image-wrapper">
@@ -456,13 +462,13 @@
                         <button class="btn-add-cart">🛒 افزودن به سبد</button>
                     </div>
                 </div>
-
+                
             </div>
             <button class="h-scroll-arrow arrow-left" onclick="scrollTrack('productsTrack', -1)">❮</button>
         </div>
     </main>
 
-    <!-- ================= سبد خرید کشویی ================= -->
+    <!-- سبد خرید کشویی -->
     <div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
     <div class="cart-drawer" id="cartDrawer">
         <div class="cart-header">
@@ -483,18 +489,24 @@
 
     <!-- ================= اسکریپت‌ها ================= -->
     <script>
-        // ۱. حل مشکل کلید Back مرورگر و لودینگ اولیه (Bfcache Fix)
+        // ۱. حل مشکل کلید Back مرورگر و لودینگ اولیه
         window.addEventListener('pageshow', (event) => {
             const transition = document.getElementById('pageTransition');
-            // رویداد pageshow در زمان لود اولیه یا بازگشت از کش فعال می‌شود
             transition.classList.remove('active');
             transition.classList.add('loaded');
         });
 
-        // ۲. ترنزیشن هنگام کلیک روی محصول (SPA Effect)
-        document.querySelectorAll('.clickable-product').forEach(card => {
+        // متغیر برای جلوگیری از کلیک اشتباه هنگام درگ کردن
+        let isDragging = false; 
+
+        // ۲. ترنزیشن هنگام کلیک روی محصول یا دسته‌بندی
+        document.querySelectorAll('.clickable-product, .clickable-category').forEach(card => {
             card.addEventListener('click', function(e) {
-                if(e.target.closest('.btn-add-cart')) return;
+                // اگر کاربر در حال درگ کردن بود، کلیک رو متوقف کن
+                if(isDragging) {
+                    e.preventDefault(); return;
+                }
+                if(e.target.closest('.btn-add-cart')) return; 
                 e.preventDefault();
                 const transition = document.getElementById('pageTransition');
                 transition.classList.remove('loaded');
@@ -508,7 +520,7 @@
             document.documentElement.setAttribute('data-theme', e.target.value);
         });
 
-        // ۴. منوهای موبایل و آبشاری
+        // ۴. منوهای موبایل
         const navWrapper = document.getElementById("navWrapper");
         function toggleMobileMenu() {
             navWrapper.classList.toggle("active") ? stopAutoSlide() : startAutoSlide();
@@ -562,38 +574,111 @@
         startAutoSlide();
         sliderContainer.addEventListener('touchstart', resetInterval, { passive: true });
 
-        // ۶. اسکرول افقی با دکمه (دسته‌بندی‌ها، برندها، محصولات)
+        // ۶. اسکرول افقی با دکمه (فلش‌ها)
         function scrollTrack(trackId, direction) {
             const track = document.getElementById(trackId);
-            const scrollAmount = direction === 1 ? -350 : 350;
+            const scrollAmount = direction === 1 ? -350 : 350; 
             track.scrollBy({ left: scrollAmount, behavior: 'smooth' });
         }
 
-        // ۷. سیستم سبد خرید
+        // ۷. سیستم حرفه‌ای اسکرول با موس (Drag-to-Scroll + Momentum)
+        const scrollTracks = document.querySelectorAll('.h-scroll-track');
+        let isDown = false;
+        let startX;
+        let scrollLeft;
+        let velX = 0;
+        let momentumID;
+
+        scrollTracks.forEach(track => {
+            track.addEventListener('mousedown', (e) => {
+                isDown = true;
+                isDragging = false; // ریست کردن وضعیت درگ
+                track.style.scrollSnapType = 'none'; // غیرفعال کردن موقت آهن‌ربا برای روانی حرکت
+                cancelAnimationFrame(momentumID);
+                startX = e.pageX - track.offsetLeft;
+                scrollLeft = track.scrollLeft;
+            });
+
+            track.addEventListener('mouseleave', () => {
+                if (!isDown) return;
+                isDown = false;
+                beginMomentum(track);
+            });
+
+            track.addEventListener('mouseup', () => {
+                if (!isDown) return;
+                isDown = false;
+                beginMomentum(track);
+                // بعد از یک تاخیر کوتاه کلیک را آزاد می‌کنیم
+                setTimeout(() => isDragging = false, 50);
+            });
+
+            track.addEventListener('mousemove', (e) => {
+                if (!isDown) return;
+                e.preventDefault();
+                const x = e.pageX - track.offsetLeft;
+                const walk = (x - startX) * 1.5; // ضریب سرعت درگ
+                
+                // اگر موس بیشتر از 5 پیکسل کشیده شد، یعنی کاربر در حال درگ است و کلیک نباید کار کند
+                if(Math.abs(walk) > 5) isDragging = true;
+
+                let prevScrollLeft = track.scrollLeft;
+                track.scrollLeft = scrollLeft - walk;
+                velX = track.scrollLeft - prevScrollLeft; // محاسبه سرعت دست کاربر
+            });
+        });
+
+        function beginMomentum(track) {
+            function step() {
+                track.scrollLeft += velX;
+                velX *= 0.92; // ضریب اصطکاک (هرچه به 1 نزدیک‌تر، سُر خوردن طولانی‌تر)
+                if (Math.abs(velX) > 0.5) {
+                    momentumID = requestAnimationFrame(step);
+                } else {
+                    track.style.scrollSnapType = 'x mandatory'; // روشن کردن مجدد آهن‌ربا
+                }
+            }
+            momentumID = requestAnimationFrame(step);
+        }
+
+        // ۸. سیستم سبد خرید
         let cart = [];
+        // تبدیل اعداد انگلیسی به فارسی
+        const toPersianNum = num => num.toString().replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
+
         function toggleCart() {
             document.getElementById('cartDrawer').classList.toggle('active');
             document.getElementById('cartOverlay').classList.toggle('active');
         }
         document.querySelectorAll('.btn-add-cart').forEach((button, index) => {
-            button.addEventListener('click', () => {
+            button.addEventListener('click', (e) => {
+                e.stopPropagation(); // جلوگیری از اجرای کلیکِ کارت محصول
                 const card = button.closest('.product-card');
                 const title = card.querySelector('.product-name').innerText;
                 const priceText = card.querySelector('.new-price').innerText.replace(' تومان', '').replace(/,/g, '');
                 const image = card.querySelector('.product-image').src;
-                const price = parseInt(priceText) || 0;
+                
+                // تبدیل قیمت فارسی به انگلیسی برای محاسبه ریاضی
+                const englishPriceText = priceText.replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d));
+                const price = parseInt(englishPriceText) || 0;
+                
                 const existingItem = cart.find(item => item.title === title);
                 if (existingItem) existingItem.quantity += 1;
                 else cart.push({ title, price, image, quantity: 1 });
                 updateCartUI();
-                toggleCart();
+                toggleCart(); 
             });
         });
         function updateCartUI() {
             const cartBody = document.getElementById('cartBody');
             const cartCount = document.getElementById('cartCount');
+            const cartCountMobile = document.getElementById('cartCountMobile');
             const cartTotalPrice = document.getElementById('cartTotalPrice');
-            cartCount.innerText = cart.reduce((sum, item) => sum + item.quantity, 0);
+            
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            cartCount.innerText = toPersianNum(totalItems);
+            cartCountMobile.innerText = toPersianNum(totalItems);
+
             if (cart.length === 0) {
                 cartBody.innerHTML = `<p class="empty-cart-text">سبد خرید شما خالی است.</p>`;
                 cartTotalPrice.innerText = '۰'; return;
@@ -606,14 +691,14 @@
                         <img src="${item.image}" alt="${item.title}" class="cart-item-img">
                         <div class="cart-item-details">
                             <h4 class="cart-item-title">${item.title}</h4>
-                            <div class="cart-item-price">${(item.price * item.quantity).toLocaleString()} تومان</div>
-                            <div style="font-size: 12px; color: var(--text-muted);">تعداد: ${item.quantity}</div>
+                            <div class="cart-item-price">${toPersianNum((item.price * item.quantity).toLocaleString())} تومان</div>
+                            <div style="font-size: 12px; color: var(--text-muted);">تعداد: ${toPersianNum(item.quantity)}</div>
                         </div>
                         <button class="cart-item-remove" onclick="removeFromCart(${index})">🗑</button>
                     </div>`;
             });
             cartBody.innerHTML = html;
-            cartTotalPrice.innerText = total.toLocaleString();
+            cartTotalPrice.innerText = toPersianNum(total.toLocaleString());
         }
         function removeFromCart(index) { cart.splice(index, 1); updateCartUI(); }
     </script>
