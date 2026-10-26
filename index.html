@@ -746,15 +746,18 @@
             startAutoSlide();
             sliderContainer.addEventListener('touchstart', resetInterval, { passive: true });
 
-            // ۶. ورق زدن کانتینرها با فلش (یک محصول در هر کلیک از موقعیت فعلی)
+            // ۶. ورق زدن کانتینرها با فلش (اصلاح جهت RTL)
             function scrollTrack(trackId, direction) {
                 const track = document.getElementById(trackId);
                 const firstCard = track.firstElementChild;
                 if (!firstCard) return;
+                
                 // عرض یک کارت + 10 پیکسل فاصله (gap)
                 const scrollAmount = firstCard.offsetWidth + 10;
-                // جابجایی نسبت به نقطه‌ای که الان هستیم
-                const move = direction === 1 ? -scrollAmount : scrollAmount;
+                
+                // اصلاح جهت: فلش راست (1) به سمت مثبت، فلش چپ (-1) به سمت منفی
+                const move = direction * scrollAmount; 
+                
                 track.scrollBy({ left: move, behavior: 'smooth' });
             }
 
