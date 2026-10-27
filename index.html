@@ -134,11 +134,17 @@
         }
         .menu-toggle {
             display: none;
-            font-size: 26px;
+            font-size: 24px;
             cursor: pointer;
             color: var(--text-color);
             user-select: none;
-            padding: 4px 8px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            width: 42px;
+            height: 42px;
+            align-items: center;
+            justify-content: center;
         }
 
         .nav-wrapper {
@@ -575,7 +581,7 @@
             border-radius: 10px;
         }
 
-        /* کانتینرهای استاندارد سکشن‌ها و اسکرول افقی ضد گیر کردن */
+        /* کانتینرهای استاندارد سکشن‌ها و اسکرول افقی */
         .section-wrapper {
             padding: 35px 30px;
             max-width: 1400px;
@@ -643,7 +649,6 @@
         .h-scroll-track::-webkit-scrollbar {
             display: none;
         }
-        /* غیرفعال کردن کامل Drag بومی مرورگر روی لینک‌ها و عکس‌ها داخل اسکرول */
         .h-scroll-track a,
         .h-scroll-track img {
             -webkit-user-drag: none;
@@ -684,20 +689,20 @@
             }
         }
 
-        /* کارت دسته‌بندی */
+        /* کارت دسته‌بندی با پنل شیشه‌ای لوکس (Glassmorphism) */
         .category-card {
             flex: 0 0 225px;
             position: relative;
-            height: 155px;
-            border-radius: 12px;
+            height: 160px;
+            border-radius: 14px;
             overflow: hidden;
             text-decoration: none;
             border: 1px solid var(--border-color);
-            transition: border-color 0.3s, transform 0.3s;
+            transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
-            padding: 16px;
+            padding: 10px;
             cursor: grab;
         }
         .category-card:active {
@@ -706,6 +711,7 @@
         .category-card:hover {
             border-color: var(--accent-color);
             transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.35);
         }
         .category-card img {
             position: absolute;
@@ -726,29 +732,38 @@
             right: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(to top, rgba(0,0,0,0.9) 10%, rgba(0,0,0,0.2) 80%);
+            background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.15) 100%);
             z-index: 1;
             pointer-events: none;
         }
-        .category-name {
+        .category-glass-caption {
             position: relative;
             z-index: 2;
+            background: rgba(18, 18, 18, 0.72);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 10px;
+            padding: 8px 12px;
+            display: flex;
+            flex-direction: column;
+            pointer-events: none;
+        }
+        .category-name {
             color: #ffffff;
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 800;
             pointer-events: none;
         }
         .category-count {
-            position: relative;
-            z-index: 2;
             color: var(--accent-color);
             font-size: 11px;
             font-weight: 700;
-            margin-top: 3px;
+            margin-top: 2px;
             pointer-events: none;
         }
 
-        /* بخش پیشنهاد شگفت‌انگیز روز (مگا آف) با اسکرول کامل */
+        /* بخش پیشنهاد شگفت‌انگیز روز (مگا آف) */
         .mega-offer-box {
             background: linear-gradient(135deg, #b71c1c 0%, #1a1a1a 65%);
             border: 2px solid var(--accent-color);
@@ -814,7 +829,7 @@
         }
         .mega-offer-track-wrapper {
             flex-grow: 1;
-            min-width: 0; /* بسیار مهم برای کارکرد صحیح فلکس و اسکرول افقی */
+            min-width: 0;
             position: relative;
         }
 
@@ -1007,7 +1022,7 @@
             margin-top: 6px;
         }
 
-        /* کارت برند (۱۴ برند برای اسکرول طولانی و روان) */
+        /* کارت برند */
         .brand-card {
             flex: 0 0 155px;
             height: 64px;
@@ -1426,6 +1441,107 @@
             opacity: 0.9;
         }
 
+        /* کشوی اختصاصی دسته‌بندی موبایل از پایین (Bottom Sheet) */
+        .cat-sheet-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.72);
+            z-index: 2200;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .cat-sheet-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .cat-bottom-sheet {
+            position: fixed;
+            bottom: -100%;
+            left: 0;
+            width: 100%;
+            max-height: 82vh;
+            background-color: var(--secondary-bg);
+            border-top: 2px solid var(--accent-color);
+            border-radius: 22px 22px 0 0;
+            z-index: 2300;
+            display: flex;
+            flex-direction: column;
+            transition: bottom 0.38s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 -8px 30px rgba(0,0,0,0.6);
+        }
+        .cat-bottom-sheet.active {
+            bottom: 0;
+        }
+        .cat-sheet-handle {
+            width: 44px;
+            height: 5px;
+            background-color: var(--border-color);
+            border-radius: 10px;
+            margin: 10px auto 4px auto;
+        }
+        .cat-sheet-header {
+            padding: 12px 20px 15px 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .cat-sheet-title {
+            font-size: 16px;
+            font-weight: 800;
+            margin: 0;
+        }
+        .cat-sheet-body {
+            padding: 16px 20px 30px 20px;
+            overflow-y: auto;
+        }
+        .cat-sheet-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .cat-sheet-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: var(--text-color);
+            font-size: 13px;
+            font-weight: 700;
+            transition: border-color 0.2s, background-color 0.2s;
+        }
+        .cat-sheet-card:hover {
+            border-color: var(--accent-color);
+            background-color: var(--bg-color);
+        }
+        .cat-sheet-card img {
+            width: 38px;
+            height: 38px;
+            border-radius: 8px;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+        .cat-sheet-theme-box {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--bg-color);
+            padding: 12px 15px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            font-size: 13px;
+            font-weight: 700;
+        }
+
         /* نوار ناوبری پایین نسخه موبایل با آیکون‌های PNG */
         .mobile-bottom-nav {
             display: none;
@@ -1443,61 +1559,21 @@
                 display: none;
             }
             .menu-toggle {
-                display: block;
+                display: flex;
                 order: 1;
             }
             .search-container {
                 order: 2;
                 flex-grow: 1;
-                max-width: calc(100% - 48px);
+                max-width: calc(100% - 52px);
                 margin: 0;
             }
             .nav-wrapper {
-                order: 3;
-                display: none;
-                width: 100%;
-                flex-direction: column;
-                margin: 8px 0 0 0;
-                background-color: var(--secondary-bg);
-                padding: 10px 0;
-                border-top: 1px solid var(--border-color);
-            }
-            .nav-wrapper.active {
-                display: flex;
-            }
-            .nav-menu {
-                flex-direction: column;
-                width: 100%;
-                gap: 0;
-            }
-            .nav-menu > li > a {
-                padding: 13px 15px;
-                border-bottom: 1px solid var(--border-color);
-            }
-            .dropdown-content, .sub-dropdown-content {
-                position: static;
-                width: 100%;
-                box-shadow: none;
-                border: none;
-                border-bottom: 1px solid var(--border-color);
-                background-color: var(--bg-color);
-            }
-            .header-actions {
-                width: 100%;
-                padding: 10px 15px 0 15px;
-                justify-content: center;
-            }
-            .header-actions .btn-primary,
-            .header-actions .btn-action:not(#themeSelector) {
-                display: none;
-            }
-            select.btn-action {
-                width: 100%;
-                text-align: center;
+                display: none !important; /* در موبایل به جای منوی قدیمی بالا، کشوی مدرن پایینی باز می‌شود */
             }
 
             .hero-section {
-                height: 360px;
+                height: 350px;
             }
             .hero-title {
                 font-size: 22px;
@@ -1521,8 +1597,34 @@
                 padding: 25px 15px;
             }
             .section-title {
-                font-size: 18px;
+                font-size: 17px;
             }
+
+            /* تبدیل دسته‌بندی‌های صفحه اصلی در موبایل به شبکه ۲ ستونه (Bento Grid) بدون نیاز به اسکرول افقی */
+            #catsTrack {
+                display: grid !important;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+                overflow-x: visible !important;
+                padding: 4px 0;
+                cursor: default;
+            }
+            #catsTrack .category-card {
+                flex: none;
+                width: 100%;
+                height: 118px;
+                padding: 8px;
+            }
+            #catsTrack .category-glass-caption {
+                padding: 6px 10px;
+            }
+            #catsTrack .category-name {
+                font-size: 12.5px;
+            }
+            #catsTrack .category-count {
+                font-size: 10px;
+            }
+
             .mega-offer-box {
                 flex-direction: column;
                 padding: 18px;
@@ -1547,10 +1649,6 @@
             }
             .product-card {
                 flex: 0 0 168px;
-            }
-            .category-card {
-                flex: 0 0 175px;
-                height: 125px;
             }
             .brand-card {
                 flex: 0 0 120px;
@@ -1650,7 +1748,8 @@
                 <img src="image.png" alt="مگا ابزار" class="logo-img" onerror="this.onerror=null; this.src='https://img.icons8.com/ios-filled/100/e53935/maintenance.png';">
             </a>
 
-            <div class="menu-toggle" onclick="toggleMobileMenu()">☰</div>
+            <!-- دکمه منو در موبایل که کشوی دسته‌بندی پایینی را باز می‌کند -->
+            <div class="menu-toggle" onclick="toggleCatSheet()">☰</div>
 
             <!-- کادر جستجوی هوشمند با برندینگ مگا ابزار در بالا -->
             <div class="search-container" id="searchContainer">
@@ -1695,7 +1794,7 @@
                 </nav>
 
                 <div class="header-actions">
-                    <select id="themeSelector" class="btn-action">
+                    <select id="themeSelector" class="btn-action" onchange="applyTheme(this.value)">
                         <option value="dark">🌙 تاریک</option>
                         <option value="light">☀️ روشن</option>
                         <option value="navy">👷‍♂️ سرمه‌ای</option>
@@ -1755,7 +1854,7 @@
         <div class="slider-dots" id="sliderDots"></div>
     </div>
 
-    <!-- ۱. دسته‌بندی‌های تخصصی (اسکرول کاملاً روان و بدون قفل شدن لینک) -->
+    <!-- ۱. دسته‌بندی‌های تخصصی (در دسکتاپ اسکرول افقی، در موبایل شبکه ۲ ستونه Bento Grid با کپشن شیشه‌ای) -->
     <section class="section-wrapper">
         <div class="section-header">
             <h2 class="section-title">دسته‌بندی‌های تخصصی</h2>
@@ -1767,57 +1866,73 @@
                 <a href="catalog.html?cat=power-tools" class="category-card clickable-item">
                     <img src="https://images.unsplash.com/photo-1504148455328-c376907d081c?q=80&w=600&auto=format&fit=crop" alt="ابزار برقی">
                     <div class="category-overlay"></div>
-                    <span class="category-name">ابزار برقی و شارژی</span>
-                    <span class="category-count">بیش از ۳۴۰ محصول</span>
+                    <div class="category-glass-caption">
+                        <span class="category-name">ابزار برقی و شارژی</span>
+                        <span class="category-count">۳۴۰+ محصول</span>
+                    </div>
                 </a>
                 <a href="catalog.html?cat=hand-tools" class="category-card clickable-item">
                     <img src="https://images.unsplash.com/photo-1530124566582-a618bc2615dc?q=80&w=600&auto=format&fit=crop" alt="ابزار دستی">
                     <div class="category-overlay"></div>
-                    <span class="category-name">ابزارهای دستی و مکانیکی</span>
-                    <span class="category-count">بیش از ۵۲۰ محصول</span>
+                    <div class="category-glass-caption">
+                        <span class="category-name">ابزار دستی و مکانیکی</span>
+                        <span class="category-count">۵۲۰+ محصول</span>
+                    </div>
                 </a>
                 <a href="catalog.html?cat=welding" class="category-card clickable-item">
                     <img src="https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?q=80&w=600&auto=format&fit=crop" alt="جوش و برش">
                     <div class="category-overlay"></div>
-                    <span class="category-name">اینورتر و جوشکاری</span>
-                    <span class="category-count">بیش از ۱۲۰ محصول</span>
+                    <div class="category-glass-caption">
+                        <span class="category-name">اینورتر و جوشکاری</span>
+                        <span class="category-count">۱۲۰+ محصول</span>
+                    </div>
                 </a>
                 <a href="catalog.html?cat=measuring" class="category-card clickable-item">
                     <img src="https://images.unsplash.com/photo-1581092335397-9583eb92d232?q=80&w=600&auto=format&fit=crop" alt="ابزار دقیق">
                     <div class="category-overlay"></div>
-                    <span class="category-name">تراز لیزری و ابزار دقیق</span>
-                    <span class="category-count">بیش از ۹۵ محصول</span>
+                    <div class="category-glass-caption">
+                        <span class="category-name">تراز لیزری و دقیق</span>
+                        <span class="category-count">۹۵+ محصول</span>
+                    </div>
                 </a>
                 <a href="catalog.html?cat=pneumatic" class="category-card clickable-item">
                     <img src="https://images.unsplash.com/photo-1572981779307-38b8cabb2407?q=80&w=600&auto=format&fit=crop" alt="ابزار بادی">
                     <div class="category-overlay"></div>
-                    <span class="category-name">ابزار بادی و کمپرسور</span>
-                    <span class="category-count">بیش از ۱۵۰ محصول</span>
+                    <div class="category-glass-caption">
+                        <span class="category-name">ابزار بادی و کمپرسور</span>
+                        <span class="category-count">۱۵۰+ محصول</span>
+                    </div>
                 </a>
                 <a href="catalog.html?cat=gardening" class="category-card clickable-item">
                     <img src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?q=80&w=600&auto=format&fit=crop" alt="ابزار باغبانی">
                     <div class="category-overlay"></div>
-                    <span class="category-name">اره موتوری و باغبانی</span>
-                    <span class="category-count">بیش از ۱۱۰ محصول</span>
+                    <div class="category-glass-caption">
+                        <span class="category-name">اره موتوری و باغبانی</span>
+                        <span class="category-count">۱۱۰+ محصول</span>
+                    </div>
                 </a>
                 <a href="catalog.html?cat=safety" class="category-card clickable-item">
                     <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=600&auto=format&fit=crop" alt="تجهیزات ایمنی">
                     <div class="category-overlay"></div>
-                    <span class="category-name">ایمنی و حفاظت فردی</span>
-                    <span class="category-count">بیش از ۸۰ محصول</span>
+                    <div class="category-glass-caption">
+                        <span class="category-name">ایمنی و حفاظت فردی</span>
+                        <span class="category-count">۸۰+ محصول</span>
+                    </div>
                 </a>
                 <a href="catalog.html?cat=accessories" class="category-card clickable-item">
                     <img src="https://images.unsplash.com/photo-1586864387967-d02ef85d93e8?q=80&w=600&auto=format&fit=crop" alt="مته و صفحه برش">
                     <div class="category-overlay"></div>
-                    <span class="category-name">مته، صفحه برش و جانبی</span>
-                    <span class="category-count">بیش از ۶۰۰ محصول</span>
+                    <div class="category-glass-caption">
+                        <span class="category-name">مته و صفحه برش</span>
+                        <span class="category-count">۶۰۰+ محصول</span>
+                    </div>
                 </a>
             </div>
             <button class="h-scroll-arrow arrow-left" onclick="scrollTrack('catsTrack', -1)">❯</button>
         </div>
     </section>
 
-    <!-- ۲. پیشنهاد شگفت‌انگیز «مگا آف» با ۶ محصول و دکمه‌های ناوبری اسکرول -->
+    <!-- ۲. پیشنهاد شگفت‌انگیز «مگا آف» -->
     <section class="section-wrapper" id="megaOfferSection">
         <div class="mega-offer-box">
             <div class="mega-offer-info">
@@ -2090,7 +2205,7 @@
         </div>
     </section>
 
-    <!-- ۵. برندهای معتبر جهانی (۱۴ برند برای اسکرول روان و کامل) -->
+    <!-- ۵. برندهای معتبر جهانی -->
     <section class="section-wrapper">
         <div class="section-header">
             <h2 class="section-title">برندهای معتبر جهانی</h2>
@@ -2245,13 +2360,68 @@
         </div>
     </div>
 
+    <!-- کشوی مدرن دسته‌بندی موبایل از پایین (Bottom Sheet) -->
+    <div class="cat-sheet-overlay" id="catSheetOverlay" onclick="toggleCatSheet()"></div>
+    <div class="cat-bottom-sheet" id="catBottomSheet">
+        <div class="cat-sheet-handle"></div>
+        <div class="cat-sheet-header">
+            <h3 class="cat-sheet-title">دسته‌بندی ابزارآلات و تنظیمات</h3>
+            <button class="cart-close" onclick="toggleCatSheet()">✕</button>
+        </div>
+        <div class="cat-sheet-body">
+            <div class="cat-sheet-grid">
+                <a href="catalog.html?cat=power-tools" class="cat-sheet-card clickable-item">
+                    <img src="https://images.unsplash.com/photo-1504148455328-c376907d081c?q=80&w=200&auto=format&fit=crop" alt="ابزار برقی">
+                    <span>ابزار برقی و شارژی</span>
+                </a>
+                <a href="catalog.html?cat=hand-tools" class="cat-sheet-card clickable-item">
+                    <img src="https://images.unsplash.com/photo-1530124566582-a618bc2615dc?q=80&w=200&auto=format&fit=crop" alt="ابزار دستی">
+                    <span>ابزار دستی و مکانیکی</span>
+                </a>
+                <a href="catalog.html?cat=welding" class="cat-sheet-card clickable-item">
+                    <img src="https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?q=80&w=200&auto=format&fit=crop" alt="جوشکاری">
+                    <span>اینورتر و جوشکاری</span>
+                </a>
+                <a href="catalog.html?cat=measuring" class="cat-sheet-card clickable-item">
+                    <img src="https://images.unsplash.com/photo-1581092335397-9583eb92d232?q=80&w=200&auto=format&fit=crop" alt="ابزار دقیق">
+                    <span>تراز لیزری و دقیق</span>
+                </a>
+                <a href="catalog.html?cat=pneumatic" class="cat-sheet-card clickable-item">
+                    <img src="https://images.unsplash.com/photo-1572981779307-38b8cabb2407?q=80&w=200&auto=format&fit=crop" alt="ابزار بادی">
+                    <span>ابزار بادی و کمپرسور</span>
+                </a>
+                <a href="catalog.html?cat=gardening" class="cat-sheet-card clickable-item">
+                    <img src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?q=80&w=200&auto=format&fit=crop" alt="باغبانی">
+                    <span>اره موتوری و باغبانی</span>
+                </a>
+                <a href="catalog.html?cat=safety" class="cat-sheet-card clickable-item">
+                    <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=200&auto=format&fit=crop" alt="ایمنی">
+                    <span>ایمنی و کارگاهی</span>
+                </a>
+                <a href="catalog.html?cat=accessories" class="cat-sheet-card clickable-item">
+                    <img src="https://images.unsplash.com/photo-1586864387967-d02ef85d93e8?q=80&w=200&auto=format&fit=crop" alt="جانبی">
+                    <span>مته و صفحه برش</span>
+                </a>
+            </div>
+
+            <div class="cat-sheet-theme-box">
+                <span>پوسته نمایش سایت:</span>
+                <select id="mobileThemeSelector" class="btn-action" style="width: auto; margin: 0;" onchange="applyTheme(this.value)">
+                    <option value="dark">🌙 تاریک</option>
+                    <option value="light">☀️ روشن</option>
+                    <option value="navy">👷‍♂️ سرمه‌ای</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
     <!-- نوار ناوبری پایین موبایل (۴ آیتم با آیکون‌های PNG قابل تعویض) -->
     <nav class="mobile-bottom-nav">
         <a href="index.html" class="bottom-nav-item active">
             <img src="https://img.icons8.com/ios-filled/64/ffffff/home.png" alt="خانه" class="bottom-nav-icon-img">
             <span>خانه</span>
         </a>
-        <a href="#" class="bottom-nav-item" onclick="toggleMobileMenu(); return false;">
+        <a href="#" class="bottom-nav-item" onclick="toggleCatSheet(); return false;">
             <img src="https://img.icons8.com/ios-filled/64/ffffff/categorize.png" alt="دسته‌بندی" class="bottom-nav-icon-img">
             <span>دسته‌بندی</span>
         </a>
@@ -2266,7 +2436,7 @@
         </a>
     </nav>
 
-    <!-- جاوا اسکریپت خالص و مهندسی‌شده -->
+    <!-- جاوا اسکریپت خالص -->
     <script>
         const toPersianNum = num => num.toString().replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
 
@@ -2281,22 +2451,22 @@
         hideTransition();
         window.addEventListener('pageshow', hideTransition);
 
-        // ۲. تغییر تم و ذخیره در حافظه
-        const themeSelector = document.getElementById('themeSelector');
-        themeSelector.addEventListener('change', e => {
-            document.documentElement.setAttribute('data-theme', e.target.value);
-            localStorage.setItem('mega_abzar_theme', e.target.value);
-        });
-        const savedTheme = localStorage.getItem('mega_abzar_theme');
-        if (savedTheme) {
-            document.documentElement.setAttribute('data-theme', savedTheme);
-            themeSelector.value = savedTheme;
+        // ۲. تغییر تم و هماهنگی دسکتاپ و موبایل
+        function applyTheme(themeVal) {
+            document.documentElement.setAttribute('data-theme', themeVal);
+            localStorage.setItem('mega_abzar_theme', themeVal);
+            const desktopSelect = document.getElementById('themeSelector');
+            const mobileSelect = document.getElementById('mobileThemeSelector');
+            if (desktopSelect) desktopSelect.value = themeVal;
+            if (mobileSelect) mobileSelect.value = themeVal;
         }
+        const savedTheme = localStorage.getItem('mega_abzar_theme');
+        if (savedTheme) applyTheme(savedTheme);
 
-        // ۳. منوی موبایل و دراپ‌داون‌ها
-        const navWrapper = document.getElementById("navWrapper");
-        function toggleMobileMenu() {
-            navWrapper.classList.toggle("active") ? stopAutoSlide() : startAutoSlide();
+        // ۳. مدیریت کشوی دسته‌بندی موبایل (Bottom Sheet) و دراپ‌داون دسکتاپ
+        function toggleCatSheet() {
+            document.getElementById('catBottomSheet').classList.toggle('active');
+            document.getElementById('catSheetOverlay').classList.toggle('active');
         }
         document.querySelectorAll('.toggle-link').forEach(link => {
             link.addEventListener('click', e => {
@@ -2351,12 +2521,8 @@
             if (!e.target.closest('#searchContainer')) {
                 liveSearchResults.classList.remove('active');
             }
-            if (!e.target.closest('.nav-menu') && !e.target.closest('.menu-toggle') && !e.target.closest('#themeSelector')) {
+            if (!e.target.closest('.nav-menu')) {
                 document.querySelectorAll('.dropdown.open, .sub-dropdown.open').forEach(el => el.classList.remove('open'));
-                if (navWrapper.classList.contains("active") && !e.target.closest('.bottom-nav-item')) {
-                    navWrapper.classList.remove("active");
-                    startAutoSlide();
-                }
             }
         });
 
@@ -2412,7 +2578,7 @@
         function startAutoSlide() {
             if (!slideInterval) {
                 slideInterval = setInterval(() => {
-                    if (!navWrapper.classList.contains("active")) goToSlide(currentSlideIndex + 1);
+                    goToSlide(currentSlideIndex + 1);
                 }, 6000);
             }
         }
@@ -2427,12 +2593,11 @@
         startAutoSlide();
         sliderContainer.addEventListener('touchstart', resetInterval, { passive: true });
 
-        // ۷. موتور اسکرول افقی یکپارچه و مستقل برای تمامی بخش‌ها (رفع کامل باگ لینک‌ها و برندها)
+        // ۷. موتور اسکرول افقی یکپارچه برای تمامی بخش‌ها
         function scrollTrack(trackId, direction) {
             const track = document.getElementById(trackId);
             if (!track || !track.firstElementChild) return;
             const cardWidth = track.firstElementChild.offsetWidth + 14;
-            // حرکت به اندازه ۲ کارت در هر کلیک روی فلش برای حس پویاتر
             track.scrollBy({ left: direction * (cardWidth * 2), behavior: 'smooth' });
         }
 
@@ -2445,11 +2610,10 @@
             let velX = 0;
             let momentumID = null;
 
-            // جلوگیری از Drag بومی مرورگر روی تگ‌های لینک (<a>) و تصاویر
             track.addEventListener('dragstart', e => e.preventDefault());
 
             track.addEventListener('mousedown', e => {
-                if (e.button !== 0) return; // فقط کلیک چپ
+                if (e.button !== 0 || window.innerWidth <= 992 && track.id === 'catsTrack') return;
                 isDown = true;
                 globalDragFlag = false;
                 track.classList.add('dragging');
@@ -2487,7 +2651,7 @@
                 function step() {
                     if (Math.abs(velX) > 0.5) {
                         track.scrollLeft += velX;
-                        velX *= 0.92; // ضریب اصطکاک نرم
+                        velX *= 0.92;
                         momentumID = requestAnimationFrame(step);
                     }
                 }
@@ -2495,7 +2659,7 @@
             }
         });
 
-        // ۸. مدیریت کلیک روی کارت‌ها (بدون تداخل با کشیدن موس)
+        // ۸. مدیریت کلیک روی کارت‌ها
         document.querySelectorAll('.clickable-item').forEach(item => {
             item.addEventListener('click', function(e) {
                 if (globalDragFlag) {
