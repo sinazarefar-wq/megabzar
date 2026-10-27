@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>مگا ابزار | فروشگاه تخصصی ابزارآلات صنعتی و کارگاهی</title>
-    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root, [data-theme="dark"] {
             --bg-color: #121212;
@@ -15,6 +15,8 @@
             --text-muted: #b0b0b0;
             --border-color: #333333;
             --image-bg: #2a2a2a;
+            --icon-filter: invert(75%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(95%) contrast(90%);
+            --icon-active-filter: invert(30%) sepia(85%) saturate(3000%) hue-rotate(345deg) brightness(95%) contrast(95%);
         }
         [data-theme="light"] {
             --bg-color: #f5f5f5;
@@ -25,6 +27,8 @@
             --text-muted: #6c757d;
             --border-color: #e0e0e0;
             --image-bg: #f8f9fa;
+            --icon-filter: invert(35%) sepia(10%) saturate(300%) hue-rotate(175deg) brightness(90%) contrast(85%);
+            --icon-active-filter: invert(24%) sepia(90%) saturate(3500%) hue-rotate(350deg) brightness(88%) contrast(95%);
         }
         [data-theme="navy"] {
             --bg-color: #0f172a;
@@ -35,6 +39,8 @@
             --text-muted: #94a3b8;
             --border-color: #334155;
             --image-bg: #1e293b;
+            --icon-filter: invert(65%) sepia(15%) saturate(400%) hue-rotate(175deg) brightness(95%) contrast(90%);
+            --icon-active-filter: invert(65%) sepia(85%) saturate(1500%) hue-rotate(355deg) brightness(100%) contrast(95%);
         }
 
         * {
@@ -104,9 +110,10 @@
             max-width: 1400px;
             margin: 0 auto;
             flex-wrap: wrap;
+            gap: 15px;
         }
         .logo-img {
-            height: 70px;
+            height: 65px;
             width: auto;
             object-fit: contain;
             transition: transform 0.3s;
@@ -116,20 +123,19 @@
         }
         .menu-toggle {
             display: none;
-            font-size: 28px;
+            font-size: 26px;
             cursor: pointer;
             color: var(--text-color);
             user-select: none;
+            padding: 4px 8px;
         }
-        .mobile-actions {
-            display: none;
-        }
+
         .nav-wrapper {
             display: flex;
             align-items: center;
             flex-grow: 1;
             justify-content: space-between;
-            margin-right: 40px;
+            margin-right: 25px;
         }
         .nav-menu {
             display: flex;
@@ -220,24 +226,142 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
+        /* کادر جستجوی هوشمند با برندینگ «مگا ابزار» و نتایج زنده */
         .search-container {
+            position: relative;
             flex-grow: 1;
-            max-width: 380px;
+            max-width: 440px;
             margin: 0 20px;
+        }
+        .search-box-wrapper {
+            position: relative;
+            width: 100%;
+            display: flex;
+            align-items: center;
         }
         .search-bar {
             width: 100%;
             background-color: var(--bg-color);
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
-            padding: 10px 18px;
+            border: 1.5px solid var(--border-color);
+            border-radius: 14px;
+            padding: 11px 42px 11px 18px;
             color: var(--text-color);
             font-family: inherit;
             font-size: 14px;
-            transition: border-color 0.3s;
+            transition: all 0.3s;
         }
         .search-bar:focus {
             border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(229, 57, 53, 0.15);
+        }
+        .search-icon-inline {
+            position: absolute;
+            right: 14px;
+            width: 18px;
+            height: 18px;
+            filter: var(--icon-filter);
+            pointer-events: none;
+            z-index: 2;
+        }
+        /* متن زیبای برندینگ داخل کادر جستجو */
+        .custom-search-placeholder {
+            position: absolute;
+            right: 42px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 13.5px;
+            color: var(--text-muted);
+            transition: opacity 0.2s ease, visibility 0.2s ease;
+            white-space: nowrap;
+        }
+        .custom-search-placeholder .brand-highlight {
+            font-weight: 900;
+            font-size: 15px;
+            color: var(--accent-color);
+            letter-spacing: -0.3px;
+        }
+        .search-bar:focus + .custom-search-placeholder,
+        .search-bar:not(:placeholder-shown) + .custom-search-placeholder {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        /* دراپ‌داون نتایج جستجوی آنی (Live Search) */
+        .live-search-results {
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            width: 100%;
+            background-color: var(--secondary-bg);
+            border: 1px solid var(--border-color);
+            border-top: 2px solid var(--accent-color);
+            border-radius: 12px;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.45);
+            z-index: 2000;
+            max-height: 350px;
+            overflow-y: auto;
+            display: none;
+        }
+        .live-search-results.active {
+            display: block;
+            animation: fadeIn 0.2s ease;
+        }
+        .live-search-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border-color);
+            text-decoration: none;
+            color: var(--text-color);
+            transition: background-color 0.2s;
+        }
+        .live-search-item:last-child {
+            border-bottom: none;
+        }
+        .live-search-item:hover {
+            background-color: var(--card-bg);
+        }
+        .live-search-img {
+            width: 46px;
+            height: 46px;
+            border-radius: 8px;
+            object-fit: contain;
+            background: var(--image-bg);
+            padding: 4px;
+            flex-shrink: 0;
+        }
+        .live-search-info {
+            flex-grow: 1;
+        }
+        .live-search-title {
+            font-size: 13px;
+            font-weight: 700;
+            margin: 0 0 4px 0;
+        }
+        .live-search-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+        }
+        .live-search-brand {
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+        .live-search-price {
+            color: var(--accent-color);
+            font-weight: 800;
+        }
+        .live-search-empty {
+            padding: 20px;
+            text-align: center;
+            font-size: 13px;
+            color: var(--text-muted);
         }
 
         .header-actions {
@@ -255,6 +379,9 @@
             font-family: inherit;
             font-size: 14px;
             transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
         select.btn-action {
             appearance: none;
@@ -583,6 +710,7 @@
             cursor: pointer;
             letter-spacing: 1px;
             font-size: 14px;
+            text-decoration: none;
         }
         .brand-card:hover {
             border-color: var(--accent-color);
@@ -734,8 +862,9 @@
             justify-content: center;
         }
         .feature-icon {
-            font-size: 30px;
-            color: var(--accent-color);
+            width: 34px;
+            height: 34px;
+            filter: var(--icon-active-filter);
         }
         .feature-text {
             font-size: 14px;
@@ -802,7 +931,7 @@
         }
         .social-icons {
             display: flex;
-            gap: 15px;
+            gap: 12px;
             margin-top: 15px;
         }
         .social-btn {
@@ -814,16 +943,21 @@
             background-color: var(--card-bg);
             border: 1px solid var(--border-color);
             border-radius: 50%;
-            color: var(--text-color);
-            font-size: 18px;
-            text-decoration: none;
             transition: all 0.3s;
+        }
+        .social-btn img {
+            width: 20px;
+            height: 20px;
+            filter: var(--icon-filter);
+            transition: filter 0.3s;
         }
         .social-btn:hover {
             background-color: var(--accent-color);
             border-color: var(--accent-color);
-            color: #fff;
             transform: translateY(-3px);
+        }
+        .social-btn:hover img {
+            filter: brightness(0) invert(1);
         }
         .trust-symbols {
             display: flex;
@@ -853,7 +987,7 @@
             border-top: 1px solid var(--border-color);
         }
 
-        /* سبد خرید کشویی */
+        /* سبد خرید کشویی با دکمه‌های + و - */
         .cart-overlay {
             position: fixed;
             top: 0;
@@ -873,8 +1007,8 @@
         .cart-drawer {
             position: fixed;
             top: 0;
-            left: -400px;
-            width: 380px;
+            left: -420px;
+            width: 390px;
             max-width: 90%;
             height: 100%;
             background-color: var(--secondary-bg);
@@ -931,12 +1065,13 @@
             border-bottom: 1px solid var(--border-color);
         }
         .cart-item-img {
-            width: 60px;
-            height: 60px;
+            width: 64px;
+            height: 64px;
             object-fit: contain;
             background-color: var(--image-bg);
-            border-radius: 6px;
-            padding: 4px;
+            border-radius: 8px;
+            padding: 5px;
+            flex-shrink: 0;
         }
         .cart-item-details {
             flex-grow: 1;
@@ -944,7 +1079,7 @@
         .cart-item-title {
             font-size: 13px;
             font-weight: 700;
-            margin: 0 0 5px 0;
+            margin: 0 0 6px 0;
             display: -webkit-box;
             -webkit-line-clamp: 1;
             -webkit-box-orient: vertical;
@@ -954,17 +1089,53 @@
             font-size: 14px;
             color: var(--accent-color);
             font-weight: 800;
+            margin-bottom: 8px;
+        }
+        .cart-qty-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .qty-btn {
+            width: 26px;
+            height: 26px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        .qty-btn:hover {
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+        }
+        .qty-number {
+            font-size: 13px;
+            font-weight: 700;
+            min-width: 20px;
+            text-align: center;
         }
         .cart-item-remove {
             background: none;
             border: none;
-            color: var(--text-muted);
             cursor: pointer;
-            font-size: 16px;
-            transition: color 0.3s;
+            padding: 6px;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+        .cart-item-remove img {
+            width: 18px;
+            height: 18px;
+            filter: var(--icon-filter);
         }
         .cart-item-remove:hover {
-            color: var(--accent-color);
+            opacity: 1;
         }
         .cart-footer {
             padding: 20px;
@@ -995,66 +1166,45 @@
             opacity: 0.9;
         }
 
-        /* نوار ناوبری پایین موبایل */
+        /* نوار ناوبری پایین نسخه موبایل با آیکون‌های PNG */
         .mobile-bottom-nav {
             display: none;
         }
 
         @media (max-width: 992px) {
             body {
-                padding-bottom: 65px;
+                padding-bottom: 68px;
             }
             .header-container {
                 padding: 10px 15px;
+                gap: 8px;
             }
-            .mobile-actions {
-                display: flex;
-                align-items: center;
-                gap: 15px;
-                margin-right: auto;
-                margin-left: 15px;
+            .logo {
+                display: none; /* در موبایل نام برند داخل باکس جستجوی بالا برجسته شده است */
             }
-            .mobile-icon-btn {
-                background: none;
-                border: none;
-                color: var(--text-color);
-                font-size: 20px;
-                cursor: pointer;
-                position: relative;
-                padding: 0;
+            .menu-toggle {
+                display: block;
+                order: 1;
             }
-            .mobile-cart-badge {
-                position: absolute;
-                top: -5px;
-                right: -8px;
-                background-color: var(--accent-color);
-                color: #fff;
-                font-size: 10px;
-                width: 16px;
-                height: 16px;
-                border-radius: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-weight: bold;
+            /* قرارگیری کادر جستجو در بالای هدر موبایل کنار دکمه منو */
+            .search-container {
+                order: 2;
+                flex-grow: 1;
+                max-width: calc(100% - 48px);
+                margin: 0;
             }
             .nav-wrapper {
+                order: 3;
                 display: none;
                 width: 100%;
                 flex-direction: column;
-                margin-top: 15px;
+                margin: 8px 0 0 0;
                 background-color: var(--secondary-bg);
-                padding: 15px 0;
+                padding: 10px 0;
                 border-top: 1px solid var(--border-color);
             }
             .nav-wrapper.active {
                 display: flex;
-            }
-            .logo-img {
-                height: 55px;
-            }
-            .menu-toggle {
-                display: block;
             }
             .nav-menu {
                 flex-direction: column;
@@ -1062,7 +1212,7 @@
                 gap: 0;
             }
             .nav-menu > li > a {
-                padding: 14px 20px;
+                padding: 13px 15px;
                 border-bottom: 1px solid var(--border-color);
             }
             .dropdown-content, .sub-dropdown-content {
@@ -1073,25 +1223,22 @@
                 border-bottom: 1px solid var(--border-color);
                 background-color: var(--bg-color);
             }
-            .search-container {
-                max-width: 100%;
-                margin: 15px 20px;
-            }
             .header-actions {
-                width: calc(100% - 40px);
-                margin: 0 20px;
+                width: 100%;
+                padding: 10px 15px 0 15px;
                 justify-content: center;
             }
-            .header-actions .btn-primary, .header-actions .btn-action:not(#themeSelector) {
+            .header-actions .btn-primary,
+            .header-actions .btn-action:not(#themeSelector) {
                 display: none;
             }
             select.btn-action {
-                margin-bottom: 10px;
                 width: 100%;
                 text-align: center;
             }
+
             .hero-section {
-                height: 380px;
+                height: 360px;
             }
             .hero-title {
                 font-size: 22px;
@@ -1112,20 +1259,20 @@
                 justify-content: center;
             }
             .section-wrapper {
-                padding: 30px 15px;
+                padding: 25px 15px;
             }
             .section-title {
                 font-size: 18px;
             }
             .product-card {
-                flex: 0 0 160px;
+                flex: 0 0 165px;
             }
             .category-card {
-                flex: 0 0 200px;
-                height: 130px;
+                flex: 0 0 190px;
+                height: 125px;
             }
             .brand-card {
-                flex: 0 0 120px;
+                flex: 0 0 115px;
                 height: 45px;
                 font-size: 13px;
             }
@@ -1137,43 +1284,68 @@
                 flex-direction: column;
                 gap: 20px;
             }
+
+            /* استایل نوار پایین موبایل با ۴ آیتم و آیکون‌های PNG */
             .mobile-bottom-nav {
                 display: flex;
                 position: fixed;
                 bottom: 0;
                 left: 0;
                 width: 100%;
-                height: 60px;
+                height: 64px;
                 background-color: var(--secondary-bg);
                 border-top: 1px solid var(--border-color);
                 z-index: 1500;
                 justify-content: space-around;
                 align-items: center;
-                box-shadow: 0 -4px 15px rgba(0,0,0,0.3);
+                box-shadow: 0 -4px 18px rgba(0,0,0,0.35);
             }
             .bottom-nav-item {
                 display: flex;
                 flex-direction: column;
                 align-items: center;
+                justify-content: center;
                 text-decoration: none;
                 color: var(--text-muted);
                 font-size: 11px;
+                font-weight: 600;
                 position: relative;
-                flex-grow: 1;
-                padding: 6px 0;
+                flex: 1;
+                height: 100%;
                 transition: color 0.3s;
             }
-            .bottom-nav-item.active, .bottom-nav-item:hover {
+            .bottom-nav-icon-img {
+                width: 23px;
+                height: 23px;
+                object-fit: contain;
+                margin-bottom: 4px;
+                filter: var(--icon-filter);
+                transition: filter 0.3s, transform 0.2s;
+            }
+            .bottom-nav-item.active,
+            .bottom-nav-item:hover {
                 color: var(--accent-color);
             }
-            .bottom-nav-icon {
-                font-size: 20px;
-                margin-bottom: 3px;
+            .bottom-nav-item.active .bottom-nav-icon-img,
+            .bottom-nav-item:hover .bottom-nav-icon-img {
+                filter: var(--icon-active-filter);
+                transform: translateY(-2px);
             }
-            .mobile-bottom-nav .mobile-cart-badge {
+            .mobile-cart-badge {
                 position: absolute;
-                top: 4px;
-                right: calc(50% - 15px);
+                top: 6px;
+                right: calc(50% - 18px);
+                background-color: var(--accent-color);
+                color: #fff;
+                font-size: 10px;
+                min-width: 17px;
+                height: 17px;
+                padding: 0 4px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: 800;
             }
         }
     </style>
@@ -1182,52 +1354,66 @@
 
     <!-- ترنزیشن لودینگ صفحه -->
     <div class="page-transition" id="pageTransition">
-        <img src="image.png" alt="مگا ابزار" class="transition-logo">
+        <img src="image.png" alt="مگا ابزار" class="transition-logo" onerror="this.src='https://img.icons8.com/ios-filled/100/e53935/maintenance.png'">
     </div>
 
     <!-- هدر سایت -->
     <header class="header">
         <div class="header-container">
-            <a href="#" class="logo"><img src="image.png" alt="مگا ابزار" class="logo-img"></a>
-            <div class="mobile-actions">
-                <button class="mobile-icon-btn">👤</button>
-                <button class="mobile-icon-btn" onclick="toggleCart()">🛒<span class="mobile-cart-badge" id="cartCountMobile">۰</span></button>
+            <a href="index.html" class="logo">
+                <img src="image.png" alt="مگا ابزار" class="logo-img" onerror="this.src='https://img.icons8.com/ios-filled/100/e53935/maintenance.png'">
+            </a>
+
+            <!-- دکمه همبرگری منو در موبایل -->
+            <div class="menu-toggle" onclick="toggleMobileMenu()">☰</div>
+
+            <!-- کادر جستجوی هوشمند (در موبایل بالا قرار می‌گیرد و دارای تایپوگرافی مگا ابزار است) -->
+            <div class="search-container" id="searchContainer">
+                <div class="search-box-wrapper">
+                    <img src="https://img.icons8.com/ios-glyphs/60/ffffff/search--v1.png" alt="جستجو" class="search-icon-inline">
+                    <input type="text" id="searchInput" class="search-bar" placeholder=" " autocomplete="off">
+                    <div class="custom-search-placeholder">
+                        <span>جستجو در</span>
+                        <span class="brand-highlight">مگا ابزار</span>
+                    </div>
+                </div>
+                <!-- نتایج جستجوی زنده -->
+                <div class="live-search-results" id="liveSearchResults"></div>
             </div>
-            <div class="menu-toggle" onclick="document.getElementById('navWrapper').classList.toggle('active')">☰</div>
+
+            <!-- منوی ناوبری و دکمه‌های دسکتاپ -->
             <div class="nav-wrapper" id="navWrapper">
                 <nav>
                     <ul class="nav-menu">
-                        <li><a href="#">صفحه اصلی</a></li>
+                        <li><a href="index.html">صفحه اصلی</a></li>
                         <li class="dropdown">
                             <a class="toggle-link">دسته‌بندی محصولات <span class="arrow">▼</span></a>
                             <ul class="dropdown-content">
                                 <li class="sub-dropdown">
                                     <a class="toggle-link">ابزارهای برقی و شارژی <span class="arrow">▼</span></a>
                                     <ul class="sub-dropdown-content">
-                                        <li><a href="#">دریل و بتن‌کن</a></li>
-                                        <li><a href="#">فرز و مینی‌فرز</a></li>
-                                        <li><a href="#">اره عمودبر و دیسکی</a></li>
+                                        <li><a href="catalog.html?cat=drills">دریل و بتن‌کن</a></li>
+                                        <li><a href="catalog.html?cat=grinders">فرز و مینی‌فرز</a></li>
+                                        <li><a href="catalog.html?cat=saws">اره عمودبر و دیسکی</a></li>
                                     </ul>
                                 </li>
-                                <li><a href="#">ابزارهای دستی و کارگاهی</a></li>
-                                <li><a href="#">ابزار دقیق و لیزری</a></li>
-                                <li><a href="#">تجهیزات ایمنی فردی</a></li>
+                                <li><a href="catalog.html?cat=hand-tools">ابزارهای دستی و کارگاهی</a></li>
+                                <li><a href="catalog.html?cat=measuring">ابزار دقیق و لیزری</a></li>
+                                <li><a href="catalog.html?cat=safety">تجهیزات ایمنی فردی</a></li>
                             </ul>
                         </li>
-                        <li><a href="#">وبلاگ تخصصی</a></li>
-                        <li><a href="#">تماس با ما</a></li>
+                        <li><a href="blog.html">وبلاگ تخصصی</a></li>
+                        <li><a href="contact.html">تماس با ما</a></li>
                     </ul>
                 </nav>
-                <div class="search-container">
-                    <input type="text" class="search-bar" placeholder="جستجوی مدل ابزار، برند (مثلاً دیوالت)...">
-                </div>
+
                 <div class="header-actions">
                     <select id="themeSelector" class="btn-action">
                         <option value="dark">🌙 تاریک</option>
                         <option value="light">☀️ روشن</option>
                         <option value="navy">👷‍♂️ سرمه‌ای</option>
                     </select>
-                    <button class="btn-action">ورود / ثبت‌نام</button>
+                    <button class="btn-action" onclick="window.location.href='profile.html'">ورود / ثبت‌نام</button>
                     <button class="btn-action btn-primary" onclick="toggleCart()">سبد خرید (<span id="cartCount">۰</span>)</button>
                 </div>
             </div>
@@ -1244,7 +1430,7 @@
                     <h1 class="hero-title">تجهیزات صنعتی و کارگاهی اصل</h1>
                     <p class="hero-subtitle">تامین‌کننده مستقیم مدرن‌ترین ابزارآلات صنعتی از بانه با تضمین اصالت و بهترین قیمت بازار.</p>
                     <div class="hero-buttons">
-                        <a href="#" class="btn-hero btn-hero-primary">مشاهده کاتالوگ فروشگاه</a>
+                        <a href="catalog.html" class="btn-hero btn-hero-primary">مشاهده کاتالوگ فروشگاه</a>
                     </div>
                 </div>
             </div>
@@ -1257,7 +1443,7 @@
                     <h1 class="hero-title">قدرت واقعی در دستان شماست</h1>
                     <p class="hero-subtitle">مگا ابزار، همراه حرفه‌ای‌ها در سخت‌ترین پروژه‌های ساختمانی و صنعتی.</p>
                     <div class="hero-buttons">
-                        <a href="#" class="btn-hero btn-hero-secondary"><span>▶</span> ویدیوی معرفی برندها</a>
+                        <a href="catalog.html?cat=welding" class="btn-hero btn-hero-secondary"><span>▶</span> بررسی تجهیزات جوش و برش</a>
                     </div>
                 </div>
             </div>
@@ -1267,7 +1453,7 @@
         <div class="slider-dots" id="sliderDots"></div>
     </div>
 
-    <!-- دسته‌بندی‌های اصلی -->
+    <!-- دسته‌بندی‌های اصلی با لینک داینامیک -->
     <section class="section-wrapper">
         <div class="section-header">
             <h2 class="section-title">دسته‌بندی‌های اصلی</h2>
@@ -1275,22 +1461,22 @@
         <div class="h-scroll-container">
             <button class="h-scroll-arrow arrow-right" onclick="scrollTrack('catsTrack', 1)">❮</button>
             <div class="h-scroll-track" id="catsTrack">
-                <a href="#" class="category-card clickable-category">
+                <a href="catalog.html?cat=power-tools" class="category-card clickable-category">
                     <img src="https://images.unsplash.com/photo-1504148455328-c376907d081c?q=80&w=500&auto=format&fit=crop" alt="ابزار برقی">
                     <div class="category-overlay"></div>
                     <span class="category-name">ابزار برقی و شارژی</span>
                 </a>
-                <a href="#" class="category-card clickable-category">
+                <a href="catalog.html?cat=hand-tools" class="category-card clickable-category">
                     <img src="https://images.unsplash.com/photo-1530124566582-a618bc2615dc?q=80&w=500&auto=format&fit=crop" alt="ابزار دستی">
                     <div class="category-overlay"></div>
                     <span class="category-name">ابزارهای دستی</span>
                 </a>
-                <a href="#" class="category-card clickable-category">
+                <a href="catalog.html?cat=measuring" class="category-card clickable-category">
                     <img src="https://images.unsplash.com/photo-1581092335397-9583eb92d232?q=80&w=500&auto=format&fit=crop" alt="ابزار دقیق">
                     <div class="category-overlay"></div>
                     <span class="category-name">ابزار دقیق و اندازه‌گیری</span>
                 </a>
-                <a href="#" class="category-card clickable-category">
+                <a href="catalog.html?cat=safety" class="category-card clickable-category">
                     <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=500&auto=format&fit=crop" alt="تجهیزات ایمنی">
                     <div class="category-overlay"></div>
                     <span class="category-name">ایمنی و حفاظت فردی</span>
@@ -1300,7 +1486,7 @@
         </div>
     </section>
 
-    <!-- برندهای معتبر -->
+    <!-- برندهای معتبر با لینک داینامیک -->
     <section class="section-wrapper">
         <div class="section-header">
             <h2 class="section-title">برندهای معتبر</h2>
@@ -1308,16 +1494,16 @@
         <div class="h-scroll-container">
             <button class="h-scroll-arrow arrow-right" onclick="scrollTrack('brandsTrack', 1)">❮</button>
             <div class="h-scroll-track" id="brandsTrack">
-                <div class="brand-card">DEWALT</div>
-                <div class="brand-card">MAKITA</div>
-                <div class="brand-card">BOSCH</div>
-                <div class="brand-card">RONIX</div>
-                <div class="brand-card">MILWAUKEE</div>
-                <div class="brand-card">HILTI</div>
-                <div class="brand-card">AEG</div>
-                <div class="brand-card">CROWN</div>
-                <div class="brand-card">TOSAN</div>
-                <div class="brand-card">MAHAK</div>
+                <a href="catalog.html?brand=dewalt" class="brand-card">DEWALT</a>
+                <a href="catalog.html?brand=makita" class="brand-card">MAKITA</a>
+                <a href="catalog.html?brand=bosch" class="brand-card">BOSCH</a>
+                <a href="catalog.html?brand=ronix" class="brand-card">RONIX</a>
+                <a href="catalog.html?brand=milwaukee" class="brand-card">MILWAUKEE</a>
+                <a href="catalog.html?brand=hilti" class="brand-card">HILTI</a>
+                <a href="catalog.html?brand=aeg" class="brand-card">AEG</a>
+                <a href="catalog.html?brand=crown" class="brand-card">CROWN</a>
+                <a href="catalog.html?brand=tosan" class="brand-card">TOSAN</a>
+                <a href="catalog.html?brand=mahak" class="brand-card">MAHAK</a>
             </div>
             <button class="h-scroll-arrow arrow-left" onclick="scrollTrack('brandsTrack', -1)">❯</button>
         </div>
@@ -1327,13 +1513,13 @@
     <main class="section-wrapper">
         <div class="section-header">
             <h2 class="section-title">پرفروش‌ترین ابزارها</h2>
-            <a href="#" class="view-all">مشاهده همه محصولات ❯</a>
+            <a href="catalog.html?sort=bestselling" class="view-all">مشاهده همه محصولات ❯</a>
         </div>
         <div class="h-scroll-container">
             <button class="h-scroll-arrow arrow-right" onclick="scrollTrack('productsTrack', 1)">❮</button>
             <div class="h-scroll-track" id="productsTrack">
                 
-                <div class="product-card clickable-product">
+                <div class="product-card clickable-product" data-id="1">
                     <span class="badge-discount">۱۵٪ تخفیف</span>
                     <div class="product-image-wrapper">
                         <img src="https://images.unsplash.com/photo-1504148455328-c376907d081c?q=80&w=500&auto=format&fit=crop" class="product-image" alt="دریل چکشی">
@@ -1345,11 +1531,11 @@
                             <span class="old-price">۴,۵۰۰,۰۰۰</span>
                             <span class="new-price">۳,۸۲۵,۰۰۰ تومان</span>
                         </div>
-                        <button class="btn-add-cart">🛒 افزودن به سبد</button>
+                        <button class="btn-add-cart">افزودن به سبد خرید</button>
                     </div>
                 </div>
 
-                <div class="product-card clickable-product">
+                <div class="product-card clickable-product" data-id="2">
                     <div class="product-image-wrapper">
                         <img src="https://images.unsplash.com/photo-1572981779307-38b8cabb2407?q=80&w=500&auto=format&fit=crop" class="product-image" alt="مینی فرز">
                     </div>
@@ -1359,11 +1545,11 @@
                         <div class="product-price">
                             <span class="new-price">۲,۹۵۰,۰۰۰ تومان</span>
                         </div>
-                        <button class="btn-add-cart">🛒 افزودن به سبد</button>
+                        <button class="btn-add-cart">افزودن به سبد خرید</button>
                     </div>
                 </div>
 
-                <div class="product-card clickable-product">
+                <div class="product-card clickable-product" data-id="3">
                     <span class="badge-discount">ارسال رایگان</span>
                     <div class="product-image-wrapper">
                         <img src="https://images.unsplash.com/photo-1530124566582-a618bc2615dc?q=80&w=500&auto=format&fit=crop" class="product-image" alt="جعبه ابزار">
@@ -1374,11 +1560,11 @@
                         <div class="product-price">
                             <span class="new-price">۵,۲۰۰,۰۰۰ تومان</span>
                         </div>
-                        <button class="btn-add-cart">🛒 افزودن به سبد</button>
+                        <button class="btn-add-cart">افزودن به سبد خرید</button>
                     </div>
                 </div>
 
-                <div class="product-card clickable-product">
+                <div class="product-card clickable-product" data-id="4">
                     <div class="product-image-wrapper">
                         <img src="https://images.unsplash.com/photo-1581092335397-9583eb92d232?q=80&w=500&auto=format&fit=crop" class="product-image" alt="متر لیزری">
                     </div>
@@ -1388,11 +1574,11 @@
                         <div class="product-price">
                             <span class="new-price">۴,۱۰۰,۰۰۰ تومان</span>
                         </div>
-                        <button class="btn-add-cart">🛒 افزودن به سبد</button>
+                        <button class="btn-add-cart">افزودن به سبد خرید</button>
                     </div>
                 </div>
 
-                <div class="product-card clickable-product">
+                <div class="product-card clickable-product" data-id="5">
                     <div class="product-image-wrapper">
                         <img src="https://images.unsplash.com/photo-1504148455328-c376907d081c?q=80&w=500&auto=format&fit=crop" class="product-image" alt="پیچ گوشتی شارژی">
                     </div>
@@ -1402,11 +1588,11 @@
                         <div class="product-price">
                             <span class="new-price">۸,۳۰۰,۰۰۰ تومان</span>
                         </div>
-                        <button class="btn-add-cart">🛒 افزودن به سبد</button>
+                        <button class="btn-add-cart">افزودن به سبد خرید</button>
                     </div>
                 </div>
 
-                <div class="product-card clickable-product">
+                <div class="product-card clickable-product" data-id="6">
                     <div class="product-image-wrapper">
                         <img src="https://images.unsplash.com/photo-1572981779307-38b8cabb2407?q=80&w=500&auto=format&fit=crop" class="product-image" alt="بتن کن">
                     </div>
@@ -1417,11 +1603,11 @@
                             <span class="old-price">۱۲,۰۰۰,۰۰۰</span>
                             <span class="new-price">۱۱,۲۰۰,۰۰۰ تومان</span>
                         </div>
-                        <button class="btn-add-cart">🛒 افزودن به سبد</button>
+                        <button class="btn-add-cart">افزودن به سبد خرید</button>
                     </div>
                 </div>
 
-                <div class="product-card clickable-product">
+                <div class="product-card clickable-product" data-id="7">
                     <div class="product-image-wrapper">
                         <img src="https://images.unsplash.com/photo-1530124566582-a618bc2615dc?q=80&w=500&auto=format&fit=crop" class="product-image" alt="فرز آهنگری">
                     </div>
@@ -1431,11 +1617,11 @@
                         <div class="product-price">
                             <span class="new-price">۴,۹۰۰,۰۰۰ تومان</span>
                         </div>
-                        <button class="btn-add-cart">🛒 افزودن به سبد</button>
+                        <button class="btn-add-cart">افزودن به سبد خرید</button>
                     </div>
                 </div>
 
-                <div class="product-card clickable-product">
+                <div class="product-card clickable-product" data-id="8">
                     <div class="product-image-wrapper">
                         <img src="https://images.unsplash.com/photo-1581092335397-9583eb92d232?q=80&w=500&auto=format&fit=crop" class="product-image" alt="تراز لیزری">
                     </div>
@@ -1445,11 +1631,11 @@
                         <div class="product-price">
                             <span class="new-price">۳,۴۵۰,۰۰۰ تومان</span>
                         </div>
-                        <button class="btn-add-cart">🛒 افزودن به سبد</button>
+                        <button class="btn-add-cart">افزودن به سبد خرید</button>
                     </div>
                 </div>
 
-                <div class="product-card clickable-product">
+                <div class="product-card clickable-product" data-id="9">
                     <div class="product-image-wrapper">
                         <img src="https://images.unsplash.com/photo-1504148455328-c376907d081c?q=80&w=500&auto=format&fit=crop" class="product-image" alt="دستگاه پولیش">
                     </div>
@@ -1459,11 +1645,11 @@
                         <div class="product-price">
                             <span class="new-price">۲,۱۰۰,۰۰۰ تومان</span>
                         </div>
-                        <button class="btn-add-cart">🛒 افزودن به سبد</button>
+                        <button class="btn-add-cart">افزودن به سبد خرید</button>
                     </div>
                 </div>
 
-                <div class="product-card clickable-product">
+                <div class="product-card clickable-product" data-id="10">
                     <div class="product-image-wrapper">
                         <img src="https://images.unsplash.com/photo-1530124566582-a618bc2615dc?q=80&w=500&auto=format&fit=crop" class="product-image" alt="اره فارسی بر">
                     </div>
@@ -1473,7 +1659,7 @@
                         <div class="product-price">
                             <span class="new-price">۷,۸۰۰,۰۰۰ تومان</span>
                         </div>
-                        <button class="btn-add-cart">🛒 افزودن به سبد</button>
+                        <button class="btn-add-cart">افزودن به سبد خرید</button>
                     </div>
                 </div>
 
@@ -1486,43 +1672,55 @@
     <footer class="footer">
         <div class="footer-container">
             <div class="footer-features">
-                <div class="feature-item"><div class="feature-icon">🚀</div><span class="feature-text">ارسال سریع و مطمئن سراسر کشور</span></div>
-                <div class="feature-item"><div class="feature-icon">🛡️</div><span class="feature-text">تضمین ۱۰۰٪ اصالت فیزیکی کالا</span></div>
-                <div class="feature-item"><div class="feature-icon">↩️</div><span class="feature-text">۷ روز مهلت تست و بازگشت کالا</span></div>
-                <div class="feature-item"><div class="feature-icon">📞</div><span class="feature-text">مشاوره تخصصی و پشتیبانی فنی</span></div>
+                <div class="feature-item">
+                    <img src="https://img.icons8.com/ios-filled/64/ffffff/delivery.png" alt="ارسال سریع" class="feature-icon">
+                    <span class="feature-text">ارسال سریع و مطمئن سراسر کشور</span>
+                </div>
+                <div class="feature-item">
+                    <img src="https://img.icons8.com/ios-filled/64/ffffff/guarantee.png" alt="تضمین اصالت" class="feature-icon">
+                    <span class="feature-text">تضمین ۱۰۰٪ اصالت فیزیکی کالا</span>
+                </div>
+                <div class="feature-item">
+                    <img src="https://img.icons8.com/ios-filled/64/ffffff/return-purchase.png" alt="ضمانت بازگشت" class="feature-icon">
+                    <span class="feature-text">۷ روز مهلت تست و بازگشت کالا</span>
+                </div>
+                <div class="feature-item">
+                    <img src="https://img.icons8.com/ios-filled/64/ffffff/headset.png" alt="پشتیبانی" class="feature-icon">
+                    <span class="feature-text">مشاوره تخصصی و پشتیبانی فنی</span>
+                </div>
             </div>
             <div class="footer-main">
                 <div class="footer-col" style="flex: 1 1 300px;">
-                    <img src="image.png" alt="مگا ابزار" class="footer-logo">
+                    <img src="image.png" alt="مگا ابزار" class="footer-logo" onerror="this.src='https://img.icons8.com/ios-filled/100/e53935/maintenance.png'">
                     <div class="footer-contact">
                         پاسخگویی از ساعت ۸ صبح تا ۸ شب<br>
                         شماره تماس: <strong>۰۸۷-۱۲۳۴۵۶۷۸</strong><br>
                         آدرس فروشگاه مرکزی: <strong>بانه، میدان جهاد، مجتمع تجاری مگا ابزار، پلاک ۱۲</strong>
                     </div>
                     <div class="social-icons">
-                        <a href="#" class="social-btn">📱</a>
-                        <a href="#" class="social-btn">📸</a>
-                        <a href="#" class="social-btn">▶️</a>
+                        <a href="#" class="social-btn" title="اینستاگرام"><img src="https://img.icons8.com/ios-glyphs/60/ffffff/instagram-new.png" alt="Instagram"></a>
+                        <a href="#" class="social-btn" title="تلگرام"><img src="https://img.icons8.com/ios-glyphs/60/ffffff/telegram-app.png" alt="Telegram"></a>
+                        <a href="#" class="social-btn" title="واتساپ"><img src="https://img.icons8.com/ios-glyphs/60/ffffff/whatsapp.png" alt="WhatsApp"></a>
                     </div>
                 </div>
                 <div class="footer-col">
                     <h4 class="footer-title">دسترسی سریع</h4>
                     <ul class="footer-links">
-                        <li><a href="#">درباره مگا ابزار</a></li>
-                        <li><a href="#">تماس با ما</a></li>
-                        <li><a href="#">سوالات متداول</a></li>
-                        <li><a href="#">ثبت شکایات و پیشنهادات</a></li>
-                        <li><a href="#">وبلاگ آموزشی ابزارشناسی</a></li>
+                        <li><a href="about.html">درباره مگا ابزار</a></li>
+                        <li><a href="contact.html">تماس با ما</a></li>
+                        <li><a href="faq.html">سوالات متداول</a></li>
+                        <li><a href="contact.html#complaints">ثبت شکایات و پیشنهادات</a></li>
+                        <li><a href="blog.html">وبلاگ آموزشی ابزارشناسی</a></li>
                     </ul>
                 </div>
                 <div class="footer-col">
                     <h4 class="footer-title">راهنمای خرید</h4>
                     <ul class="footer-links">
-                        <li><a href="#">نحوه ثبت سفارش و خرید آنلاین</a></li>
-                        <li><a href="#">رویه ارسال کالاهای سنگین (باربری)</a></li>
-                        <li><a href="#">شیوه‌های پرداخت و درگاه بانکی</a></li>
-                        <li><a href="#">شرایط بازگشت کالا و گارانتی</a></li>
-                        <li><a href="#">قوانین و مقررات حریم خصوصی</a></li>
+                        <li><a href="guide.html#order">نحوه ثبت سفارش و خرید آنلاین</a></li>
+                        <li><a href="guide.html#shipping">رویه ارسال کالاهای سنگین (باربری)</a></li>
+                        <li><a href="guide.html#payment">شیوه‌های پرداخت و درگاه بانکی</a></li>
+                        <li><a href="terms.html#return">شرایط بازگشت کالا و گارانتی</a></li>
+                        <li><a href="terms.html">قوانین و مقررات حریم خصوصی</a></li>
                     </ul>
                 </div>
                 <div class="footer-col">
@@ -1554,21 +1752,35 @@
                 <span>مبلغ قابل پرداخت:</span>
                 <span><span id="cartTotalPrice">۰</span> تومان</span>
             </div>
-            <button class="btn-checkout">تکمیل خرید و ثبت سفارش</button>
+            <button class="btn-checkout" onclick="window.location.href='checkout.html'">تکمیل خرید و ثبت سفارش</button>
         </div>
     </div>
 
-    <!-- ناوبری پایین نسخه موبایل -->
+    <!-- نوار ناوبری پایین موبایل (۴ آیتم با آیکون‌های PNG قابل تعویض) -->
     <nav class="mobile-bottom-nav">
-        <a href="#" class="bottom-nav-item active"><span class="bottom-nav-icon">🏠</span><span class="bottom-nav-text">خانه</span></a>
-        <a href="#" class="bottom-nav-item" onclick="toggleMobileMenu(); return false;"><span class="bottom-nav-icon">📂</span><span class="bottom-nav-text">دسته‌بندی</span></a>
-        <a href="#" class="bottom-nav-item" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;"><span class="bottom-nav-icon">🔍</span><span class="bottom-nav-text">جستجو</span></a>
-        <a href="#" class="bottom-nav-item" onclick="toggleCart(); return false;"><span class="bottom-nav-icon">🛒</span><span class="bottom-nav-text">سبد</span><span class="mobile-cart-badge" id="cartCountMobileBottom">۰</span></a>
-        <a href="#" class="bottom-nav-item"><span class="bottom-nav-icon">👤</span><span class="bottom-nav-text">حساب</span></a>
+        <a href="index.html" class="bottom-nav-item active">
+            <img src="https://img.icons8.com/ios-filled/64/ffffff/home.png" alt="خانه" class="bottom-nav-icon-img">
+            <span>خانه</span>
+        </a>
+        <a href="#" class="bottom-nav-item" onclick="toggleMobileMenu(); return false;">
+            <img src="https://img.icons8.com/ios-filled/64/ffffff/categorize.png" alt="دسته‌بندی" class="bottom-nav-icon-img">
+            <span>دسته‌بندی</span>
+        </a>
+        <a href="#" class="bottom-nav-item" onclick="toggleCart(); return false;">
+            <img src="https://img.icons8.com/ios-filled/64/ffffff/shopping-cart.png" alt="سبد خرید" class="bottom-nav-icon-img">
+            <span>سبد خرید</span>
+            <span class="mobile-cart-badge" id="cartCountMobileBottom">۰</span>
+        </a>
+        <a href="profile.html" class="bottom-nav-item">
+            <img src="https://img.icons8.com/ios-filled/64/ffffff/user-male-circle.png" alt="حساب کاربری" class="bottom-nav-icon-img">
+            <span>حساب</span>
+        </a>
     </nav>
 
     <!-- جاوا اسکریپت خالص -->
     <script>
+        const toPersianNum = num => num.toString().replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
+
         // ۱. مدیریت انیمیشن ترنزیشن اولیه
         function hideTransition() {
             const transition = document.getElementById('pageTransition');
@@ -1582,21 +1794,22 @@
         window.addEventListener('pageshow', hideTransition);
         setTimeout(hideTransition, 250);
 
-        // ۲. انتقال به صفحه محصول در زمان کلیک بدون تداخل با درگ
+        // ۲. انتقال نرم به صفحات محصول و دسته‌بندی بدون تداخل با درگ موس
         let isDragging = false;
         document.querySelectorAll('.clickable-product, .clickable-category').forEach(card => {
             card.addEventListener('click', function(e) {
                 if (isDragging) { e.preventDefault(); return; }
                 if (e.target.closest('.btn-add-cart')) return;
                 e.preventDefault();
+                const targetUrl = this.getAttribute('href') || `product.html?id=${this.dataset.id || 1}`;
                 const transition = document.getElementById('pageTransition');
                 transition.classList.remove('loaded');
                 transition.classList.add('active');
-                setTimeout(() => { window.location.href = 'product.html'; }, 500);
+                setTimeout(() => { window.location.href = targetUrl; }, 450);
             });
         });
 
-        // ۳. تغییر تم (Dark / Light / Navy)
+        // ۳. تغییر تم و ذخیره در حافظه
         const themeSelector = document.getElementById('themeSelector');
         themeSelector.addEventListener('change', e => {
             document.documentElement.setAttribute('data-theme', e.target.value);
@@ -1608,7 +1821,7 @@
             themeSelector.value = savedTheme;
         }
 
-        // ۴. منوی ریسپانسیو موبایل و دراپ‌داون‌ها
+        // ۴. منوی موبایل و دراپ‌داون‌ها
         const navWrapper = document.getElementById("navWrapper");
         function toggleMobileMenu() {
             navWrapper.classList.toggle("active") ? stopAutoSlide() : startAutoSlide();
@@ -1619,17 +1832,65 @@
                 link.parentElement.classList.toggle('open');
             });
         });
+
+        // ۵. سیستم جستجوی زنده و آنی (Live Search)
+        const searchInput = document.getElementById('searchInput');
+        const liveSearchResults = document.getElementById('liveSearchResults');
+
+        // استخراج خودکار لیست محصولات از کارت‌های موجود در صفحه برای جستجو
+        const allProducts = Array.from(document.querySelectorAll('.product-card')).map(card => ({
+            id: card.dataset.id || '1',
+            title: card.querySelector('.product-name').innerText,
+            brand: card.querySelector('.product-brand').innerText,
+            price: card.querySelector('.new-price').innerText,
+            image: card.querySelector('.product-image').src
+        }));
+
+        searchInput.addEventListener('input', function() {
+            const query = this.value.trim().toLowerCase();
+            if (query.length < 2) {
+                liveSearchResults.classList.remove('active');
+                return;
+            }
+            const matched = allProducts.filter(p =>
+                p.title.toLowerCase().includes(query) ||
+                p.brand.toLowerCase().includes(query)
+            );
+
+            if (matched.length === 0) {
+                liveSearchResults.innerHTML = `<div class="live-search-empty">ابزاری با عبارت «${this.value}» یافت نشد.</div>`;
+            } else {
+                liveSearchResults.innerHTML = matched.map(item => `
+                    <a href="product.html?id=${item.id}" class="live-search-item">
+                        <img src="${item.image}" alt="${item.title}" class="live-search-img">
+                        <div class="live-search-info">
+                            <h4 class="live-search-title">${item.title}</h4>
+                            <div class="live-search-meta">
+                                <span class="live-search-brand">${item.brand}</span>
+                                <span class="live-search-price">${item.price}</span>
+                            </div>
+                        </div>
+                    </a>
+                `).join('');
+            }
+            liveSearchResults.classList.add('active');
+        });
+
+        // بستن دراپ‌داون‌ها و نتایج جستجو هنگام کلیک بیرون
         document.addEventListener('click', e => {
+            if (!e.target.closest('#searchContainer')) {
+                liveSearchResults.classList.remove('active');
+            }
             if (!e.target.closest('.nav-menu') && !e.target.closest('.menu-toggle') && !e.target.closest('#themeSelector')) {
                 document.querySelectorAll('.dropdown.open, .sub-dropdown.open').forEach(el => el.classList.remove('open'));
-                if (navWrapper.classList.contains("active")) {
+                if (navWrapper.classList.contains("active") && !e.target.closest('.bottom-nav-item')) {
                     navWrapper.classList.remove("active");
                     startAutoSlide();
                 }
             }
         });
 
-        // ۵. اسلایدر هیرو
+        // ۶. اسلایدر هیرو
         const sliderContainer = document.getElementById('sliderContainer');
         const dotsContainer = document.getElementById('sliderDots');
         const slides = document.querySelectorAll('.slide');
@@ -1683,7 +1944,7 @@
         startAutoSlide();
         sliderContainer.addEventListener('touchstart', resetInterval, { passive: true });
 
-        // ۶. اسکرول با دکمه‌های فلش
+        // ۷. اسکرول با دکمه‌های فلش و فیزیک اینرسی موس (Momentum)
         function scrollTrack(trackId, direction) {
             const track = document.getElementById(trackId);
             const firstCard = track.firstElementChild;
@@ -1692,7 +1953,6 @@
             track.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
         }
 
-        // ۷. سیستم اسکرول کششی با موس و فیزیک اینرسی (Momentum Physics)
         const scrollTracks = document.querySelectorAll('.h-scroll-track');
         let isDown = false;
         let startX, scrollLeft, velX = 0, momentumID;
@@ -1742,9 +2002,8 @@
             momentumID = requestAnimationFrame(step);
         }
 
-        // ۸. مدیریت سبد خرید کشویی (Cart Drawer) با LocalStorage
+        // ۸. مدیریت سبد خرید کشویی با دکمه‌های افزایش و کاهش تعداد (+ / -)
         let cart = JSON.parse(localStorage.getItem('mega_abzar_cart') || '[]');
-        const toPersianNum = num => num.toString().replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
 
         function toggleCart() {
             document.getElementById('cartDrawer').classList.toggle('active');
@@ -1773,6 +2032,20 @@
             });
         });
 
+        function changeQuantity(index, delta) {
+            if (!cart[index]) return;
+            cart[index].quantity += delta;
+            if (cart[index].quantity <= 0) {
+                cart.splice(index, 1);
+            }
+            saveAndUpdateCart();
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            saveAndUpdateCart();
+        }
+
         function saveAndUpdateCart() {
             localStorage.setItem('mega_abzar_cart', JSON.stringify(cart));
             updateCartUI();
@@ -1781,7 +2054,6 @@
         function updateCartUI() {
             const cartBody = document.getElementById('cartBody');
             const cartCount = document.getElementById('cartCount');
-            const cartCountMobile = document.getElementById('cartCountMobile');
             const cartCountMobileBottom = document.getElementById('cartCountMobileBottom');
             const cartTotalPrice = document.getElementById('cartTotalPrice');
             
@@ -1789,7 +2061,6 @@
             const persianTotal = toPersianNum(totalItems);
             
             if (cartCount) cartCount.innerText = persianTotal;
-            if (cartCountMobile) cartCountMobile.innerText = persianTotal;
             if (cartCountMobileBottom) cartCountMobileBottom.innerText = persianTotal;
 
             if (cart.length === 0) {
@@ -1808,21 +2079,21 @@
                         <div class="cart-item-details">
                             <h4 class="cart-item-title">${item.title}</h4>
                             <div class="cart-item-price">${toPersianNum((item.price * item.quantity).toLocaleString())} تومان</div>
-                            <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">تعداد: ${toPersianNum(item.quantity)}</div>
+                            <div class="cart-qty-controls">
+                                <button class="qty-btn" onclick="changeQuantity(${index}, 1)">+</button>
+                                <span class="qty-number">${toPersianNum(item.quantity)}</span>
+                                <button class="qty-btn" onclick="changeQuantity(${index}, -1)">−</button>
+                            </div>
                         </div>
-                        <button class="cart-item-remove" onclick="removeFromCart(${index})">🗑</button>
+                        <button class="cart-item-remove" onclick="removeFromCart(${index})" title="حذف از سبد">
+                            <img src="https://img.icons8.com/ios-glyphs/60/ffffff/trash--v1.png" alt="حذف">
+                        </button>
                     </div>`;
             });
             cartBody.innerHTML = html;
             cartTotalPrice.innerText = toPersianNum(total.toLocaleString());
         }
 
-        function removeFromCart(index) {
-            cart.splice(index, 1);
-            saveAndUpdateCart();
-        }
-
-        // بارگذاری اولیه سبد خرید از حافظه
         updateCartUI();
     </script>
 </body>
