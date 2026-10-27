@@ -408,7 +408,7 @@
             opacity: 0.9;
         }
 
-        /* بخش هیرو اسلایدر (۳ اسلاید تصویری و ویدیویی) */
+        /* بخش هیرو اسلایدر */
         .hero-section {
             position: relative;
             width: 100%;
@@ -575,7 +575,7 @@
             border-radius: 10px;
         }
 
-        /* کانتینرهای استاندارد سکشن‌ها */
+        /* کانتینرهای استاندارد سکشن‌ها و اسکرول افقی ضد گیر کردن */
         .section-wrapper {
             padding: 35px 30px;
             max-width: 1400px;
@@ -622,23 +622,33 @@
             position: relative;
             display: flex;
             align-items: center;
+            width: 100%;
         }
         .h-scroll-track {
             display: flex;
             overflow-x: auto;
-            scroll-behavior: smooth;
             gap: 14px;
-            padding: 12px 0;
+            padding: 12px 2px;
             scrollbar-width: none;
             width: 100%;
             -webkit-overflow-scrolling: touch;
             cursor: grab;
+            user-select: none;
+            -webkit-user-select: none;
         }
-        .h-scroll-track:active {
+        .h-scroll-track.dragging {
             cursor: grabbing;
+            scroll-behavior: auto !important;
         }
         .h-scroll-track::-webkit-scrollbar {
             display: none;
+        }
+        /* غیرفعال کردن کامل Drag بومی مرورگر روی لینک‌ها و عکس‌ها داخل اسکرول */
+        .h-scroll-track a,
+        .h-scroll-track img {
+            -webkit-user-drag: none;
+            user-select: none;
+            -webkit-user-select: none;
         }
 
         .h-scroll-arrow {
@@ -652,30 +662,31 @@
             height: 42px;
             border-radius: 50%;
             cursor: pointer;
-            z-index: 10;
+            z-index: 15;
             display: none;
             align-items: center;
             justify-content: center;
             font-size: 16px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.45);
+            transition: all 0.25s;
         }
         .h-scroll-arrow:hover {
             background-color: var(--accent-color);
             border-color: var(--accent-color);
             color: #fff;
+            transform: translateY(-50%) scale(1.08);
         }
         .arrow-right { right: -18px; }
         .arrow-left { left: -18px; }
         @media (min-width: 993px) {
-            .section-wrapper:hover .h-scroll-arrow {
+            .h-scroll-container:hover .h-scroll-arrow {
                 display: flex;
             }
         }
 
-        /* کارت دسته‌بندی (۸ دسته تصویری) */
+        /* کارت دسته‌بندی */
         .category-card {
-            flex: 0 0 220px;
+            flex: 0 0 225px;
             position: relative;
             height: 155px;
             border-radius: 12px;
@@ -687,6 +698,10 @@
             flex-direction: column;
             justify-content: flex-end;
             padding: 16px;
+            cursor: grab;
+        }
+        .category-card:active {
+            cursor: grabbing;
         }
         .category-card:hover {
             border-color: var(--accent-color);
@@ -721,6 +736,7 @@
             color: #ffffff;
             font-size: 15px;
             font-weight: 800;
+            pointer-events: none;
         }
         .category-count {
             position: relative;
@@ -729,9 +745,10 @@
             font-size: 11px;
             font-weight: 700;
             margin-top: 3px;
+            pointer-events: none;
         }
 
-        /* بخش جدید ۱: پیشنهاد شگفت‌انگیز روز (مگا آف) با تایمر */
+        /* بخش پیشنهاد شگفت‌انگیز روز (مگا آف) با اسکرول کامل */
         .mega-offer-box {
             background: linear-gradient(135deg, #b71c1c 0%, #1a1a1a 65%);
             border: 2px solid var(--accent-color);
@@ -739,14 +756,15 @@
             padding: 25px;
             display: flex;
             align-items: center;
-             gap: 25px;
+            gap: 25px;
             position: relative;
             overflow: hidden;
         }
         .mega-offer-info {
-            flex: 0 0 260px;
+            flex: 0 0 250px;
             color: #fff;
             text-align: right;
+            z-index: 2;
         }
         .mega-offer-tag {
             display: inline-block;
@@ -759,7 +777,7 @@
             margin-bottom: 10px;
         }
         .mega-offer-title {
-            font-size: 26px;
+            font-size: 25px;
             font-weight: 900;
             margin: 0 0 10px 0;
         }
@@ -796,7 +814,8 @@
         }
         .mega-offer-track-wrapper {
             flex-grow: 1;
-            overflow: hidden;
+            min-width: 0; /* بسیار مهم برای کارکرد صحیح فلکس و اسکرول افقی */
+            position: relative;
         }
 
         /* کارت محصول */
@@ -809,8 +828,11 @@
             position: relative;
             display: flex;
             flex-direction: column;
-            cursor: pointer;
+            cursor: grab;
             transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .product-card:active {
+            cursor: grabbing;
         }
         .product-card:hover {
             border-color: var(--accent-color);
@@ -918,7 +940,7 @@
             color: #fff;
         }
 
-        /* بخش جدید ۲: بنرهای دوقلوی تبلیغاتی */
+        /* بنرهای دوقلوی تبلیغاتی */
         .promo-banners-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -985,10 +1007,10 @@
             margin-top: 6px;
         }
 
-        /* کارت برند */
+        /* کارت برند (۱۴ برند برای اسکرول طولانی و روان) */
         .brand-card {
-            flex: 0 0 145px;
-            height: 60px;
+            flex: 0 0 155px;
+            height: 64px;
             background-color: var(--card-bg);
             border: 1px solid var(--border-color);
             border-radius: 10px;
@@ -997,19 +1019,22 @@
             justify-content: center;
             font-weight: 900;
             color: var(--text-muted);
-            transition: all 0.3s;
-            cursor: pointer;
+            transition: border-color 0.3s, color 0.3s, transform 0.3s;
+            cursor: grab;
             letter-spacing: 1px;
             font-size: 15px;
             text-decoration: none;
         }
+        .brand-card:active {
+            cursor: grabbing;
+        }
         .brand-card:hover {
             border-color: var(--accent-color);
             color: var(--accent-color);
-            transform: translateY(-2px);
+            transform: translateY(-3px);
         }
 
-        /* بخش جدید ۳: مجله تخصصی و راهنمای خرید ابزار */
+        /* مجله تخصصی و راهنمای خرید ابزار */
         .blog-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -1528,8 +1553,8 @@
                 height: 125px;
             }
             .brand-card {
-                flex: 0 0 115px;
-                height: 48px;
+                flex: 0 0 120px;
+                height: 50px;
                 font-size: 13px;
             }
             .footer-features {
@@ -1541,7 +1566,6 @@
                 gap: 20px;
             }
 
-            /* استایل نوار پایین موبایل با ۴ آیتم و آیکون‌های PNG */
             .mobile-bottom-nav {
                 display: flex;
                 position: fixed;
@@ -1626,7 +1650,6 @@
                 <img src="image.png" alt="مگا ابزار" class="logo-img" onerror="this.onerror=null; this.src='https://img.icons8.com/ios-filled/100/e53935/maintenance.png';">
             </a>
 
-            <!-- دکمه منو در موبایل -->
             <div class="menu-toggle" onclick="toggleMobileMenu()">☰</div>
 
             <!-- کادر جستجوی هوشمند با برندینگ مگا ابزار در بالا -->
@@ -1684,7 +1707,7 @@
         </div>
     </header>
 
-    <!-- اسلایدر هیرو (۳ اسلاید کامل تصویری و ویدیویی) -->
+    <!-- اسلایدر هیرو -->
     <div class="hero-section" dir="ltr" onmouseenter="stopAutoSlide()" onmouseleave="startAutoSlide()">
         <div class="hero-slider" id="sliderContainer">
             <div class="slide" dir="rtl">
@@ -1732,7 +1755,7 @@
         <div class="slider-dots" id="sliderDots"></div>
     </div>
 
-    <!-- ۱. دسته‌بندی‌های اصلی (۸ دسته کامل با تصاویر صنعتی متنوع) -->
+    <!-- ۱. دسته‌بندی‌های تخصصی (اسکرول کاملاً روان و بدون قفل شدن لینک) -->
     <section class="section-wrapper">
         <div class="section-header">
             <h2 class="section-title">دسته‌بندی‌های تخصصی</h2>
@@ -1741,49 +1764,49 @@
         <div class="h-scroll-container">
             <button class="h-scroll-arrow arrow-right" onclick="scrollTrack('catsTrack', 1)">❮</button>
             <div class="h-scroll-track" id="catsTrack">
-                <a href="catalog.html?cat=power-tools" class="category-card clickable-category">
+                <a href="catalog.html?cat=power-tools" class="category-card clickable-item">
                     <img src="https://images.unsplash.com/photo-1504148455328-c376907d081c?q=80&w=600&auto=format&fit=crop" alt="ابزار برقی">
                     <div class="category-overlay"></div>
                     <span class="category-name">ابزار برقی و شارژی</span>
-                    <span class="category-count"> بیش از ۳۴۰ محصول</span>
+                    <span class="category-count">بیش از ۳۴۰ محصول</span>
                 </a>
-                <a href="catalog.html?cat=hand-tools" class="category-card clickable-category">
+                <a href="catalog.html?cat=hand-tools" class="category-card clickable-item">
                     <img src="https://images.unsplash.com/photo-1530124566582-a618bc2615dc?q=80&w=600&auto=format&fit=crop" alt="ابزار دستی">
                     <div class="category-overlay"></div>
                     <span class="category-name">ابزارهای دستی و مکانیکی</span>
                     <span class="category-count">بیش از ۵۲۰ محصول</span>
                 </a>
-                <a href="catalog.html?cat=welding" class="category-card clickable-category">
+                <a href="catalog.html?cat=welding" class="category-card clickable-item">
                     <img src="https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?q=80&w=600&auto=format&fit=crop" alt="جوش و برش">
                     <div class="category-overlay"></div>
                     <span class="category-name">اینورتر و جوشکاری</span>
                     <span class="category-count">بیش از ۱۲۰ محصول</span>
                 </a>
-                <a href="catalog.html?cat=measuring" class="category-card clickable-category">
+                <a href="catalog.html?cat=measuring" class="category-card clickable-item">
                     <img src="https://images.unsplash.com/photo-1581092335397-9583eb92d232?q=80&w=600&auto=format&fit=crop" alt="ابزار دقیق">
                     <div class="category-overlay"></div>
                     <span class="category-name">تراز لیزری و ابزار دقیق</span>
                     <span class="category-count">بیش از ۹۵ محصول</span>
                 </a>
-                <a href="catalog.html?cat=pneumatic" class="category-card clickable-category">
+                <a href="catalog.html?cat=pneumatic" class="category-card clickable-item">
                     <img src="https://images.unsplash.com/photo-1572981779307-38b8cabb2407?q=80&w=600&auto=format&fit=crop" alt="ابزار بادی">
                     <div class="category-overlay"></div>
                     <span class="category-name">ابزار بادی و کمپرسور</span>
                     <span class="category-count">بیش از ۱۵۰ محصول</span>
                 </a>
-                <a href="catalog.html?cat=gardening" class="category-card clickable-category">
+                <a href="catalog.html?cat=gardening" class="category-card clickable-item">
                     <img src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?q=80&w=600&auto=format&fit=crop" alt="ابزار باغبانی">
                     <div class="category-overlay"></div>
                     <span class="category-name">اره موتوری و باغبانی</span>
                     <span class="category-count">بیش از ۱۱۰ محصول</span>
                 </a>
-                <a href="catalog.html?cat=safety" class="category-card clickable-category">
+                <a href="catalog.html?cat=safety" class="category-card clickable-item">
                     <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=600&auto=format&fit=crop" alt="تجهیزات ایمنی">
                     <div class="category-overlay"></div>
                     <span class="category-name">ایمنی و حفاظت فردی</span>
                     <span class="category-count">بیش از ۸۰ محصول</span>
                 </a>
-                <a href="catalog.html?cat=accessories" class="category-card clickable-category">
+                <a href="catalog.html?cat=accessories" class="category-card clickable-item">
                     <img src="https://images.unsplash.com/photo-1586864387967-d02ef85d93e8?q=80&w=600&auto=format&fit=crop" alt="مته و صفحه برش">
                     <div class="category-overlay"></div>
                     <span class="category-name">مته، صفحه برش و جانبی</span>
@@ -1794,7 +1817,7 @@
         </div>
     </section>
 
-    <!-- ۲. بخش جدید: پیشنهاد شگفت‌انگیز «مگا آف» با تایمر معکوس زنده -->
+    <!-- ۲. پیشنهاد شگفت‌انگیز «مگا آف» با ۶ محصول و دکمه‌های ناوبری اسکرول -->
     <section class="section-wrapper" id="megaOfferSection">
         <div class="mega-offer-box">
             <div class="mega-offer-info">
@@ -1806,12 +1829,13 @@
                     <div class="time-box"><span class="time-val" id="timerMinutes">۲۸</span><span class="time-label">دقیقه</span></div>
                     <div class="time-box"><span class="time-val" id="timerHours">۰۷</span><span class="time-label">ساعت</span></div>
                 </div>
-                <a href="catalog.html?filter=special" class="btn-hero btn-hero-secondary" style="padding: 8px 20px; font-size: 13px; display: inline-flex;">مشاهده همه شگفت‌انگیزها ❯</a>
+                <a href="catalog.html?filter=special" class="btn-hero btn-hero-secondary" style="padding: 8px 20px; font-size: 13px; display: inline-flex;">مشاهده همه ❯</a>
             </div>
 
-            <div class="mega-offer-track-wrapper">
+            <div class="mega-offer-track-wrapper h-scroll-container">
+                <button class="h-scroll-arrow arrow-right" onclick="scrollTrack('offerTrack', 1)">❮</button>
                 <div class="h-scroll-track" id="offerTrack">
-                    <div class="product-card clickable-product" data-id="101">
+                    <div class="product-card clickable-item" data-id="101">
                         <span class="badge-discount">۲۲٪ تخفیف</span>
                         <div class="product-image-wrapper">
                             <img src="https://images.unsplash.com/photo-1504148455328-c376907d081c?q=80&w=500&auto=format&fit=crop" class="product-image" alt="بکس شارژی دیوالت">
@@ -1827,7 +1851,7 @@
                         </div>
                     </div>
 
-                    <div class="product-card clickable-product" data-id="102">
+                    <div class="product-card clickable-item" data-id="102">
                         <span class="badge-discount">۱۸٪ تخفیف</span>
                         <div class="product-image-wrapper">
                             <img src="https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?q=80&w=500&auto=format&fit=crop" class="product-image" alt="اینورتر جوشکاری">
@@ -1843,7 +1867,7 @@
                         </div>
                     </div>
 
-                    <div class="product-card clickable-product" data-id="103">
+                    <div class="product-card clickable-item" data-id="103">
                         <span class="badge-discount">۲۵٪ تخفیف</span>
                         <div class="product-image-wrapper">
                             <img src="https://images.unsplash.com/photo-1581092160607-ee22621dd758?q=80&w=500&auto=format&fit=crop" class="product-image" alt="کارواش صنعتی">
@@ -1859,7 +1883,7 @@
                         </div>
                     </div>
 
-                    <div class="product-card clickable-product" data-id="104">
+                    <div class="product-card clickable-item" data-id="104">
                         <span class="badge-discount">۱۵٪ تخفیف</span>
                         <div class="product-image-wrapper">
                             <img src="https://images.unsplash.com/photo-1586864387967-d02ef85d93e8?q=80&w=500&auto=format&fit=crop" class="product-image" alt="چکش تخریب">
@@ -1874,7 +1898,40 @@
                             <button class="btn-add-cart">افزودن به سبد خرید</button>
                         </div>
                     </div>
+
+                    <div class="product-card clickable-item" data-id="105">
+                        <span class="badge-discount">۲۰٪ تخفیف</span>
+                        <div class="product-image-wrapper">
+                            <img src="https://images.unsplash.com/photo-1530124566582-a618bc2615dc?q=80&w=500&auto=format&fit=crop" class="product-image" alt="بکس بادی">
+                        </div>
+                        <div class="product-info">
+                            <span class="product-brand">MILWAUKEE</span>
+                            <h3 class="product-name">پک کامل دریل و مینی‌فرز شارژی میلواکی M18</h3>
+                            <div class="product-price">
+                                <span class="old-price">۱۹,۵۰۰,۰۰۰</span>
+                                <span class="new-price">۱۵,۶۰۰,۰۰۰ تومان</span>
+                            </div>
+                            <button class="btn-add-cart">افزودن به سبد خرید</button>
+                        </div>
+                    </div>
+
+                    <div class="product-card clickable-item" data-id="106">
+                        <span class="badge-discount">۱۹٪ تخفیف</span>
+                        <div class="product-image-wrapper">
+                            <img src="https://images.unsplash.com/photo-1572981779307-38b8cabb2407?q=80&w=500&auto=format&fit=crop" class="product-image" alt="پروفیل بر">
+                        </div>
+                        <div class="product-info">
+                            <span class="product-brand">AEG</span>
+                            <h3 class="product-name">اره پروفیل‌بر صنعتی آ ا گ مدل SMT 355</h3>
+                            <div class="product-price">
+                                <span class="old-price">۱۱,۴۰۰,۰۰۰</span>
+                                <span class="new-price">۹,۲۳۰,۰۰۰ تومان</span>
+                            </div>
+                            <button class="btn-add-cart">افزودن به سبد خرید</button>
+                        </div>
+                    </div>
                 </div>
+                <button class="h-scroll-arrow arrow-left" onclick="scrollTrack('offerTrack', -1)">❯</button>
             </div>
         </div>
     </section>
@@ -1889,7 +1946,7 @@
             <button class="h-scroll-arrow arrow-right" onclick="scrollTrack('productsTrack', 1)">❮</button>
             <div class="h-scroll-track" id="productsTrack">
                 
-                <div class="product-card clickable-product" data-id="1">
+                <div class="product-card clickable-item" data-id="1">
                     <span class="badge-discount">۱۵٪ تخفیف</span>
                     <div class="product-image-wrapper">
                         <img src="https://images.unsplash.com/photo-1504148455328-c376907d081c?q=80&w=500&auto=format&fit=crop" class="product-image" alt="دریل چکشی">
@@ -1905,7 +1962,7 @@
                     </div>
                 </div>
 
-                <div class="product-card clickable-product" data-id="2">
+                <div class="product-card clickable-item" data-id="2">
                     <div class="product-image-wrapper">
                         <img src="https://images.unsplash.com/photo-1572981779307-38b8cabb2407?q=80&w=500&auto=format&fit=crop" class="product-image" alt="مینی فرز">
                     </div>
@@ -1919,7 +1976,7 @@
                     </div>
                 </div>
 
-                <div class="product-card clickable-product" data-id="3">
+                <div class="product-card clickable-item" data-id="3">
                     <span class="badge-discount">ارسال رایگان</span>
                     <div class="product-image-wrapper">
                         <img src="https://images.unsplash.com/photo-1530124566582-a618bc2615dc?q=80&w=500&auto=format&fit=crop" class="product-image" alt="جعبه ابزار">
@@ -1934,7 +1991,7 @@
                     </div>
                 </div>
 
-                <div class="product-card clickable-product" data-id="4">
+                <div class="product-card clickable-item" data-id="4">
                     <div class="product-image-wrapper">
                         <img src="https://images.unsplash.com/photo-1581092335397-9583eb92d232?q=80&w=500&auto=format&fit=crop" class="product-image" alt="متر لیزری">
                     </div>
@@ -1948,7 +2005,7 @@
                     </div>
                 </div>
 
-                <div class="product-card clickable-product" data-id="5">
+                <div class="product-card clickable-item" data-id="5">
                     <div class="product-image-wrapper">
                         <img src="https://images.unsplash.com/photo-1586864387967-d02ef85d93e8?q=80&w=500&auto=format&fit=crop" class="product-image" alt="پیچ گوشتی شارژی">
                     </div>
@@ -1962,7 +2019,7 @@
                     </div>
                 </div>
 
-                <div class="product-card clickable-product" data-id="6">
+                <div class="product-card clickable-item" data-id="6">
                     <div class="product-image-wrapper">
                         <img src="https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?q=80&w=500&auto=format&fit=crop" class="product-image" alt="بتن کن">
                     </div>
@@ -1977,7 +2034,7 @@
                     </div>
                 </div>
 
-                <div class="product-card clickable-product" data-id="7">
+                <div class="product-card clickable-item" data-id="7">
                     <div class="product-image-wrapper">
                         <img src="https://images.unsplash.com/photo-1581092160607-ee22621dd758?q=80&w=500&auto=format&fit=crop" class="product-image" alt="فرز آهنگری">
                     </div>
@@ -1991,7 +2048,7 @@
                     </div>
                 </div>
 
-                <div class="product-card clickable-product" data-id="8">
+                <div class="product-card clickable-item" data-id="8">
                     <div class="product-image-wrapper">
                         <img src="https://images.unsplash.com/photo-1581092335397-9583eb92d232?q=80&w=500&auto=format&fit=crop" class="product-image" alt="تراز لیزری">
                     </div>
@@ -2009,10 +2066,10 @@
         </div>
     </main>
 
-    <!-- ۴. بخش جدید: بنرهای دوقلوی تبلیغاتی (Twin Promo Banners) -->
+    <!-- ۴. بنرهای دوقلوی تبلیغاتی -->
     <section class="section-wrapper">
         <div class="promo-banners-grid">
-            <a href="catalog.html?cat=welding" class="promo-banner-card clickable-category">
+            <a href="catalog.html?cat=welding" class="promo-banner-card clickable-item">
                 <img src="https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?q=80&w=900&auto=format&fit=crop" alt="تجهیزات جوشکاری">
                 <div class="promo-banner-overlay"></div>
                 <div class="promo-banner-content">
@@ -2021,7 +2078,7 @@
                     <span class="promo-banner-btn">مشاهده و خرید ❯</span>
                 </div>
             </a>
-            <a href="catalog.html?cat=cordless" class="promo-banner-card clickable-category">
+            <a href="catalog.html?cat=cordless" class="promo-banner-card clickable-item">
                 <img src="https://images.unsplash.com/photo-1572981779307-38b8cabb2407?q=80&w=900&auto=format&fit=crop" alt="ابزارهای شارژی">
                 <div class="promo-banner-overlay"></div>
                 <div class="promo-banner-content">
@@ -2033,7 +2090,7 @@
         </div>
     </section>
 
-    <!-- ۵. برندهای معتبر -->
+    <!-- ۵. برندهای معتبر جهانی (۱۴ برند برای اسکرول روان و کامل) -->
     <section class="section-wrapper">
         <div class="section-header">
             <h2 class="section-title">برندهای معتبر جهانی</h2>
@@ -2041,22 +2098,26 @@
         <div class="h-scroll-container">
             <button class="h-scroll-arrow arrow-right" onclick="scrollTrack('brandsTrack', 1)">❮</button>
             <div class="h-scroll-track" id="brandsTrack">
-                <a href="catalog.html?brand=dewalt" class="brand-card">DEWALT</a>
-                <a href="catalog.html?brand=makita" class="brand-card">MAKITA</a>
-                <a href="catalog.html?brand=bosch" class="brand-card">BOSCH</a>
-                <a href="catalog.html?brand=milwaukee" class="brand-card">MILWAUKEE</a>
-                <a href="catalog.html?brand=hilti" class="brand-card">HILTI</a>
-                <a href="catalog.html?brand=ronix" class="brand-card">RONIX</a>
-                <a href="catalog.html?brand=aeg" class="brand-card">AEG</a>
-                <a href="catalog.html?brand=crown" class="brand-card">CROWN</a>
-                <a href="catalog.html?brand=tosan" class="brand-card">TOSAN</a>
-                <a href="catalog.html?brand=mahak" class="brand-card">MAHAK</a>
+                <a href="catalog.html?brand=dewalt" class="brand-card clickable-item">DEWALT</a>
+                <a href="catalog.html?brand=makita" class="brand-card clickable-item">MAKITA</a>
+                <a href="catalog.html?brand=bosch" class="brand-card clickable-item">BOSCH</a>
+                <a href="catalog.html?brand=milwaukee" class="brand-card clickable-item">MILWAUKEE</a>
+                <a href="catalog.html?brand=hilti" class="brand-card clickable-item">HILTI</a>
+                <a href="catalog.html?brand=metabo" class="brand-card clickable-item">METABO</a>
+                <a href="catalog.html?brand=ronix" class="brand-card clickable-item">RONIX</a>
+                <a href="catalog.html?brand=aeg" class="brand-card clickable-item">AEG</a>
+                <a href="catalog.html?brand=crown" class="brand-card clickable-item">CROWN</a>
+                <a href="catalog.html?brand=tosan" class="brand-card clickable-item">TOSAN</a>
+                <a href="catalog.html?brand=mahak" class="brand-card clickable-item">MAHAK</a>
+                <a href="catalog.html?brand=arva" class="brand-card clickable-item">ARVA</a>
+                <a href="catalog.html?brand=total" class="brand-card clickable-item">TOTAL</a>
+                <a href="catalog.html?brand=ingco" class="brand-card clickable-item">INGCO</a>
             </div>
             <button class="h-scroll-arrow arrow-left" onclick="scrollTrack('brandsTrack', -1)">❯</button>
         </div>
     </section>
 
-    <!-- ۶. بخش جدید: مجله تخصصی و راهنمای خرید ابزار -->
+    <!-- ۶. مجله تخصصی و راهنمای خرید ابزار -->
     <section class="section-wrapper" id="blogSection">
         <div class="section-header">
             <h2 class="section-title">مجله تخصصی و راهنمای خرید</h2>
@@ -2205,11 +2266,11 @@
         </a>
     </nav>
 
-    <!-- جاوا اسکریپت خالص -->
+    <!-- جاوا اسکریپت خالص و مهندسی‌شده -->
     <script>
         const toPersianNum = num => num.toString().replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
 
-        // ۱. بستن فوری صفحه لودینگ (بدون معطلی)
+        // ۱. بستن فوری صفحه لودینگ
         function hideTransition() {
             const transition = document.getElementById('pageTransition');
             if (transition) {
@@ -2220,22 +2281,7 @@
         hideTransition();
         window.addEventListener('pageshow', hideTransition);
 
-        // ۲. انتقال نرم به صفحات محصول و دسته‌بندی بدون تداخل با درگ موس
-        let isDragging = false;
-        document.querySelectorAll('.clickable-product, .clickable-category').forEach(card => {
-            card.addEventListener('click', function(e) {
-                if (isDragging) { e.preventDefault(); return; }
-                if (e.target.closest('.btn-add-cart')) return;
-                e.preventDefault();
-                const targetUrl = this.getAttribute('href') || `product.html?id=${this.dataset.id || 1}`;
-                const transition = document.getElementById('pageTransition');
-                transition.classList.remove('loaded');
-                transition.classList.add('active');
-                setTimeout(() => { window.location.href = targetUrl; }, 400);
-            });
-        });
-
-        // ۳. تغییر تم و ذخیره در حافظه
+        // ۲. تغییر تم و ذخیره در حافظه
         const themeSelector = document.getElementById('themeSelector');
         themeSelector.addEventListener('change', e => {
             document.documentElement.setAttribute('data-theme', e.target.value);
@@ -2247,7 +2293,7 @@
             themeSelector.value = savedTheme;
         }
 
-        // ۴. منوی موبایل و دراپ‌داون‌ها
+        // ۳. منوی موبایل و دراپ‌داون‌ها
         const navWrapper = document.getElementById("navWrapper");
         function toggleMobileMenu() {
             navWrapper.classList.toggle("active") ? stopAutoSlide() : startAutoSlide();
@@ -2259,7 +2305,7 @@
             });
         });
 
-        // ۵. سیستم جستجوی زنده و آنی (Live Search)
+        // ۴. سیستم جستجوی زنده و آنی (Live Search)
         const searchInput = document.getElementById('searchInput');
         const liveSearchResults = document.getElementById('liveSearchResults');
 
@@ -2314,7 +2360,7 @@
             }
         });
 
-        // ۶. تایمر شمارش معکوس بخش «مگا آف»
+        // ۵. تایمر شمارش معکوس بخش «مگا آف»
         let remainingSeconds = (7 * 3600) + (28 * 60) + 45;
         setInterval(() => {
             if (remainingSeconds <= 0) remainingSeconds = 8 * 3600;
@@ -2327,7 +2373,7 @@
             document.getElementById('timerSeconds').innerText = toPersianNum(String(secs).padStart(2, '0'));
         }, 1000);
 
-        // ۷. اسلایدر هیرو
+        // ۶. اسلایدر هیرو
         const sliderContainer = document.getElementById('sliderContainer');
         const dotsContainer = document.getElementById('sliderDots');
         const slides = document.querySelectorAll('.slide');
@@ -2381,65 +2427,93 @@
         startAutoSlide();
         sliderContainer.addEventListener('touchstart', resetInterval, { passive: true });
 
-        // ۸. اسکرول با دکمه‌های فلش و فیزیک اینرسی موس (Momentum)
+        // ۷. موتور اسکرول افقی یکپارچه و مستقل برای تمامی بخش‌ها (رفع کامل باگ لینک‌ها و برندها)
         function scrollTrack(trackId, direction) {
             const track = document.getElementById(trackId);
-            const firstCard = track.firstElementChild;
-            if (!firstCard) return;
-            const scrollAmount = firstCard.offsetWidth + 14;
-            track.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
+            if (!track || !track.firstElementChild) return;
+            const cardWidth = track.firstElementChild.offsetWidth + 14;
+            // حرکت به اندازه ۲ کارت در هر کلیک روی فلش برای حس پویاتر
+            track.scrollBy({ left: direction * (cardWidth * 2), behavior: 'smooth' });
         }
 
-        const scrollTracks = document.querySelectorAll('.h-scroll-track');
-        let isDown = false;
-        let startX, scrollLeft, velX = 0, momentumID;
+        let globalDragFlag = false;
 
-        scrollTracks.forEach(track => {
-            track.addEventListener('mousedown', (e) => {
+        document.querySelectorAll('.h-scroll-track').forEach(track => {
+            let isDown = false;
+            let startX = 0;
+            let startScrollLeft = 0;
+            let velX = 0;
+            let momentumID = null;
+
+            // جلوگیری از Drag بومی مرورگر روی تگ‌های لینک (<a>) و تصاویر
+            track.addEventListener('dragstart', e => e.preventDefault());
+
+            track.addEventListener('mousedown', e => {
+                if (e.button !== 0) return; // فقط کلیک چپ
                 isDown = true;
-                isDragging = false;
-                track.style.scrollBehavior = 'auto';
+                globalDragFlag = false;
+                track.classList.add('dragging');
                 cancelAnimationFrame(momentumID);
-                startX = e.pageX - track.offsetLeft;
-                scrollLeft = track.scrollLeft;
+                startX = e.pageX;
+                startScrollLeft = track.scrollLeft;
+                velX = 0;
             });
-            track.addEventListener('mouseleave', () => {
-                if (!isDown) return;
-                isDown = false;
-                beginMomentum(track);
-            });
-            track.addEventListener('mouseup', () => {
-                if (!isDown) return;
-                isDown = false;
-                beginMomentum(track);
-                setTimeout(() => isDragging = false, 50);
-            });
-            track.addEventListener('mousemove', (e) => {
+
+            track.addEventListener('mousemove', e => {
                 if (!isDown) return;
                 e.preventDefault();
-                const x = e.pageX - track.offsetLeft;
-                const walk = (x - startX) * 1.2;
-                if (Math.abs(walk) > 5) isDragging = true;
-                let prevScrollLeft = track.scrollLeft;
-                track.scrollLeft = scrollLeft - walk;
-                velX = track.scrollLeft - prevScrollLeft;
+                const x = e.pageX;
+                const walk = (x - startX) * 1.35;
+                if (Math.abs(walk) > 6) {
+                    globalDragFlag = true;
+                }
+                const prevScroll = track.scrollLeft;
+                track.scrollLeft = startScrollLeft - walk;
+                velX = track.scrollLeft - prevScroll;
+            });
+
+            const stopDrag = () => {
+                if (!isDown) return;
+                isDown = false;
+                track.classList.remove('dragging');
+                beginMomentum();
+                setTimeout(() => { globalDragFlag = false; }, 60);
+            };
+
+            track.addEventListener('mouseup', stopDrag);
+            track.addEventListener('mouseleave', stopDrag);
+
+            function beginMomentum() {
+                function step() {
+                    if (Math.abs(velX) > 0.5) {
+                        track.scrollLeft += velX;
+                        velX *= 0.92; // ضریب اصطکاک نرم
+                        momentumID = requestAnimationFrame(step);
+                    }
+                }
+                momentumID = requestAnimationFrame(step);
+            }
+        });
+
+        // ۸. مدیریت کلیک روی کارت‌ها (بدون تداخل با کشیدن موس)
+        document.querySelectorAll('.clickable-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                if (globalDragFlag) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return;
+                }
+                if (e.target.closest('.btn-add-cart')) return;
+                e.preventDefault();
+                const targetUrl = this.getAttribute('href') || `product.html?id=${this.dataset.id || 1}`;
+                const transition = document.getElementById('pageTransition');
+                transition.classList.remove('loaded');
+                transition.classList.add('active');
+                setTimeout(() => { window.location.href = targetUrl; }, 380);
             });
         });
 
-        function beginMomentum(track) {
-            function step() {
-                track.scrollLeft += velX;
-                velX *= 0.90;
-                if (Math.abs(velX) > 0.5) {
-                    momentumID = requestAnimationFrame(step);
-                } else {
-                    track.style.scrollBehavior = 'smooth';
-                }
-            }
-            momentumID = requestAnimationFrame(step);
-        }
-
-        // ۹. مدیریت سبد خرید کشویی با دکمه‌های افزایش و کاهش تعداد (+ / -)
+        // ۹. مدیریت سبد خرید کشویی با دکمه‌های + و -
         let cart = JSON.parse(localStorage.getItem('mega_abzar_cart') || '[]');
 
         function toggleCart() {
@@ -2450,6 +2524,7 @@
         document.querySelectorAll('.btn-add-cart').forEach((button) => {
             button.addEventListener('click', (e) => {
                 e.stopPropagation();
+                if (globalDragFlag) return;
                 const card = button.closest('.product-card');
                 const title = card.querySelector('.product-name').innerText;
                 const priceText = card.querySelector('.new-price').innerText.replace(' تومان', '').replace(/,/g, '');
