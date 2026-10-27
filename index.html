@@ -58,7 +58,7 @@
             transition: background-color 0.4s ease, color 0.4s ease;
         }
 
-        /* لایه انیمیشن ترنزیشن صفحه */
+        /* لایه انیمیشن ترنزیشن صفحه - ضد قفل شدن (Fail-Safe) */
         .page-transition {
             position: fixed;
             top: 0;
@@ -72,21 +72,32 @@
             align-items: center;
             opacity: 1;
             visibility: visible;
-            transition: opacity 0.4s ease, visibility 0.4s ease;
+            transition: opacity 0.35s ease, visibility 0.35s ease;
+            animation: forceHideTransition 0.4s ease 0.5s forwards;
+        }
+        @keyframes forceHideTransition {
+            to {
+                opacity: 0;
+                visibility: hidden;
+                pointer-events: none;
+            }
         }
         .page-transition.loaded {
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
+            opacity: 0 !important;
+            visibility: hidden !important;
+            pointer-events: none !important;
+            display: none !important;
         }
         .page-transition.active {
-            opacity: 1;
-            visibility: visible;
-            pointer-events: auto;
+            display: flex !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+            pointer-events: auto !important;
+            animation: none !important;
         }
         .transition-logo {
-            width: 120px;
-            animation: pulse 0.9s infinite alternate;
+            width: 110px;
+            animation: pulse 0.8s infinite alternate;
         }
         @keyframes pulse {
             from { transform: scale(1); }
@@ -113,7 +124,7 @@
             gap: 15px;
         }
         .logo-img {
-            height: 65px;
+            height: 60px;
             width: auto;
             object-fit: contain;
             transition: transform 0.3s;
@@ -226,7 +237,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* کادر جستجوی هوشمند با برندینگ «مگا ابزار» و نتایج زنده */
+        /* کادر جستجوی هوشمند با برندینگ «مگا ابزار» */
         .search-container {
             position: relative;
             flex-grow: 1;
@@ -289,7 +300,7 @@
             visibility: hidden;
         }
 
-        /* دراپ‌داون نتایج جستجوی آنی (Live Search) */
+        /* دراپ‌داون نتایج جستجوی آنی */
         .live-search-results {
             position: absolute;
             top: calc(100% + 8px);
@@ -329,9 +340,8 @@
             width: 46px;
             height: 46px;
             border-radius: 8px;
-            object-fit: contain;
+            object-fit: cover;
             background: var(--image-bg);
-            padding: 4px;
             flex-shrink: 0;
         }
         .live-search-info {
@@ -398,7 +408,7 @@
             opacity: 0.9;
         }
 
-        /* بخش هیرو اسلایدر */
+        /* بخش هیرو اسلایدر (۳ اسلاید تصویری و ویدیویی) */
         .hero-section {
             position: relative;
             width: 100%;
@@ -444,7 +454,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.65);
+            background: linear-gradient(to top, rgba(0,0,0,0.85), rgba(0,0,0,0.45));
         }
         .hero-content {
             position: absolute;
@@ -458,11 +468,21 @@
             padding: 0 20px;
             z-index: 3;
         }
+        .hero-badge {
+            display: inline-block;
+            background-color: var(--accent-color);
+            color: #fff;
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 800;
+            margin-bottom: 12px;
+        }
         .hero-title {
             font-size: 36px;
-            font-weight: 800;
-            margin-bottom: 15px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            font-weight: 900;
+            margin: 0 0 15px 0;
+            text-shadow: 2px 2px 6px rgba(0,0,0,0.85);
         }
         .hero-subtitle {
             font-size: 16px;
@@ -495,10 +515,11 @@
             border: none;
         }
         .btn-hero-primary:hover {
-            opacity: 0.9;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(229, 57, 53, 0.4);
         }
         .btn-hero-secondary {
-            background-color: rgba(255,255,255,0.1);
+            background-color: rgba(255,255,255,0.12);
             color: #fff;
             border: 2px solid #fff;
             backdrop-filter: blur(4px);
@@ -546,15 +567,17 @@
             background-color: rgba(255, 255, 255, 0.4);
             border-radius: 50%;
             cursor: pointer;
-            transition: background 0.3s;
+            transition: all 0.3s;
         }
         .dot.active {
             background-color: var(--accent-color);
+            width: 28px;
+            border-radius: 10px;
         }
 
-        /* اسکرول افقی محصولات، برندها و دسته‌ها */
+        /* کانتینرهای استاندارد سکشن‌ها */
         .section-wrapper {
-            padding: 40px 30px;
+            padding: 35px 30px;
             max-width: 1400px;
             margin: 0 auto;
             position: relative;
@@ -570,7 +593,7 @@
         }
         .section-title {
             font-size: 20px;
-            font-weight: 700;
+            font-weight: 800;
             margin: 0;
             display: flex;
             align-items: center;
@@ -580,7 +603,7 @@
             content: '';
             display: inline-block;
             width: 5px;
-            height: 20px;
+            height: 22px;
             background-color: var(--accent-color);
             border-radius: 3px;
         }
@@ -588,6 +611,7 @@
             color: var(--text-muted);
             text-decoration: none;
             font-size: 14px;
+            font-weight: 600;
             transition: color 0.3s;
         }
         .view-all:hover {
@@ -603,8 +627,8 @@
             display: flex;
             overflow-x: auto;
             scroll-behavior: smooth;
-            gap: 12px;
-            padding: 15px 0;
+            gap: 14px;
+            padding: 12px 0;
             scrollbar-width: none;
             width: 100%;
             -webkit-overflow-scrolling: touch;
@@ -624,8 +648,8 @@
             background-color: var(--secondary-bg);
             border: 1px solid var(--border-color);
             color: var(--text-color);
-            width: 40px;
-            height: 40px;
+            width: 42px;
+            height: 42px;
             border-radius: 50%;
             cursor: pointer;
             z-index: 10;
@@ -633,38 +657,40 @@
             align-items: center;
             justify-content: center;
             font-size: 16px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
             transition: all 0.3s;
         }
         .h-scroll-arrow:hover {
-            background-color: var(--bg-color);
-            color: var(--accent-color);
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+            color: #fff;
         }
-        .arrow-right { right: -15px; }
-        .arrow-left { left: -15px; }
+        .arrow-right { right: -18px; }
+        .arrow-left { left: -18px; }
         @media (min-width: 993px) {
             .section-wrapper:hover .h-scroll-arrow {
                 display: flex;
             }
         }
 
-        /* کارت دسته‌بندی */
+        /* کارت دسته‌بندی (۸ دسته تصویری) */
         .category-card {
-            flex: 0 0 240px;
+            flex: 0 0 220px;
             position: relative;
-            height: 160px;
-            border-radius: 10px;
+            height: 155px;
+            border-radius: 12px;
             overflow: hidden;
             text-decoration: none;
             border: 1px solid var(--border-color);
             transition: border-color 0.3s, transform 0.3s;
             display: flex;
-            align-items: flex-end;
-            padding: 20px;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 16px;
         }
         .category-card:hover {
             border-color: var(--accent-color);
-            transform: translateY(-3px);
+            transform: translateY(-4px);
         }
         .category-card img {
             position: absolute;
@@ -674,6 +700,10 @@
             height: 100%;
             object-fit: cover;
             pointer-events: none;
+            transition: transform 0.5s ease;
+        }
+        .category-card:hover img {
+            transform: scale(1.08);
         }
         .category-overlay {
             position: absolute;
@@ -681,7 +711,7 @@
             right: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(to top, rgba(0,0,0,0.85), rgba(0,0,0,0.2));
+            background: linear-gradient(to top, rgba(0,0,0,0.9) 10%, rgba(0,0,0,0.2) 80%);
             z-index: 1;
             pointer-events: none;
         }
@@ -689,50 +719,103 @@
             position: relative;
             z-index: 2;
             color: #ffffff;
-            font-size: 16px;
+            font-size: 15px;
+            font-weight: 800;
+        }
+        .category-count {
+            position: relative;
+            z-index: 2;
+            color: var(--accent-color);
+            font-size: 11px;
             font-weight: 700;
+            margin-top: 3px;
         }
 
-        /* کارت برند */
-        .brand-card {
-            flex: 0 0 140px;
-            height: 55px;
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
+        /* بخش جدید ۱: پیشنهاد شگفت‌انگیز روز (مگا آف) با تایمر */
+        .mega-offer-box {
+            background: linear-gradient(135deg, #b71c1c 0%, #1a1a1a 65%);
+            border: 2px solid var(--accent-color);
+            border-radius: 16px;
+            padding: 25px;
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-weight: 800;
-            color: var(--text-muted);
-            transition: all 0.3s;
-            cursor: pointer;
-            letter-spacing: 1px;
-            font-size: 14px;
-            text-decoration: none;
+             gap: 25px;
+            position: relative;
+            overflow: hidden;
         }
-        .brand-card:hover {
-            border-color: var(--accent-color);
-            color: var(--accent-color);
-            transform: translateY(-2px);
+        .mega-offer-info {
+            flex: 0 0 260px;
+            color: #fff;
+            text-align: right;
+        }
+        .mega-offer-tag {
+            display: inline-block;
+            background: #fff;
+            color: #b71c1c;
+            font-weight: 900;
+            font-size: 12px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-bottom: 10px;
+        }
+        .mega-offer-title {
+            font-size: 26px;
+            font-weight: 900;
+            margin: 0 0 10px 0;
+        }
+        .mega-offer-desc {
+            font-size: 13px;
+            color: #e0e0e0;
+            line-height: 1.7;
+            margin-bottom: 18px;
+        }
+        .countdown-timer {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+        .time-box {
+            background: rgba(0,0,0,0.55);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 8px;
+            width: 54px;
+            height: 54px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .time-val {
+            font-size: 18px;
+            font-weight: 900;
+            color: #fff;
+        }
+        .time-label {
+            font-size: 10px;
+            color: #ccc;
+        }
+        .mega-offer-track-wrapper {
+            flex-grow: 1;
+            overflow: hidden;
         }
 
         /* کارت محصول */
         .product-card {
-            flex: 0 0 215px;
+            flex: 0 0 220px;
             background-color: var(--card-bg);
             border: 1px solid var(--border-color);
-            border-radius: 10px;
+            border-radius: 12px;
             overflow: hidden;
             position: relative;
             display: flex;
             flex-direction: column;
             cursor: pointer;
-            transition: transform 0.3s ease, border-color 0.3s ease;
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
         }
         .product-card:hover {
             border-color: var(--accent-color);
             transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
         }
         .badge-discount {
             position: absolute;
@@ -740,28 +823,31 @@
             right: 10px;
             background-color: var(--accent-color);
             color: #fff;
-            padding: 3px 8px;
+            padding: 4px 10px;
             border-radius: 12px;
             font-size: 11px;
-            font-weight: 700;
+            font-weight: 800;
             z-index: 2;
             pointer-events: none;
         }
         .product-image-wrapper {
             background-color: var(--image-bg);
-            padding: 15px;
-            text-align: center;
-            border-bottom: 1px solid var(--border-color);
             aspect-ratio: 1 / 1;
             display: flex;
             align-items: center;
             justify-content: center;
+            overflow: hidden;
+            border-bottom: 1px solid var(--border-color);
             pointer-events: none;
         }
         .product-image {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+        .product-card:hover .product-image {
+            transform: scale(1.06);
         }
         .product-info {
             padding: 14px;
@@ -775,10 +861,11 @@
             font-size: 11px;
             margin-bottom: 4px;
             text-transform: uppercase;
-            font-weight: 700;
+            font-weight: 800;
+            letter-spacing: 0.5px;
         }
         .product-name {
-            font-size: 13px;
+            font-size: 13.5px;
             font-weight: 700;
             color: var(--text-color);
             margin: 0 0 10px 0;
@@ -804,20 +891,20 @@
         .new-price {
             color: var(--text-color);
             font-size: 15px;
-            font-weight: 800;
+            font-weight: 900;
         }
         .btn-add-cart {
             width: 100%;
             background-color: transparent;
             color: var(--accent-color);
-            border: 1px solid var(--accent-color);
-            padding: 8px;
-            border-radius: 6px;
+            border: 1.5px solid var(--accent-color);
+            padding: 9px;
+            border-radius: 8px;
             font-family: inherit;
             font-size: 13px;
-            font-weight: 700;
+            font-weight: 800;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.25s;
             z-index: 5;
             position: relative;
             display: flex;
@@ -829,6 +916,157 @@
         .btn-add-cart:hover {
             background-color: var(--accent-color);
             color: #fff;
+        }
+
+        /* بخش جدید ۲: بنرهای دوقلوی تبلیغاتی */
+        .promo-banners-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        .promo-banner-card {
+            position: relative;
+            height: 220px;
+            border-radius: 14px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            padding: 30px;
+            text-decoration: none;
+            color: #fff;
+        }
+        .promo-banner-card img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        .promo-banner-card:hover img {
+            transform: scale(1.06);
+        }
+        .promo-banner-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to left, rgba(0,0,0,0.88) 35%, rgba(0,0,0,0.25) 100%);
+        }
+        .promo-banner-content {
+            position: relative;
+            z-index: 2;
+            max-width: 320px;
+        }
+        .promo-banner-tag {
+            color: var(--accent-color);
+            font-size: 12px;
+            font-weight: 800;
+            display: block;
+            margin-bottom: 6px;
+        }
+        .promo-banner-title {
+            font-size: 22px;
+            font-weight: 900;
+            margin: 0 0 10px 0;
+            line-height: 1.4;
+        }
+        .promo-banner-btn {
+            display: inline-block;
+            background-color: var(--accent-color);
+            color: #fff;
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            margin-top: 6px;
+        }
+
+        /* کارت برند */
+        .brand-card {
+            flex: 0 0 145px;
+            height: 60px;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            color: var(--text-muted);
+            transition: all 0.3s;
+            cursor: pointer;
+            letter-spacing: 1px;
+            font-size: 15px;
+            text-decoration: none;
+        }
+        .brand-card:hover {
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+            transform: translateY(-2px);
+        }
+
+        /* بخش جدید ۳: مجله تخصصی و راهنمای خرید ابزار */
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        .blog-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            text-decoration: none;
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s, border-color 0.3s;
+        }
+        .blog-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent-color);
+        }
+        .blog-img-wrapper {
+            height: 180px;
+            overflow: hidden;
+            position: relative;
+        }
+        .blog-img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s;
+        }
+        .blog-card:hover .blog-img-wrapper img {
+            transform: scale(1.06);
+        }
+        .blog-body {
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+        .blog-date {
+            font-size: 11px;
+            color: var(--accent-color);
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+        .blog-title {
+            font-size: 15px;
+            font-weight: 800;
+            margin: 0 0 8px 0;
+            line-height: 1.6;
+        }
+        .blog-excerpt {
+            font-size: 12.5px;
+            color: var(--text-muted);
+            line-height: 1.7;
+            margin: 0;
         }
 
         /* فوتر */
@@ -971,11 +1209,10 @@
             align-items: center;
             justify-content: center;
             padding: 8px;
-        }
-        .trust-symbol img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
+            color: #121212;
+            font-weight: 800;
+            font-size: 12px;
+            text-align: center;
         }
         .footer-bottom {
             background-color: var(--bg-color);
@@ -986,7 +1223,7 @@
             border-top: 1px solid var(--border-color);
         }
 
-        /* سبد خرید کشویی با کنترلر هوشمند (+ / - / 🗑) */
+        /* سبد خرید کشویی */
         .cart-overlay {
             position: fixed;
             top: 0;
@@ -1057,21 +1294,19 @@
         }
         .cart-item {
             display: flex;
-            gap: 14px;
+            gap: 12px;
             align-items: center;
-            margin-bottom: 16px;
-            padding-bottom: 16px;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
             border-bottom: 1px solid var(--border-color);
         }
         .cart-item-img {
-            width: 68px;
-            height: 68px;
-            object-fit: contain;
+            width: 64px;
+            height: 64px;
+            object-fit: cover;
             background-color: var(--image-bg);
-            border-radius: 10px;
-            padding: 6px;
+            border-radius: 8px;
             flex-shrink: 0;
-            border: 1px solid var(--border-color);
         }
         .cart-item-details {
             flex-grow: 1;
@@ -1080,42 +1315,31 @@
             font-size: 13px;
             font-weight: 700;
             margin: 0 0 6px 0;
-            line-height: 1.5;
             display: -webkit-box;
-            -webkit-line-clamp: 2;
+            -webkit-line-clamp: 1;
             -webkit-box-orient: vertical;
             overflow: hidden;
-        }
-        .cart-item-bottom-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 8px;
         }
         .cart-item-price {
             font-size: 14px;
             color: var(--accent-color);
             font-weight: 800;
+            margin-bottom: 8px;
         }
-        /* باکس یکپارچه تعداد و سطل آشغال */
-        .cart-qty-pill {
-            display: inline-flex;
+        .cart-qty-controls {
+            display: flex;
             align-items: center;
-            background-color: var(--bg-color);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 2px;
-            gap: 4px;
+            gap: 8px;
         }
         .qty-btn {
-            width: 28px;
-            height: 28px;
+            width: 26px;
+            height: 26px;
             border-radius: 6px;
-            border: none;
-            background-color: transparent;
+            border: 1px solid var(--border-color);
+            background-color: var(--card-bg);
             color: var(--text-color);
-            font-size: 16px;
-            font-weight: 800;
+            font-size: 15px;
+            font-weight: 700;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -1123,27 +1347,30 @@
             transition: all 0.2s;
         }
         .qty-btn:hover {
-            background-color: var(--card-bg);
+            border-color: var(--accent-color);
             color: var(--accent-color);
         }
-        .qty-btn.is-trash img {
-            width: 15px;
-            height: 15px;
-            filter: var(--icon-active-filter);
-            transition: transform 0.2s;
-        }
-        .qty-btn.is-trash:hover {
-            background-color: rgba(229, 57, 53, 0.12);
-        }
-        .qty-btn.is-trash:hover img {
-            transform: scale(1.12);
-        }
         .qty-number {
-            font-size: 13.5px;
-            font-weight: 800;
-            min-width: 22px;
+            font-size: 13px;
+            font-weight: 700;
+            min-width: 20px;
             text-align: center;
-            color: var(--text-color);
+        }
+        .cart-item-remove {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 6px;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+        .cart-item-remove img {
+            width: 18px;
+            height: 18px;
+            filter: var(--icon-filter);
+        }
+        .cart-item-remove:hover {
+            opacity: 1;
         }
         .cart-footer {
             padding: 20px;
@@ -1271,16 +1498,38 @@
             .section-title {
                 font-size: 18px;
             }
+            .mega-offer-box {
+                flex-direction: column;
+                padding: 18px;
+                text-align: center;
+            }
+            .mega-offer-info {
+                flex: none;
+                width: 100%;
+                text-align: center;
+            }
+            .countdown-timer {
+                justify-content: center;
+            }
+            .mega-offer-track-wrapper {
+                width: 100%;
+            }
+            .promo-banners-grid {
+                grid-template-columns: 1fr;
+            }
+            .blog-grid {
+                grid-template-columns: 1fr;
+            }
             .product-card {
-                flex: 0 0 165px;
+                flex: 0 0 168px;
             }
             .category-card {
-                flex: 0 0 190px;
+                flex: 0 0 175px;
                 height: 125px;
             }
             .brand-card {
                 flex: 0 0 115px;
-                height: 45px;
+                height: 48px;
                 font-size: 13px;
             }
             .footer-features {
@@ -1292,6 +1541,7 @@
                 gap: 20px;
             }
 
+            /* استایل نوار پایین موبایل با ۴ آیتم و آیکون‌های PNG */
             .mobile-bottom-nav {
                 display: flex;
                 position: fixed;
@@ -1358,22 +1608,28 @@
 </head>
 <body>
 
-    <!-- ترنزیشن لودینگ صفحه -->
+    <!-- ترنزیشن لودینگ صفحه با محافظت فوری ضد قفل شدن -->
     <div class="page-transition" id="pageTransition">
-        <img src="image.png" alt="مگا ابزار" class="transition-logo" onerror="this.src='https://img.icons8.com/ios-filled/100/e53935/maintenance.png'">
+        <img src="image.png" alt="مگا ابزار" class="transition-logo" onerror="this.onerror=null; this.src='https://img.icons8.com/ios-filled/100/e53935/maintenance.png';">
     </div>
+    <script>
+        setTimeout(function() {
+            var pt = document.getElementById('pageTransition');
+            if (pt) pt.classList.add('loaded');
+        }, 180);
+    </script>
 
     <!-- هدر سایت -->
     <header class="header">
         <div class="header-container">
             <a href="index.html" class="logo">
-                <img src="image.png" alt="مگا ابزار" class="logo-img" onerror="this.src='https://img.icons8.com/ios-filled/100/e53935/maintenance.png'">
+                <img src="image.png" alt="مگا ابزار" class="logo-img" onerror="this.onerror=null; this.src='https://img.icons8.com/ios-filled/100/e53935/maintenance.png';">
             </a>
 
-            <!-- دکمه همبرگری منو در موبایل -->
+            <!-- دکمه منو در موبایل -->
             <div class="menu-toggle" onclick="toggleMobileMenu()">☰</div>
 
-            <!-- کادر جستجوی هوشمند (در موبایل بالا قرار می‌گیرد و دارای تایپوگرافی مگا ابزار است) -->
+            <!-- کادر جستجوی هوشمند با برندینگ مگا ابزار در بالا -->
             <div class="search-container" id="searchContainer">
                 <div class="search-box-wrapper">
                     <img src="https://img.icons8.com/ios-glyphs/60/ffffff/search--v1.png" alt="جستجو" class="search-icon-inline">
@@ -1383,11 +1639,10 @@
                         <span class="brand-highlight">مگا ابزار</span>
                     </div>
                 </div>
-                <!-- نتایج جستجوی زنده -->
                 <div class="live-search-results" id="liveSearchResults"></div>
             </div>
 
-            <!-- منوی ناوبری و دکمه‌های دسکتاپ -->
+            <!-- منوی ناوبری و اکشن‌های دسکتاپ -->
             <div class="nav-wrapper" id="navWrapper">
                 <nav>
                     <ul class="nav-menu">
@@ -1398,17 +1653,20 @@
                                 <li class="sub-dropdown">
                                     <a class="toggle-link">ابزارهای برقی و شارژی <span class="arrow">▼</span></a>
                                     <ul class="sub-dropdown-content">
-                                        <li><a href="catalog.html?cat=drills">دریل و بتن‌کن</a></li>
-                                        <li><a href="catalog.html?cat=grinders">فرز و مینی‌فرز</a></li>
-                                        <li><a href="catalog.html?cat=saws">اره عمودبر و دیسکی</a></li>
+                                        <li><a href="catalog.html?cat=drills">دریل، پیچ‌گوشتی و بتن‌کن</a></li>
+                                        <li><a href="catalog.html?cat=grinders">فرز، مینی‌فرز و پولیش</a></li>
+                                        <li><a href="catalog.html?cat=saws">اره گردبر، افقی‌بر و فارسی‌بر</a></li>
                                     </ul>
                                 </li>
-                                <li><a href="catalog.html?cat=hand-tools">ابزارهای دستی و کارگاهی</a></li>
-                                <li><a href="catalog.html?cat=measuring">ابزار دقیق و لیزری</a></li>
-                                <li><a href="catalog.html?cat=safety">تجهیزات ایمنی فردی</a></li>
+                                <li><a href="catalog.html?cat=welding">تجهیزات جوشکاری و اینورتر</a></li>
+                                <li><a href="catalog.html?cat=pneumatic">ابزارهای بادی و کمپرسور</a></li>
+                                <li><a href="catalog.html?cat=hand-tools">ابزارهای دستی و جعبه ابزار</a></li>
+                                <li><a href="catalog.html?cat=measuring">ابزار دقیق و تراز لیزری</a></li>
+                                <li><a href="catalog.html?cat=safety">تجهیزات ایمنی و کارگاهی</a></li>
                             </ul>
                         </li>
-                        <li><a href="blog.html">وبلاگ تخصصی</a></li>
+                        <li><a href="#megaOfferSection">فروش ویژه (مگا آف)</a></li>
+                        <li><a href="#blogSection">مجله ابزارشناسی</a></li>
                         <li><a href="contact.html">تماس با ما</a></li>
                     </ul>
                 </nav>
@@ -1426,30 +1684,45 @@
         </div>
     </header>
 
-    <!-- اسلایدر هیرو -->
+    <!-- اسلایدر هیرو (۳ اسلاید کامل تصویری و ویدیویی) -->
     <div class="hero-section" dir="ltr" onmouseenter="stopAutoSlide()" onmouseleave="startAutoSlide()">
         <div class="hero-slider" id="sliderContainer">
             <div class="slide" dir="rtl">
-                <img class="hero-media" src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=1920&auto=format&fit=crop" alt="بنر اول">
+                <img class="hero-media" src="https://images.unsplash.com/photo-1504148455328-c376907d081c?q=80&w=1920&auto=format&fit=crop" alt="ابزارآلات صنعتی">
                 <div class="hero-overlay"></div>
                 <div class="hero-content">
-                    <h1 class="hero-title">تجهیزات صنعتی و کارگاهی اصل</h1>
-                    <p class="hero-subtitle">تامین‌کننده مستقیم مدرن‌ترین ابزارآلات صنعتی از بانه با تضمین اصالت و بهترین قیمت بازار.</p>
+                    <span class="hero-badge">واردات مستقیم از بانه</span>
+                    <h1 class="hero-title">مرجع تخصصی ابزارآلات صنعتی و کارگاهی</h1>
+                    <p class="hero-subtitle">تامین‌کننده مستقیم برترین برندهای جهانی (دیوالت، ماکیتا، بوش و میلواکی) با تضمین ۱۰۰٪ اصالت کالا.</p>
                     <div class="hero-buttons">
-                        <a href="catalog.html" class="btn-hero btn-hero-primary">مشاهده کاتالوگ فروشگاه</a>
+                        <a href="catalog.html" class="btn-hero btn-hero-primary">مشاهده کاتالوگ محصولات</a>
+                        <a href="#megaOfferSection" class="btn-hero btn-hero-secondary">🔥 تخفیف‌های امروز</a>
                     </div>
                 </div>
             </div>
             <div class="slide" dir="rtl">
-                <video class="hero-media" autoplay loop muted playsinline>
+                <video class="hero-media" autoplay loop muted playsinline poster="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=1920&auto=format&fit=crop">
                     <source src="https://assets.mixkit.co/videos/preview/mixkit-welder-working-with-a-welding-machine-226-large.mp4" type="video/mp4">
                 </video>
                 <div class="hero-overlay"></div>
                 <div class="hero-content">
-                    <h1 class="hero-title">قدرت واقعی در دستان شماست</h1>
-                    <p class="hero-subtitle">مگا ابزار، همراه حرفه‌ای‌ها در سخت‌ترین پروژه‌های ساختمانی و صنعتی.</p>
+                    <span class="hero-badge">قدرت بی‌رقیب در پروژه‌ها</span>
+                    <h1 class="hero-title">تجهیزات جوشکاری و برشکاری سنگین</h1>
+                    <p class="hero-subtitle">جدیدترین نسل اینورترهای صنعتی، فرزهای آهنگری و اره پروفیل‌بر با گارانتی معتبر.</p>
                     <div class="hero-buttons">
-                        <a href="catalog.html?cat=welding" class="btn-hero btn-hero-secondary"><span>▶</span> بررسی تجهیزات جوش و برش</a>
+                        <a href="catalog.html?cat=welding" class="btn-hero btn-hero-primary">خرید تجهیزات جوش و برش</a>
+                    </div>
+                </div>
+            </div>
+            <div class="slide" dir="rtl">
+                <img class="hero-media" src="https://images.unsplash.com/photo-1530124566582-a618bc2615dc?q=80&w=1920&auto=format&fit=crop" alt="جعبه ابزار و ست‌های مکانیکی">
+                <div class="hero-overlay"></div>
+                <div class="hero-content">
+                    <span class="hero-badge">تجهیز کامل تعمیرگاه</span>
+                    <h1 class="hero-title">ست‌های کامل آچار، بکس و ابزار دستی</h1>
+                    <p class="hero-subtitle">مجموعه‌های حرفه‌ای کروم-وانادیوم مقاوم در برابر فشار برای مکانیک‌ها و تکنسین‌های صنعتی.</p>
+                    <div class="hero-buttons">
+                        <a href="catalog.html?cat=hand-tools" class="btn-hero btn-hero-primary">مشاهده ابزارهای دستی</a>
                     </div>
                 </div>
             </div>
@@ -1459,63 +1732,154 @@
         <div class="slider-dots" id="sliderDots"></div>
     </div>
 
-    <!-- دسته‌بندی‌های اصلی با لینک داینامیک -->
+    <!-- ۱. دسته‌بندی‌های اصلی (۸ دسته کامل با تصاویر صنعتی متنوع) -->
     <section class="section-wrapper">
         <div class="section-header">
-            <h2 class="section-title">دسته‌بندی‌های اصلی</h2>
+            <h2 class="section-title">دسته‌بندی‌های تخصصی</h2>
+            <a href="catalog.html" class="view-all">همه دسته‌ها ❯</a>
         </div>
         <div class="h-scroll-container">
             <button class="h-scroll-arrow arrow-right" onclick="scrollTrack('catsTrack', 1)">❮</button>
             <div class="h-scroll-track" id="catsTrack">
                 <a href="catalog.html?cat=power-tools" class="category-card clickable-category">
-                    <img src="https://images.unsplash.com/photo-1504148455328-c376907d081c?q=80&w=500&auto=format&fit=crop" alt="ابزار برقی">
+                    <img src="https://images.unsplash.com/photo-1504148455328-c376907d081c?q=80&w=600&auto=format&fit=crop" alt="ابزار برقی">
                     <div class="category-overlay"></div>
                     <span class="category-name">ابزار برقی و شارژی</span>
+                    <span class="category-count"> بیش از ۳۴۰ محصول</span>
                 </a>
                 <a href="catalog.html?cat=hand-tools" class="category-card clickable-category">
-                    <img src="https://images.unsplash.com/photo-1530124566582-a618bc2615dc?q=80&w=500&auto=format&fit=crop" alt="ابزار دستی">
+                    <img src="https://images.unsplash.com/photo-1530124566582-a618bc2615dc?q=80&w=600&auto=format&fit=crop" alt="ابزار دستی">
                     <div class="category-overlay"></div>
-                    <span class="category-name">ابزارهای دستی</span>
+                    <span class="category-name">ابزارهای دستی و مکانیکی</span>
+                    <span class="category-count">بیش از ۵۲۰ محصول</span>
+                </a>
+                <a href="catalog.html?cat=welding" class="category-card clickable-category">
+                    <img src="https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?q=80&w=600&auto=format&fit=crop" alt="جوش و برش">
+                    <div class="category-overlay"></div>
+                    <span class="category-name">اینورتر و جوشکاری</span>
+                    <span class="category-count">بیش از ۱۲۰ محصول</span>
                 </a>
                 <a href="catalog.html?cat=measuring" class="category-card clickable-category">
-                    <img src="https://images.unsplash.com/photo-1581092335397-9583eb92d232?q=80&w=500&auto=format&fit=crop" alt="ابزار دقیق">
+                    <img src="https://images.unsplash.com/photo-1581092335397-9583eb92d232?q=80&w=600&auto=format&fit=crop" alt="ابزار دقیق">
                     <div class="category-overlay"></div>
-                    <span class="category-name">ابزار دقیق و اندازه‌گیری</span>
+                    <span class="category-name">تراز لیزری و ابزار دقیق</span>
+                    <span class="category-count">بیش از ۹۵ محصول</span>
+                </a>
+                <a href="catalog.html?cat=pneumatic" class="category-card clickable-category">
+                    <img src="https://images.unsplash.com/photo-1572981779307-38b8cabb2407?q=80&w=600&auto=format&fit=crop" alt="ابزار بادی">
+                    <div class="category-overlay"></div>
+                    <span class="category-name">ابزار بادی و کمپرسور</span>
+                    <span class="category-count">بیش از ۱۵۰ محصول</span>
+                </a>
+                <a href="catalog.html?cat=gardening" class="category-card clickable-category">
+                    <img src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?q=80&w=600&auto=format&fit=crop" alt="ابزار باغبانی">
+                    <div class="category-overlay"></div>
+                    <span class="category-name">اره موتوری و باغبانی</span>
+                    <span class="category-count">بیش از ۱۱۰ محصول</span>
                 </a>
                 <a href="catalog.html?cat=safety" class="category-card clickable-category">
-                    <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=500&auto=format&fit=crop" alt="تجهیزات ایمنی">
+                    <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=600&auto=format&fit=crop" alt="تجهیزات ایمنی">
                     <div class="category-overlay"></div>
                     <span class="category-name">ایمنی و حفاظت فردی</span>
+                    <span class="category-count">بیش از ۸۰ محصول</span>
+                </a>
+                <a href="catalog.html?cat=accessories" class="category-card clickable-category">
+                    <img src="https://images.unsplash.com/photo-1586864387967-d02ef85d93e8?q=80&w=600&auto=format&fit=crop" alt="مته و صفحه برش">
+                    <div class="category-overlay"></div>
+                    <span class="category-name">مته، صفحه برش و جانبی</span>
+                    <span class="category-count">بیش از ۶۰۰ محصول</span>
                 </a>
             </div>
             <button class="h-scroll-arrow arrow-left" onclick="scrollTrack('catsTrack', -1)">❯</button>
         </div>
     </section>
 
-    <!-- برندهای معتبر با لینک داینامیک -->
-    <section class="section-wrapper">
-        <div class="section-header">
-            <h2 class="section-title">برندهای معتبر</h2>
-        </div>
-        <div class="h-scroll-container">
-            <button class="h-scroll-arrow arrow-right" onclick="scrollTrack('brandsTrack', 1)">❮</button>
-            <div class="h-scroll-track" id="brandsTrack">
-                <a href="catalog.html?brand=dewalt" class="brand-card">DEWALT</a>
-                <a href="catalog.html?brand=makita" class="brand-card">MAKITA</a>
-                <a href="catalog.html?brand=bosch" class="brand-card">BOSCH</a>
-                <a href="catalog.html?brand=ronix" class="brand-card">RONIX</a>
-                <a href="catalog.html?brand=milwaukee" class="brand-card">MILWAUKEE</a>
-                <a href="catalog.html?brand=hilti" class="brand-card">HILTI</a>
-                <a href="catalog.html?brand=aeg" class="brand-card">AEG</a>
-                <a href="catalog.html?brand=crown" class="brand-card">CROWN</a>
-                <a href="catalog.html?brand=tosan" class="brand-card">TOSAN</a>
-                <a href="catalog.html?brand=mahak" class="brand-card">MAHAK</a>
+    <!-- ۲. بخش جدید: پیشنهاد شگفت‌انگیز «مگا آف» با تایمر معکوس زنده -->
+    <section class="section-wrapper" id="megaOfferSection">
+        <div class="mega-offer-box">
+            <div class="mega-offer-info">
+                <span class="mega-offer-tag">🔥 حراج ویژه بانه</span>
+                <h2 class="mega-offer-title">پیشنهاد شگفت‌انگیز مگا آف</h2>
+                <p class="mega-offer-desc">تخفیف‌های استثنایی و محدود روی ابزارآلات صنعتی منتخب با ارسال فوری.</p>
+                <div class="countdown-timer">
+                    <div class="time-box"><span class="time-val" id="timerSeconds">۴۵</span><span class="time-label">ثانیه</span></div>
+                    <div class="time-box"><span class="time-val" id="timerMinutes">۲۸</span><span class="time-label">دقیقه</span></div>
+                    <div class="time-box"><span class="time-val" id="timerHours">۰۷</span><span class="time-label">ساعت</span></div>
+                </div>
+                <a href="catalog.html?filter=special" class="btn-hero btn-hero-secondary" style="padding: 8px 20px; font-size: 13px; display: inline-flex;">مشاهده همه شگفت‌انگیزها ❯</a>
             </div>
-            <button class="h-scroll-arrow arrow-left" onclick="scrollTrack('brandsTrack', -1)">❯</button>
+
+            <div class="mega-offer-track-wrapper">
+                <div class="h-scroll-track" id="offerTrack">
+                    <div class="product-card clickable-product" data-id="101">
+                        <span class="badge-discount">۲۲٪ تخفیف</span>
+                        <div class="product-image-wrapper">
+                            <img src="https://images.unsplash.com/photo-1504148455328-c376907d081c?q=80&w=500&auto=format&fit=crop" class="product-image" alt="بکس شارژی دیوالت">
+                        </div>
+                        <div class="product-info">
+                            <span class="product-brand">DEWALT</span>
+                            <h3 class="product-name">بکس شارژی براشلس دیوالت ۲۰ ولت مدل DCF899</h3>
+                            <div class="product-price">
+                                <span class="old-price">۱۴,۵۰۰,۰۰۰</span>
+                                <span class="new-price">۱۱,۳۱۰,۰۰۰ تومان</span>
+                            </div>
+                            <button class="btn-add-cart">افزودن به سبد خرید</button>
+                        </div>
+                    </div>
+
+                    <div class="product-card clickable-product" data-id="102">
+                        <span class="badge-discount">۱۸٪ تخفیف</span>
+                        <div class="product-image-wrapper">
+                            <img src="https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?q=80&w=500&auto=format&fit=crop" class="product-image" alt="اینورتر جوشکاری">
+                        </div>
+                        <div class="product-info">
+                            <span class="product-brand">RONIX</span>
+                            <h3 class="product-name">اینورتر جوشکاری ۲۵۰ آمپر صنعتی رونیکس RH-4625</h3>
+                            <div class="product-price">
+                                <span class="old-price">۷,۸۰۰,۰۰۰</span>
+                                <span class="new-price">۶,۳۹۰,۰۰۰ تومان</span>
+                            </div>
+                            <button class="btn-add-cart">افزودن به سبد خرید</button>
+                        </div>
+                    </div>
+
+                    <div class="product-card clickable-product" data-id="103">
+                        <span class="badge-discount">۲۵٪ تخفیف</span>
+                        <div class="product-image-wrapper">
+                            <img src="https://images.unsplash.com/photo-1581092160607-ee22621dd758?q=80&w=500&auto=format&fit=crop" class="product-image" alt="کارواش صنعتی">
+                        </div>
+                        <div class="product-info">
+                            <span class="product-brand">BOSCH</span>
+                            <h3 class="product-name">کارواش صنعتی دینامی بوش مدل AQT 140 بار</h3>
+                            <div class="product-price">
+                                <span class="old-price">۹,۲۰۰,۰۰۰</span>
+                                <span class="new-price">۶,۹۰۰,۰۰۰ تومان</span>
+                            </div>
+                            <button class="btn-add-cart">افزودن به سبد خرید</button>
+                        </div>
+                    </div>
+
+                    <div class="product-card clickable-product" data-id="104">
+                        <span class="badge-discount">۱۵٪ تخفیف</span>
+                        <div class="product-image-wrapper">
+                            <img src="https://images.unsplash.com/photo-1586864387967-d02ef85d93e8?q=80&w=500&auto=format&fit=crop" class="product-image" alt="چکش تخریب">
+                        </div>
+                        <div class="product-info">
+                            <span class="product-brand">MAKITA</span>
+                            <h3 class="product-name">چکش تخریب ۱۶ کیلویی ماکیتا مدل HM1307C</h3>
+                            <div class="product-price">
+                                <span class="old-price">۳۲,۰۰۰,۰۰۰</span>
+                                <span class="new-price">۲۷,۲۰۰,۰۰۰ تومان</span>
+                            </div>
+                            <button class="btn-add-cart">افزودن به سبد خرید</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
-    <!-- پرفروش‌ترین ابزارها -->
+    <!-- ۳. پرفروش‌ترین ابزارها -->
     <main class="section-wrapper">
         <div class="section-header">
             <h2 class="section-title">پرفروش‌ترین ابزارها</h2>
@@ -1586,11 +1950,11 @@
 
                 <div class="product-card clickable-product" data-id="5">
                     <div class="product-image-wrapper">
-                        <img src="https://images.unsplash.com/photo-1504148455328-c376907d081c?q=80&w=500&auto=format&fit=crop" class="product-image" alt="پیچ گوشتی شارژی">
+                        <img src="https://images.unsplash.com/photo-1586864387967-d02ef85d93e8?q=80&w=500&auto=format&fit=crop" class="product-image" alt="پیچ گوشتی شارژی">
                     </div>
                     <div class="product-info">
                         <span class="product-brand">MILWAUKEE</span>
-                        <h3 class="product-name">دریل پیچ‌گوشتی شارژی براشلس میلواکی</h3>
+                        <h3 class="product-name">دریل پیچ‌گوشتی شارژی براشلس میلواکی ۱۸ ولت</h3>
                         <div class="product-price">
                             <span class="new-price">۸,۳۰۰,۰۰۰ تومان</span>
                         </div>
@@ -1600,7 +1964,7 @@
 
                 <div class="product-card clickable-product" data-id="6">
                     <div class="product-image-wrapper">
-                        <img src="https://images.unsplash.com/photo-1572981779307-38b8cabb2407?q=80&w=500&auto=format&fit=crop" class="product-image" alt="بتن کن">
+                        <img src="https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?q=80&w=500&auto=format&fit=crop" class="product-image" alt="بتن کن">
                     </div>
                     <div class="product-info">
                         <span class="product-brand">HILTI</span>
@@ -1615,7 +1979,7 @@
 
                 <div class="product-card clickable-product" data-id="7">
                     <div class="product-image-wrapper">
-                        <img src="https://images.unsplash.com/photo-1530124566582-a618bc2615dc?q=80&w=500&auto=format&fit=crop" class="product-image" alt="فرز آهنگری">
+                        <img src="https://images.unsplash.com/photo-1581092160607-ee22621dd758?q=80&w=500&auto=format&fit=crop" class="product-image" alt="فرز آهنگری">
                     </div>
                     <div class="product-info">
                         <span class="product-brand">AEG</span>
@@ -1640,39 +2004,97 @@
                         <button class="btn-add-cart">افزودن به سبد خرید</button>
                     </div>
                 </div>
-
-                <div class="product-card clickable-product" data-id="9">
-                    <div class="product-image-wrapper">
-                        <img src="https://images.unsplash.com/photo-1504148455328-c376907d081c?q=80&w=500&auto=format&fit=crop" class="product-image" alt="دستگاه پولیش">
-                    </div>
-                    <div class="product-info">
-                        <span class="product-brand">TOSAN</span>
-                        <h3 class="product-name">دستگاه پولیش توسان مدل 3415P دیمردار</h3>
-                        <div class="product-price">
-                            <span class="new-price">۲,۱۰۰,۰۰۰ تومان</span>
-                        </div>
-                        <button class="btn-add-cart">افزودن به سبد خرید</button>
-                    </div>
-                </div>
-
-                <div class="product-card clickable-product" data-id="10">
-                    <div class="product-image-wrapper">
-                        <img src="https://images.unsplash.com/photo-1530124566582-a618bc2615dc?q=80&w=500&auto=format&fit=crop" class="product-image" alt="اره فارسی بر">
-                    </div>
-                    <div class="product-info">
-                        <span class="product-brand">MAHAK</span>
-                        <h3 class="product-name">اره فارسی‌بر کشویی دوطرفه محک MS-305</h3>
-                        <div class="product-price">
-                            <span class="new-price">۷,۸۰۰,۰۰۰ تومان</span>
-                        </div>
-                        <button class="btn-add-cart">افزودن به سبد خرید</button>
-                    </div>
-                </div>
-
             </div>
             <button class="h-scroll-arrow arrow-left" onclick="scrollTrack('productsTrack', -1)">❯</button>
         </div>
     </main>
+
+    <!-- ۴. بخش جدید: بنرهای دوقلوی تبلیغاتی (Twin Promo Banners) -->
+    <section class="section-wrapper">
+        <div class="promo-banners-grid">
+            <a href="catalog.html?cat=welding" class="promo-banner-card clickable-category">
+                <img src="https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?q=80&w=900&auto=format&fit=crop" alt="تجهیزات جوشکاری">
+                <div class="promo-banner-overlay"></div>
+                <div class="promo-banner-content">
+                    <span class="promo-banner-tag">ضمانت ۲۴ ماهه</span>
+                    <h3 class="promo-banner-title">نسل جدید اینورترهای جوشکاری IGBT</h3>
+                    <span class="promo-banner-btn">مشاهده و خرید ❯</span>
+                </div>
+            </a>
+            <a href="catalog.html?cat=cordless" class="promo-banner-card clickable-category">
+                <img src="https://images.unsplash.com/photo-1572981779307-38b8cabb2407?q=80&w=900&auto=format&fit=crop" alt="ابزارهای شارژی">
+                <div class="promo-banner-overlay"></div>
+                <div class="promo-banner-content">
+                    <span class="promo-banner-tag">موتورهای براشلس (Brushless)</span>
+                    <h3 class="promo-banner-title">خانواده ابزارهای شارژی ۲۰ ولت صنعتی</h3>
+                    <span class="promo-banner-btn">مشاهده و خرید ❯</span>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <!-- ۵. برندهای معتبر -->
+    <section class="section-wrapper">
+        <div class="section-header">
+            <h2 class="section-title">برندهای معتبر جهانی</h2>
+        </div>
+        <div class="h-scroll-container">
+            <button class="h-scroll-arrow arrow-right" onclick="scrollTrack('brandsTrack', 1)">❮</button>
+            <div class="h-scroll-track" id="brandsTrack">
+                <a href="catalog.html?brand=dewalt" class="brand-card">DEWALT</a>
+                <a href="catalog.html?brand=makita" class="brand-card">MAKITA</a>
+                <a href="catalog.html?brand=bosch" class="brand-card">BOSCH</a>
+                <a href="catalog.html?brand=milwaukee" class="brand-card">MILWAUKEE</a>
+                <a href="catalog.html?brand=hilti" class="brand-card">HILTI</a>
+                <a href="catalog.html?brand=ronix" class="brand-card">RONIX</a>
+                <a href="catalog.html?brand=aeg" class="brand-card">AEG</a>
+                <a href="catalog.html?brand=crown" class="brand-card">CROWN</a>
+                <a href="catalog.html?brand=tosan" class="brand-card">TOSAN</a>
+                <a href="catalog.html?brand=mahak" class="brand-card">MAHAK</a>
+            </div>
+            <button class="h-scroll-arrow arrow-left" onclick="scrollTrack('brandsTrack', -1)">❯</button>
+        </div>
+    </section>
+
+    <!-- ۶. بخش جدید: مجله تخصصی و راهنمای خرید ابزار -->
+    <section class="section-wrapper" id="blogSection">
+        <div class="section-header">
+            <h2 class="section-title">مجله تخصصی و راهنمای خرید</h2>
+            <a href="blog.html" class="view-all">ورود به وبلاگ ❯</a>
+        </div>
+        <div class="blog-grid">
+            <a href="blog.html?post=1" class="blog-card">
+                <div class="blog-img-wrapper">
+                    <img src="https://images.unsplash.com/photo-1504148455328-c376907d081c?q=80&w=600&auto=format&fit=crop" alt="راهنمای خرید دریل">
+                </div>
+                <div class="blog-body">
+                    <span class="blog-date">راهنمای خرید • ۵ دقیقه مطالعه</span>
+                    <h3 class="blog-title">تفاوت دریل چکشی، گیربکسی و بتن‌کن؛ کدام برای شما مناسب است؟</h3>
+                    <p class="blog-excerpt">بررسی کامل گشتاور، قدرت ضربه و کاربرد هر کدام از انواع دریل‌ها در پروژه‌های ساختمانی و خانگی.</p>
+                </div>
+            </a>
+            <a href="blog.html?post=2" class="blog-card">
+                <div class="blog-img-wrapper">
+                    <img src="https://images.unsplash.com/photo-1581092160607-ee22621dd758?q=80&w=600&auto=format&fit=crop" alt="تشخیص ابزار اصل">
+                </div>
+                <div class="blog-body">
+                    <span class="blog-date">تشخیص اصالت • ۴ دقیقه مطالعه</span>
+                    <h3 class="blog-title">چگونه ابزارهای اورجینال دیوالت و ماکیتا را از نسخه‌های فیک تشخیص دهیم؟</h3>
+                    <p class="blog-excerpt">نکات کلیدی بررسی سریال بدنه، کیفیت قالب‌گیری، لیبل باتری و گارانتی هنگام خرید ابزار از بانه.</p>
+                </div>
+            </a>
+            <a href="blog.html?post=3" class="blog-card">
+                <div class="blog-img-wrapper">
+                    <img src="https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?q=80&w=600&auto=format&fit=crop" alt="انتخاب اینورتر">
+                </div>
+                <div class="blog-body">
+                    <span class="blog-date">آموزش فنی • ۶ دقیقه مطالعه</span>
+                    <h3 class="blog-title">راهنمای انتخاب آمپر مناسب در خرید دستگاه جوش اینورتر</h3>
+                    <p class="blog-excerpt">برای ذوب دائمی الکترود ۳ و ۴ به چه چرخه کاری (Duty Cycle) و چه میزان آمپر واقعی نیاز داریم؟</p>
+                </div>
+            </a>
+        </div>
+    </section>
 
     <!-- فوتر فروشگاه -->
     <footer class="footer">
@@ -1680,7 +2102,7 @@
             <div class="footer-features">
                 <div class="feature-item">
                     <img src="https://img.icons8.com/ios-filled/64/ffffff/delivery.png" alt="ارسال سریع" class="feature-icon">
-                    <span class="feature-text">ارسال سریع و مطمئن سراسر کشور</span>
+                    <span class="feature-text">ارسال سریع به سراسر کشور (تیپاکس و باربری)</span>
                 </div>
                 <div class="feature-item">
                     <img src="https://img.icons8.com/ios-filled/64/ffffff/guarantee.png" alt="تضمین اصالت" class="feature-icon">
@@ -1692,12 +2114,12 @@
                 </div>
                 <div class="feature-item">
                     <img src="https://img.icons8.com/ios-filled/64/ffffff/headset.png" alt="پشتیبانی" class="feature-icon">
-                    <span class="feature-text">مشاوره تخصصی و پشتیبانی فنی</span>
+                    <span class="feature-text">مشاوره تخصصی پیش از خرید</span>
                 </div>
             </div>
             <div class="footer-main">
                 <div class="footer-col" style="flex: 1 1 300px;">
-                    <img src="image.png" alt="مگا ابزار" class="footer-logo" onerror="this.src='https://img.icons8.com/ios-filled/100/e53935/maintenance.png'">
+                    <img src="image.png" alt="مگا ابزار" class="footer-logo" onerror="this.onerror=null; this.src='https://img.icons8.com/ios-filled/100/e53935/maintenance.png';">
                     <div class="footer-contact">
                         پاسخگویی از ساعت ۸ صبح تا ۸ شب<br>
                         شماره تماس: <strong>۰۸۷-۱۲۳۴۵۶۷۸</strong><br>
@@ -1720,20 +2142,20 @@
                     </ul>
                 </div>
                 <div class="footer-col">
-                    <h4 class="footer-title">راهنمای خرید</h4>
+                    <h4 class="footer-title">راهنمای خرید و ارسال</h4>
                     <ul class="footer-links">
-                        <li><a href="guide.html#order">نحوه ثبت سفارش و خرید آنلاین</a></li>
+                        <li><a href="guide.html#order">نحوه ثبت سفارش آنلاین</a></li>
                         <li><a href="guide.html#shipping">رویه ارسال کالاهای سنگین (باربری)</a></li>
-                        <li><a href="guide.html#payment">شیوه‌های پرداخت و درگاه بانکی</a></li>
+                        <li><a href="guide.html#payment">شیوه‌های پرداخت و درگاه شاپرک</a></li>
                         <li><a href="terms.html#return">شرایط بازگشت کالا و گارانتی</a></li>
-                        <li><a href="terms.html">قوانین و مقررات حریم خصوصی</a></li>
+                        <li><a href="terms.html">قوانین و حریم خصوصی</a></li>
                     </ul>
                 </div>
                 <div class="footer-col">
                     <h4 class="footer-title">نمادهای اعتماد الکترونیکی</h4>
                     <div class="trust-symbols">
-                        <div class="trust-symbol"><img src="https://trustseal.enamad.ir/logo.aspx?id=12345" alt="اینماد" onerror="this.src='https://via.placeholder.com/80x80?text=e-Namad'"></div>
-                        <div class="trust-symbol"><img src="https://logo.samandehi.ir/logo.aspx?id=12345" alt="ساماندهی" onerror="this.src='https://via.placeholder.com/80x80?text=Samandehi'"></div>
+                        <div class="trust-symbol">نماد اعتماد<br>(e-Namad)</div>
+                        <div class="trust-symbol">نشان ملی<br>(ساماندهی)</div>
                     </div>
                 </div>
             </div>
@@ -1787,7 +2209,7 @@
     <script>
         const toPersianNum = num => num.toString().replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
 
-        // ۱. مدیریت انیمیشن ترنزیشن اولیه
+        // ۱. بستن فوری صفحه لودینگ (بدون معطلی)
         function hideTransition() {
             const transition = document.getElementById('pageTransition');
             if (transition) {
@@ -1795,10 +2217,8 @@
                 transition.classList.add('loaded');
             }
         }
-        window.addEventListener('DOMContentLoaded', hideTransition);
-        window.addEventListener('load', hideTransition);
+        hideTransition();
         window.addEventListener('pageshow', hideTransition);
-        setTimeout(hideTransition, 250);
 
         // ۲. انتقال نرم به صفحات محصول و دسته‌بندی بدون تداخل با درگ موس
         let isDragging = false;
@@ -1811,7 +2231,7 @@
                 const transition = document.getElementById('pageTransition');
                 transition.classList.remove('loaded');
                 transition.classList.add('active');
-                setTimeout(() => { window.location.href = targetUrl; }, 450);
+                setTimeout(() => { window.location.href = targetUrl; }, 400);
             });
         });
 
@@ -1894,7 +2314,20 @@
             }
         });
 
-        // ۶. اسلایدر هیرو
+        // ۶. تایمر شمارش معکوس بخش «مگا آف»
+        let remainingSeconds = (7 * 3600) + (28 * 60) + 45;
+        setInterval(() => {
+            if (remainingSeconds <= 0) remainingSeconds = 8 * 3600;
+            remainingSeconds--;
+            const hrs = Math.floor(remainingSeconds / 3600);
+            const mins = Math.floor((remainingSeconds % 3600) / 60);
+            const secs = remainingSeconds % 60;
+            document.getElementById('timerHours').innerText = toPersianNum(String(hrs).padStart(2, '0'));
+            document.getElementById('timerMinutes').innerText = toPersianNum(String(mins).padStart(2, '0'));
+            document.getElementById('timerSeconds').innerText = toPersianNum(String(secs).padStart(2, '0'));
+        }, 1000);
+
+        // ۷. اسلایدر هیرو
         const sliderContainer = document.getElementById('sliderContainer');
         const dotsContainer = document.getElementById('sliderDots');
         const slides = document.querySelectorAll('.slide');
@@ -1933,4 +2366,172 @@
         function startAutoSlide() {
             if (!slideInterval) {
                 slideInterval = setInterval(() => {
-                    if (!navWrapper.classList.contains("active")) goTo
+                    if (!navWrapper.classList.contains("active")) goToSlide(currentSlideIndex + 1);
+                }, 6000);
+            }
+        }
+        function stopAutoSlide() {
+            clearInterval(slideInterval);
+            slideInterval = null;
+        }
+        function resetInterval() {
+            stopAutoSlide();
+            startAutoSlide();
+        }
+        startAutoSlide();
+        sliderContainer.addEventListener('touchstart', resetInterval, { passive: true });
+
+        // ۸. اسکرول با دکمه‌های فلش و فیزیک اینرسی موس (Momentum)
+        function scrollTrack(trackId, direction) {
+            const track = document.getElementById(trackId);
+            const firstCard = track.firstElementChild;
+            if (!firstCard) return;
+            const scrollAmount = firstCard.offsetWidth + 14;
+            track.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
+        }
+
+        const scrollTracks = document.querySelectorAll('.h-scroll-track');
+        let isDown = false;
+        let startX, scrollLeft, velX = 0, momentumID;
+
+        scrollTracks.forEach(track => {
+            track.addEventListener('mousedown', (e) => {
+                isDown = true;
+                isDragging = false;
+                track.style.scrollBehavior = 'auto';
+                cancelAnimationFrame(momentumID);
+                startX = e.pageX - track.offsetLeft;
+                scrollLeft = track.scrollLeft;
+            });
+            track.addEventListener('mouseleave', () => {
+                if (!isDown) return;
+                isDown = false;
+                beginMomentum(track);
+            });
+            track.addEventListener('mouseup', () => {
+                if (!isDown) return;
+                isDown = false;
+                beginMomentum(track);
+                setTimeout(() => isDragging = false, 50);
+            });
+            track.addEventListener('mousemove', (e) => {
+                if (!isDown) return;
+                e.preventDefault();
+                const x = e.pageX - track.offsetLeft;
+                const walk = (x - startX) * 1.2;
+                if (Math.abs(walk) > 5) isDragging = true;
+                let prevScrollLeft = track.scrollLeft;
+                track.scrollLeft = scrollLeft - walk;
+                velX = track.scrollLeft - prevScrollLeft;
+            });
+        });
+
+        function beginMomentum(track) {
+            function step() {
+                track.scrollLeft += velX;
+                velX *= 0.90;
+                if (Math.abs(velX) > 0.5) {
+                    momentumID = requestAnimationFrame(step);
+                } else {
+                    track.style.scrollBehavior = 'smooth';
+                }
+            }
+            momentumID = requestAnimationFrame(step);
+        }
+
+        // ۹. مدیریت سبد خرید کشویی با دکمه‌های افزایش و کاهش تعداد (+ / -)
+        let cart = JSON.parse(localStorage.getItem('mega_abzar_cart') || '[]');
+
+        function toggleCart() {
+            document.getElementById('cartDrawer').classList.toggle('active');
+            document.getElementById('cartOverlay').classList.toggle('active');
+        }
+
+        document.querySelectorAll('.btn-add-cart').forEach((button) => {
+            button.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const card = button.closest('.product-card');
+                const title = card.querySelector('.product-name').innerText;
+                const priceText = card.querySelector('.new-price').innerText.replace(' تومان', '').replace(/,/g, '');
+                const image = card.querySelector('.product-image').src;
+                const englishPriceText = priceText.replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d));
+                const price = parseInt(englishPriceText) || 0;
+                
+                const existingItem = cart.find(item => item.title === title);
+                if (existingItem) {
+                    existingItem.quantity += 1;
+                } else {
+                    cart.push({ title, price, image, quantity: 1 });
+                }
+                
+                saveAndUpdateCart();
+                toggleCart();
+            });
+        });
+
+        function changeQuantity(index, delta) {
+            if (!cart[index]) return;
+            cart[index].quantity += delta;
+            if (cart[index].quantity <= 0) {
+                cart.splice(index, 1);
+            }
+            saveAndUpdateCart();
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            saveAndUpdateCart();
+        }
+
+        function saveAndUpdateCart() {
+            localStorage.setItem('mega_abzar_cart', JSON.stringify(cart));
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            const cartBody = document.getElementById('cartBody');
+            const cartCount = document.getElementById('cartCount');
+            const cartCountMobileBottom = document.getElementById('cartCountMobileBottom');
+            const cartTotalPrice = document.getElementById('cartTotalPrice');
+            
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const persianTotal = toPersianNum(totalItems);
+            
+            if (cartCount) cartCount.innerText = persianTotal;
+            if (cartCountMobileBottom) cartCountMobileBottom.innerText = persianTotal;
+
+            if (cart.length === 0) {
+                cartBody.innerHTML = `<p class="empty-cart-text">سبد خرید شما در حال حاضر خالی است.</p>`;
+                cartTotalPrice.innerText = '۰';
+                return;
+            }
+
+            let html = '';
+            let total = 0;
+            cart.forEach((item, index) => {
+                total += item.price * item.quantity;
+                html += `
+                    <div class="cart-item">
+                        <img src="${item.image}" alt="${item.title}" class="cart-item-img">
+                        <div class="cart-item-details">
+                            <h4 class="cart-item-title">${item.title}</h4>
+                            <div class="cart-item-price">${toPersianNum((item.price * item.quantity).toLocaleString())} تومان</div>
+                            <div class="cart-qty-controls">
+                                <button class="qty-btn" onclick="changeQuantity(${index}, 1)">+</button>
+                                <span class="qty-number">${toPersianNum(item.quantity)}</span>
+                                <button class="qty-btn" onclick="changeQuantity(${index}, -1)">−</button>
+                            </div>
+                        </div>
+                        <button class="cart-item-remove" onclick="removeFromCart(${index})" title="حذف از سبد">
+                            <img src="https://img.icons8.com/ios-glyphs/60/ffffff/trash--v1.png" alt="حذف">
+                        </button>
+                    </div>`;
+            });
+            cartBody.innerHTML = html;
+            cartTotalPrice.innerText = toPersianNum(total.toLocaleString());
+        }
+
+        updateCartUI();
+    </script>
+</body>
+</html>
