@@ -1,89 +1,490 @@
 <!DOCTYPE html>
 <html dir="rtl" lang="fa" data-theme="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>دریل چکشی دیوالت | مگا ابزار</title>
-    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        /* استفاده از متغیرهای رنگی قبلی برای یکپارچگی */
-        :root, [data-theme="dark"] {
-            --bg-color: #121212; --secondary-bg: #1a1a1a; --card-bg: #222222;
-            --accent-color: #e53935; --text-color: #ffffff; --text-muted: #b0b0b0;
-            --border-color: #333333; --image-bg: #2a2a2a;
-        }
-        body { font-family: 'Vazirmatn', Tahoma, sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; }
-
-        .page-transition {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-color: var(--bg-color); z-index: 9999;
-            display: flex; justify-content: center; align-items: center;
-            opacity: 1; visibility: visible;
-            transition: opacity 0.5s ease, visibility 0.5s ease;
-        }
-        .page-transition.loaded { opacity: 0; visibility: hidden; pointer-events: none; }
-        .transition-logo { width: 120px; animation: pulse 1s infinite alternate; }
-        @keyframes pulse { from { transform: scale(1); } to { transform: scale(1.15); } }
-
-        /* استایل اختصاصی صفحه محصول */
-        .header { background-color: var(--secondary-bg); border-bottom: 2px solid var(--accent-color); padding: 15px 30px; display: flex; justify-content: space-between; }
-        .back-btn { color: var(--text-color); text-decoration: none; display: flex; align-items: center; gap: 8px; font-weight: bold; }
-
-        .product-detail-container { max-width: 1200px; margin: 50px auto; padding: 0 30px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
-        .product-gallery { background-color: var(--image-bg); border: 1px solid var(--border-color); border-radius: 15px; padding: 40px; display: flex; justify-content: center; align-items: center; }
-        .product-gallery img { max-width: 100%; animation: floatIn 0.8s ease-out; }
-        @keyframes floatIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-
-        .product-specs h1 { font-size: 32px; margin-top: 0; }
-        .brand-badge { display: inline-block; background: var(--card-bg); border: 1px solid var(--border-color); padding: 5px 15px; border-radius: 20px; font-weight: bold; margin-bottom: 15px; color: var(--text-muted); }
-        .price-box { margin: 30px 0; font-size: 28px; font-weight: bold; color: var(--accent-color); }
-        .btn-large-buy { width: 100%; background: var(--accent-color); color: #fff; border: none; padding: 15px; border-radius: 10px; font-size: 18px; font-weight: bold; cursor: pointer; transition: opacity 0.3s; }
-        .btn-large-buy:hover { opacity: 0.9; }
-
-        @media (max-width: 992px) {
-            .product-detail-container { grid-template-columns: 1fr; margin: 20px auto; padding: 0 15px; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>دریل چکشی دیوالت مدل DWD024 | مگا ابزار</title>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root, [data-theme="dark"] {
+--bg-color: #121212;
+--secondary-bg: #1a1a1a;
+--card-bg: #222222;
+--accent-color: #e53935;
+--text-color: #ffffff;
+--text-muted: #b0b0b0;
+--border-color: #333333;
+--image-bg: #2a2a2a;
+--icon-filter: invert(75%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(95%) contrast(90%);
+--icon-active-filter: invert(30%) sepia(85%) saturate(3000%) hue-rotate(345deg) brightness(95%) contrast(95%);
+}
+[data-theme="light"] {
+--bg-color: #f5f5f5;
+--secondary-bg: #ffffff;
+--card-bg: #ffffff;
+--accent-color: #d32f2f;
+--text-color: #212529;
+--text-muted: #6c757d;
+--border-color: #e0e0e0;
+--image-bg: #f8f9fa;
+--icon-filter: invert(35%) sepia(10%) saturate(300%) hue-rotate(175deg) brightness(90%) contrast(85%);
+--icon-active-filter: invert(24%) sepia(90%) saturate(3500%) hue-rotate(350deg) brightness(88%) contrast(95%);
+}
+[data-theme="navy"] {
+--bg-color: #0f172a;
+--secondary-bg: #1e293b;
+--card-bg: #27354f;
+--accent-color: #f59e0b;
+--text-color: #f8fafc;
+--text-muted: #94a3b8;
+--border-color: #334155;
+--image-bg: #1e293b;
+--icon-filter: invert(65%) sepia(15%) saturate(400%) hue-rotate(175deg) brightness(95%) contrast(90%);
+--icon-active-filter: invert(65%) sepia(85%) saturate(1500%) hue-rotate(355deg) brightness(100%) contrast(95%);
+}
+* { box-sizing: border-box; outline: none; }
+body { font-family: 'Vazirmatn', Tahoma, sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 0; overflow-x: hidden; transition: background-color 0.4s ease, color 0.4s ease; }
+/* لایه ترنزیشن صفحه */
+.page-transition { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--bg-color); z-index: 9999; display: flex; justify-content: center; align-items: center; opacity: 1; visibility: visible; transition: opacity 0.35s ease, visibility 0.35s ease; animation: forceHideTransition 0.4s ease 0.5s forwards; }
+@keyframes forceHideTransition { to { opacity: 0; visibility: hidden; pointer-events: none; } }
+.page-transition.loaded { opacity: 0 !important; visibility: hidden !important; pointer-events: none !important; display: none !important; }
+.page-transition.active { display: flex !important; opacity: 1 !important; visibility: visible !important; pointer-events: auto !important; animation: none !important; }
+.transition-logo { width: 110px; animation: pulse 0.8s infinite alternate; }
+@keyframes pulse { from { transform: scale(1); } to { transform: scale(1.12); } }
+/* هدر سایت */
+.header { background-color: var(--secondary-bg); border-bottom: 2px solid var(--accent-color); position: sticky; top: 0; z-index: 1000; transition: background-color 0.4s ease, border-color 0.4s ease; }
+.header-container { display: flex; align-items: center; justify-content: space-between; padding: 10px 30px; max-width: 1400px; margin: 0 auto; flex-wrap: wrap; gap: 15px; }
+.logo-img { height: 60px; width: auto; object-fit: contain; }
+.menu-toggle { display: none; font-size: 24px; cursor: pointer; color: var(--text-color); user-select: none; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 10px; width: 42px; height: 42px; align-items: center; justify-content: center; }
+.nav-wrapper { display: flex; align-items: center; flex-grow: 1; justify-content: space-between; margin-right: 25px; }
+.nav-menu { display: flex; gap: 20px; list-style: none; margin: 0; padding: 0; }
+.nav-menu > li > a { color: var(--text-color); text-decoration: none; font-size: 15px; padding: 10px 0; display: flex; align-items: center; gap: 5px; cursor: pointer; transition: color 0.3s; }
+.nav-menu > li > a:hover { color: var(--accent-color); }
+.search-container { position: relative; flex-grow: 1; max-width: 440px; margin: 0 20px; }
+.search-box-wrapper { position: relative; width: 100%; display: flex; align-items: center; }
+.search-bar { width: 100%; background-color: var(--bg-color); border: 1.5px solid var(--border-color); border-radius: 14px; padding: 11px 42px 11px 18px; color: var(--text-color); font-family: inherit; font-size: 14px; transition: all 0.3s; }
+.search-bar:focus { border-color: var(--accent-color); box-shadow: 0 0 0 3px rgba(229, 57, 53, 0.15); }
+.search-icon-inline { position: absolute; right: 14px; width: 18px; height: 18px; filter: var(--icon-filter); pointer-events: none; z-index: 2; }
+.custom-search-placeholder { position: absolute; right: 42px; top: 50%; transform: translateY(-50%); pointer-events: none; display: flex; align-items: center; gap: 5px; font-size: 13.5px; color: var(--text-muted); }
+.custom-search-placeholder .brand-highlight { font-weight: 900; font-size: 15px; color: var(--accent-color); }
+.search-bar:focus + .custom-search-placeholder, .search-bar:not(:placeholder-shown) + .custom-search-placeholder { opacity: 0; visibility: hidden; }
+.header-actions { display: flex; gap: 10px; align-items: center; }
+.btn-action { background-color: transparent; color: var(--text-color); border: 1px solid var(--border-color); padding: 8px 16px; border-radius: 20px; cursor: pointer; font-family: inherit; font-size: 14px; transition: all 0.3s; display: flex; align-items: center; gap: 6px; }
+select.btn-action { appearance: none; background-color: var(--secondary-bg); padding-left: 25px; cursor: pointer; }
+.btn-primary { background-color: var(--accent-color); border-color: var(--accent-color); color: #fff !important; font-weight: 700; }
+/* بردکرامب */
+.breadcrumb-container { max-width: 1400px; margin: 20px auto 0 auto; padding: 0 30px; font-size: 13px; color: var(--text-muted); display: flex; gap: 8px; align-items: center; }
+.breadcrumb-container a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+.breadcrumb-container a:hover { color: var(--accent-color); }
+/* بدنه صفحه محصول */
+.product-main-wrapper { max-width: 1400px; margin: 20px auto 40px auto; padding: 0 30px; display: grid; grid-template-columns: 480px 1fr 340px; gap: 30px; align-items: start; }
+/* گالری تصاویر محصول و زوم ذره‌بینی */
+.product-gallery-section { display: flex; flex-direction: column; gap: 15px; position: sticky; top: 95px; }
+.main-image-container { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; height: 420px; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; cursor: crosshair; }
+.main-product-img { max-width: 85%; max-height: 85%; object-fit: contain; transition: transform 0.3s ease; }
+.thumb-list { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; }
+.thumb-list::-webkit-scrollbar { display: none; }
+.thumb-item { flex: 0 0 80px; height: 80px; background-color: var(--card-bg); border: 1.5px solid var(--border-color); border-radius: 10px; overflow: hidden; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: border-color 0.2s; }
+.thumb-item.active, .thumb-item:hover { border-color: var(--accent-color); }
+.thumb-item img { width: 80%; height: 80%; object-fit: contain; }
+/* اطلاعات میانی محصول */
+.product-details-section { display: flex; flex-direction: column; gap: 20px; }
+.product-main-title { font-size: 22px; font-weight: 900; margin: 0; line-height: 1.5; }
+.product-meta-row { display: flex; align-items: center; gap: 20px; font-size: 13px; color: var(--text-muted); }
+.product-rating { color: #f59e0b; font-weight: 800; display: flex; align-items: center; gap: 4px; }
+.variants-box { background-color: var(--secondary-bg); border: 1px solid var(--border-color); border-radius: 14px; padding: 18px; display: flex; flex-direction: column; gap: 14px; }
+.variant-title { font-size: 14px; font-weight: 800; }
+.variant-options { display: flex; gap: 10px; flex-wrap: wrap; }
+.variant-chip { background-color: var(--card-bg); border: 1.5px solid var(--border-color); color: var(--text-color); padding: 8px 16px; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+.variant-chip.active, .variant-chip:hover { border-color: var(--accent-color); color: var(--accent-color); background-color: rgba(229, 57, 53, 0.05); }
+.features-bullet-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; font-size: 13.5px; color: var(--text-muted); }
+.features-bullet-list li { display: flex; align-items: center; gap: 8px; }
+.features-bullet-list li::before { content: '•'; color: var(--accent-color); font-weight: 900; font-size: 18px; }
+/* باکس خرید سمت چپ (Buy Box) */
+.buy-box { background-color: var(--secondary-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 22px; display: flex; flex-direction: column; gap: 18px; position: sticky; top: 95px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+.stock-status { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; color: #10b981; }
+.stock-dot { width: 9px; height: 9px; background-color: #10b981; border-radius: 50%; box-shadow: 0 0 8px #10b981; }
+.buy-box-price { display: flex; flex-direction: column; align-items: flex-end; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; }
+.buy-old-price { color: var(--text-muted); text-decoration: line-through; font-size: 13px; margin-bottom: 4px; }
+.buy-new-price { font-size: 22px; font-weight: 900; color: var(--text-color); }
+.btn-add-to-cart-lg { width: 100%; background-color: var(--accent-color); color: #fff; border: none; padding: 14px; border-radius: 12px; font-family: inherit; font-size: 15px; font-weight: 900; cursor: pointer; transition: opacity 0.3s, transform 0.2s; display: flex; justify-content: center; align-items: center; gap: 8px; }
+.btn-add-to-cart-lg:hover { opacity: 0.9; transform: translateY(-2px); }
+/* بخش تب‌های مشخصات، توضیحات و نظرات پایین صفحه */
+.product-tabs-wrapper { max-width: 1400px; margin: 40px auto; padding: 0 30px; }
+.tabs-header { display: flex; gap: 15px; border-bottom: 2px solid var(--border-color); margin-bottom: 25px; }
+.tab-btn { background: none; border: none; color: var(--text-muted); font-family: inherit; font-size: 16px; font-weight: 800; padding: 12px 20px; cursor: pointer; position: relative; transition: color 0.3s; }
+.tab-btn.active { color: var(--accent-color); }
+.tab-btn.active::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 100%; height: 3px; background-color: var(--accent-color); border-radius: 2px; }
+.tab-content { display: none; background-color: var(--secondary-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 25px; }
+.tab-content.active { display: block; animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.specs-table { width: 100%; border-collapse: collapse; }
+.specs-table tr { border-bottom: 1px solid var(--border-color); }
+.specs-table tr:last-child { border-bottom: none; }
+.specs-table td { padding: 14px 10px; font-size: 14px; }
+.specs-table td:first-child { color: var(--text-muted); font-weight: 700; width: 30%; }
+.specs-table td:last-child { font-weight: 800; }
+/* فوتر و سبد خرید مشابه صفحه اصلی */
+.footer { background-color: var(--secondary-bg); border-top: 1px solid var(--border-color); margin-top: 60px; padding-top: 30px; color: var(--text-color); }
+.footer-container { max-width: 1400px; margin: 0 auto; padding: 0 30px; }
+.footer-bottom { background-color: var(--bg-color); padding: 20px 30px; text-align: center; font-size: 13px; color: var(--text-muted); border-top: 1px solid var(--border-color); }
+.cart-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); z-index: 2000; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease; }
+.cart-overlay.active { opacity: 1; visibility: visible; }
+.cart-drawer { position: fixed; top: 0; left: -420px; width: 390px; max-width: 90%; height: 100%; background-color: var(--secondary-bg); border-right: 1px solid var(--border-color); z-index: 2100; display: flex; flex-direction: column; transition: left 0.4s cubic-bezier(0.16, 1, 0.3, 1); box-shadow: -5px 0 25px rgba(0,0,0,0.5); }
+.cart-drawer.active { left: 0; }
+.cart-header { padding: 20px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
+.cart-title { font-size: 18px; font-weight: 700; margin: 0; }
+.cart-close { background: none; border: none; color: var(--text-color); font-size: 22px; cursor: pointer; }
+.cart-body { padding: 20px; flex-grow: 1; overflow-y: auto; }
+.empty-cart-text { text-align: center; color: var(--text-muted); margin-top: 50px; font-size: 14px; }
+.cart-item { display: flex; gap: 12px; align-items: center; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid var(--border-color); }
+.cart-item-img { width: 64px; height: 64px; object-fit: cover; background-color: var(--image-bg); border-radius: 8px; flex-shrink: 0; }
+.cart-item-details { flex-grow: 1; }
+.cart-item-title { font-size: 13px; font-weight: 700; margin: 0 0 6px 0; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
+.cart-item-price { font-size: 14px; color: var(--accent-color); font-weight: 800; margin-bottom: 8px; }
+.cart-qty-controls { display: flex; align-items: center; gap: 8px; }
+.qty-btn { width: 26px; height: 26px; border-radius: 6px; border: 1px solid var(--border-color); background-color: var(--card-bg); color: var(--text-color); font-size: 15px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.qty-number { font-size: 13px; font-weight: 700; min-width: 20px; text-align: center; }
+.cart-item-remove { background: none; border: none; cursor: pointer; padding: 6px; opacity: 0.7; }
+.cart-item-remove img { width: 18px; height: 18px; filter: var(--icon-filter); }
+.cart-footer { padding: 20px; border-top: 1px solid var(--border-color); background-color: var(--bg-color); }
+.cart-total { display: flex; justify-content: space-between; margin-bottom: 15px; font-size: 15px; font-weight: 700; }
+.btn-checkout { width: 100%; background-color: var(--accent-color); color: #fff; border: none; padding: 12px; border-radius: 8px; font-family: inherit; font-size: 15px; font-weight: 700; cursor: pointer; }
+/* نوار پایین موبایل */
+.mobile-bottom-nav { display: none; }
+@media (max-width: 992px) {
+body { padding-bottom: 68px; }
+.header-container { padding: 10px 15px; gap: 8px; }
+.logo { display: none; }
+.menu-toggle { display: flex; order: 1; }
+.search-container { order: 2; flex-grow: 1; max-width: calc(100% - 52px); margin: 0; }
+.nav-wrapper { display: none !important; }
+.product-main-wrapper { grid-template-columns: 1fr; gap: 20px; padding: 0 15px; }
+.product-gallery-section { position: static; }
+.main-image-container { height: 300px; }
+.buy-box { position: static; box-shadow: none; }
+.product-tabs-wrapper { padding: 0 15px; }
+.mobile-bottom-nav { display: flex; position: fixed; bottom: 0; left: 0; width: 100%; height: 64px; background-color: var(--secondary-bg); border-top: 1px solid var(--border-color); z-index: 1500; justify-content: space-around; align-items: center; box-shadow: 0 -4px 18px rgba(0,0,0,0.35); }
+.bottom-nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; text-decoration: none; color: var(--text-muted); font-size: 11px; font-weight: 600; position: relative; flex: 1; height: 100%; }
+.bottom-nav-icon-img { width: 23px; height: 23px; object-fit: contain; margin-bottom: 4px; filter: var(--icon-filter); }
+.bottom-nav-item.active { color: var(--accent-color); }
+.bottom-nav-item.active .bottom-nav-icon-img { filter: var(--icon-active-filter); }
+.mobile-cart-badge { position: absolute; top: 6px; right: calc(50% - 18px); background-color: var(--accent-color); color: #fff; font-size: 10px; min-width: 17px; height: 17px; padding: 0 4px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; }
+}
+</style>
 </head>
 <body>
-
-    <!-- لایه ترنزیشن برای ورود نرم به این صفحه -->
-    <div class="page-transition" id="pageTransition">
-        <img src="image.png" alt="مگا ابزار" class="transition-logo">
-    </div>
-
-    <header class="header">
-        <a href="index.html" class="back-btn">❮ بازگشت به فروشگاه</a>
-        <img src="image.png" alt="مگا ابزار" style="height: 40px;">
-    </header>
-
-    <main class="product-detail-container">
-        <div class="product-gallery">
-            <!-- تصویر بزرگ محصول -->
-            <img src="https://images.unsplash.com/photo-1504148455328-c376907d081c?q=80&w=800&auto=format&fit=crop" alt="دریل چکشی">
-        </div>
-        <div class="product-specs">
-            <span class="brand-badge">برند: DEWALT</span>
-            <h1>دریل چکشی دیوالت مدل DWD024 سه نظام آچاری</h1>
-            <p style="color: var(--text-muted); line-height: 1.8; margin-bottom: 30px;">
-                این دریل با موتور قدرتمند ۷۵۰ وات و قابلیت چکشی، انتخابی ایده‌آل برای مصارف سنگین صنعتی و سوراخ‌کاری در بتن و فلز است. دارای سیستم خنک‌کننده پیشرفته و طراحی ارگونومیک برای جلوگیری از خستگی کاربر.
-            </p>
-            <ul style="color: var(--text-muted); line-height: 2.2;">
-                <li>توان خروجی: ۷۵۰ وات واقعی</li>
-                <li>سرعت در حالت آزاد: ۰ تا ۲۸۰۰ دور در دقیقه</li>
-                <li>وزن دستگاه: ۱.۸ کیلوگرم (بسیار سبک)</li>
-                <li>گارانتی: ۱۲ ماه شرکتی</li>
-            </ul>
-            <div class="price-box">۳,۸۲۵,۰۰۰ تومان</div>
-            <button class="btn-large-buy">افزودن به سبد خرید</button>
-        </div>
-    </main>
-
-    <script>
-        // با لود شدن این صفحه، لایه ترنزیشن محو می‌شود و محتوای صفحه با یک افکت نرم نمایان می‌گردد
-        window.addEventListener('load', () => {
-            document.getElementById('pageTransition').classList.add('loaded');
-        });
-    </script>
+<!-- ترنزیشن لودینگ صفحه -->
+<div class="page-transition" id="pageTransition">
+<img src="image.png" alt="مگا ابزار" class="transition-logo" onerror="this.onerror=null; this.src='https://img.icons8.com/ios-filled/100/e53935/maintenance.png';">
+</div>
+<script>
+setTimeout(function() {
+var pt = document.getElementById('pageTransition');
+if (pt) pt.classList.add('loaded');
+}, 180);
+</script>
+<!-- هدر سایت -->
+<header class="header">
+<div class="header-container">
+<a href="index.html" class="logo">
+<img src="image.png" alt="مگا ابزار" class="logo-img" onerror="this.onerror=null; this.src='https://img.icons8.com/ios-filled/100/e53935/maintenance.png';">
+</a>
+<div class="menu-toggle" onclick="window.location.href='index.html'">🏠</div>
+<div class="search-container">
+<div class="search-box-wrapper">
+<img src="https://img.icons8.com/ios-glyphs/60/ffffff/search--v1.png" alt="جستجو" class="search-icon-inline">
+<input type="text" id="searchInput" class="search-bar" placeholder=" " autocomplete="off">
+<div class="custom-search-placeholder">
+<span>جستجو در</span>
+<span class="brand-highlight">مگا ابزار</span>
+</div>
+</div>
+</div>
+<div class="nav-wrapper" id="navWrapper">
+<nav>
+<ul class="nav-menu">
+<li><a href="index.html">صفحه اصلی</a></li>
+<li><a href="catalog.html">کاتالوگ محصولات</a></li>
+<li><a href="index.html#megaOfferSection">حراج شگفت‌انگیز</a></li>
+<li><a href="contact.html">تماس با ما</a></li>
+</ul>
+</nav>
+<div class="header-actions">
+<select id="themeSelector" class="btn-action" onchange="applyTheme(this.value)">
+<option value="dark">🌙 تاریک</option>
+<option value="light">☀️ روشن</option>
+<option value="navy">👷‍♂️ سرمه‌ای</option>
+</select>
+<button class="btn-action btn-primary" onclick="toggleCart()">سبد خرید (<span id="cartCount">۰</span>)</button>
+</div>
+</div>
+</div>
+</header>
+<!-- بردکرامب -->
+<div class="breadcrumb-container">
+<a href="index.html">خانه</a>
+<span>/</span>
+<a href="catalog.html?cat=power-tools">ابزار برقی و شارژی</a>
+<span>/</span>
+<span style="color: var(--text-color);">دریل چکشی دیوالت مدل DWD024</span>
+</div>
+<!-- بدنه اصلی صفحه محصول -->
+<main class="product-main-wrapper">
+<!-- ۱. گالری تصاویر محصول -->
+<div class="product-gallery-section">
+<div class="main-image-container" id="zoomContainer">
+<img src="https://images.unsplash.com/photo-1504148455328-c376907d081c?q=80&w=800&auto=format&fit=crop" alt="دریل چکشی دیوالت" class="main-product-img" id="mainProductImg">
+</div>
+<div class="thumb-list">
+<div class="thumb-item active" onclick="changeImage(this, 'https://images.unsplash.com/photo-1504148455328-c376907d081c?q=80&w=800&auto=format&fit=crop')">
+<img src="https://images.unsplash.com/photo-1504148455328-c376907d081c?q=80&w=200&auto=format&fit=crop" alt="نما ۱">
+</div>
+<div class="thumb-item" onclick="changeImage(this, 'https://images.unsplash.com/photo-1572981779307-38b8cabb2407?q=80&w=800&auto=format&fit=crop')">
+<img src="https://images.unsplash.com/photo-1572981779307-38b8cabb2407?q=80&w=200&auto=format&fit=crop" alt="نما ۲">
+</div>
+<div class="thumb-item" onclick="changeImage(this, 'https://images.unsplash.com/photo-1581092335397-9583eb92d232?q=80&w=800&auto=format&fit=crop')">
+<img src="https://images.unsplash.com/photo-1581092335397-9583eb92d232?q=80&w=200&auto=format&fit=crop" alt="نما ۳">
+</div>
+</div>
+</div>
+<!-- ۲. اطلاعات و مشخصات میانی محصول -->
+<div class="product-details-section">
+<span style="color: var(--accent-color); font-weight: 800; font-size: 12px; text-transform: uppercase;">برند اصلی: DEWALT</span>
+<h1 class="product-main-title">دریل چکشی دیوالت مدل DWD024 توان ۶۵۰ وات اورجینال</h1>
+<div class="product-meta-row">
+<div class="product-rating">⭐ ۴.۹ (از ۲۸ دیدگاه کاربران)</div>
+<div>کد کالا: <strong style="color: var(--text-color);">MEGA-DW-024</strong></div>
+</div>
+<!-- انتخاب نوع سه نظام -->
+<div class="variants-box">
+<span class="variant-title">انتخاب نوع سه نظام:</span>
+<div class="variant-options">
+<button class="variant-chip active" onclick="selectVariant(this)">سه نظام آچاری ۱۳ میلی‌متری</button>
+<button class="variant-chip" onclick="selectVariant(this)">سه نظام اتوماتیک پلاس</button>
+</div>
+</div>
+<!-- انتخاب گارانتی -->
+<div class="variants-box">
+<span class="variant-title">انتخاب گارانتی و ضمانت اصالت:</span>
+<div class="variant-options">
+<button class="variant-chip active" onclick="selectVariant(this)">گارانتی ۱۸ ماهه شرکتی + اصالت بانه</button>
+<button class="variant-chip" onclick="selectVariant(this)">۲ سال ضمانت تعویض قطعات صنعتی</button>
+</div>
+</div>
+<div>
+<h4 style="margin: 0 0 10px 0; font-size: 14px;">ویژگی‌های برجسته محصول:</h4>
+<ul class="features-bullet-list">
+<li>موتور پرقدرت ۶۵۰ وات واقعی با قابلیت کنترل سرعت (دیمردار)</li>
+<li>طراحی ارگونومیک، ضد لرزش و بسیار خوش‌دست برای کار طولانی</li>
+<li>دارای کلید چپ‌گرد/راست‌گرد و قفل سوییچ برای کارهای مداوم</li>
+<li>تامین مستقیم از بانه با تضمین ۱۰۰٪ اصالت فیزیکی کالا</li>
+</ul>
+</div>
+</div>
+<!-- ۳. باکس خرید سمت چپ (Buy Box) -->
+<div class="buy-box">
+<div class="stock-status">
+<div class="stock-dot"></div>
+<span>موجود در انبار بانه (ارسال فوری)</span>
+</div>
+<div class="buy-box-price">
+<span class="buy-old-price">۴,۵۰۰,۰۰۰ تومان</span>
+<span class="buy-new-price">۳,۸۲۵,۰۰۰ تومان</span>
+</div>
+<button class="btn-add-to-cart-lg" onclick="addProductToCart()">
+🛒 افزودن به سبد خرید
+</button>
+<div style="font-size: 12px; color: var(--text-muted); line-height: 1.6; text-align: center; border-top: 1px solid var(--border-color); pt-3;">
+🛡️ ۷ روز ضمانت بازگشت وجه در صورت مغایرت کالا
+</div>
+</div>
+</main>
+<!-- تب‌های پایین صفحه (مشخصات، توضیحات، نظرات) -->
+<div class="product-tabs-wrapper">
+<div class="tabs-header">
+<button class="tab-btn active" onclick="switchTab(event, 'tabSpecs')">مشخصات فنی</button>
+<button class="tab-btn" onclick="switchTab(event, 'tabDesc')">توضیحات تخصصی</button>
+<button class="tab-btn" onclick="switchTab(event, 'tabReviews')">نظرات کاربران (۲۸)</button>
+</div>
+<!-- محتوای مشخصات فنی -->
+<div id="tabSpecs" class="tab-content active">
+<table class="specs-table">
+<tr><td>برند سازنده</td><td>دیوالت (DEWALT)</td></tr>
+<tr><td>مدل دستگاه</td><td>DWD024</td></tr>
+<tr><td>توان الکتریکی</td><td>۶۵۰ وات</td></tr>
+<tr><td>سرعت در حالت آزاد</td><td>۰ تا ۲۸۰۰ دور در دقیقه</td></tr>
+<tr><td>نرخ ضربه در دقیقه</td><td>۰ تا ۴۷۶۰۰ ضربه در دقیقه</td></tr>
+<tr><td>حداکثر قطر سوراخکاری در چوب</td><td>۲۵ میلی‌متر</td></tr>
+<tr><td>حداکثر قطر سوراخکاری در فلز</td><td>۱۳ میلی‌متر</td></tr>
+<tr><td>وزن دستگاه</td><td>۱.۸ کیلوگرم</td></tr>
+<tr><td>کشور سازنده</td><td>تحت لیسانس آمریکا (ساخت چین درجه یک)</td></tr>
+</table>
+</div>
+<!-- محتوای توضیحات تخصصی -->
+<div id="tabDesc" class="tab-content">
+<h3 style="margin-top: 0; color: var(--accent-color);">بررسی تخصصی دریل چکشی دیوالت DWD024</h3>
+<p style="line-height: 1.8; font-size: 14px; color: var(--text-muted);">
+دریل چکشی دیوالت مدل DWD024 یکی از محبوب‌ترین و پرفروش‌ترین ابزارهای برقی در کارگاه‌های ساختمانی و صنعتی است. وزن سبک ۱.۸ کیلوگرمی این دستگاه در کنار موتور ۶۵۰ واتی قدرتمند آن باعث شده است تا تکنسین‌ها برای سوراخکاری‌های طولانی مدت دچار خستگی دست نشوند. سیستم مته‌گیر و سه نظام آچاری مستحکم این دریل توانایی بالایی در تحمل فشار وارد شده در حالت چکشی دارد.
+</p>
+</div>
+<!-- محتوای نظرات -->
+<div id="tabReviews" class="tab-content">
+<h3 style="margin-top: 0;">دیدگاه‌های خریداران</h3>
+<p style="font-size: 13.5px; color: var(--text-muted);">«واقعاً دستگاه خوش‌دستیه، توی کارگاه مرتب ازش استفاده می‌کنم و قدرت ضربش عالیه.» — مهدی مرادی از تهران</p>
+<hr style="border: 0; border-top: 1px solid var(--border-color); margin: 15px 0;">
+<p style="font-size: 13.5px; color: var(--text-muted);">«اصالت کالا توسط کارشناس بررسی شد و کاملاً اورجینال بود. ممنون از مگا ابزار.» — کیوان صیادی</p>
+</div>
+</div>
+<!-- فوتر فروشگاه -->
+<footer class="footer">
+<div class="footer-container">
+<div class="footer-bottom">
+کلیه حقوق مادی و معنوی این سایت متعلق به فروشگاه آنلاین «مگا ابزار» می‌باشد. توسعه اختصاصی بدون فریم‌ورک.
+</div>
+</div>
+</footer>
+<!-- کشوی سبد خرید -->
+<div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+<div class="cart-drawer" id="cartDrawer">
+<div class="cart-header">
+<h3 class="cart-title">سبد خرید شما</h3>
+<button class="cart-close" onclick="toggleCart()">✕</button>
+</div>
+<div class="cart-body" id="cartBody">
+<p class="empty-cart-text">سبد خرید شما در حال حاضر خالی است.</p>
+</div>
+<div class="cart-footer">
+<div class="cart-total">
+<span>مبلغ قابل پرداخت:</span>
+<span><span id="cartTotalPrice">۰</span> تومان</span>
+</div>
+<button class="btn-checkout" onclick="window.location.href='checkout.html'">تکمیل خرید و ثبت سفارش</button>
+</div>
+</div>
+<!-- ناوبری پایین موبایل -->
+<nav class="mobile-bottom-nav">
+<a href="index.html" class="bottom-nav-item">
+<img src="https://img.icons8.com/ios-filled/64/ffffff/home.png" alt="خانه" class="bottom-nav-icon-img">
+<span>خانه</span>
+</a>
+<a href="index.html" class="bottom-nav-item">
+<img src="https://img.icons8.com/ios-filled/64/ffffff/categorize.png" alt="دسته‌بندی" class="bottom-nav-icon-img">
+<span>دسته‌بندی</span>
+</a>
+<a href="#" class="bottom-nav-item active" onclick="toggleCart(); return false;">
+<img src="https://img.icons8.com/ios-filled/64/ffffff/shopping-cart.png" alt="سبد خرید" class="bottom-nav-icon-img">
+<span>سبد خرید</span>
+<span class="mobile-cart-badge" id="cartCountMobileBottom">۰</span>
+</a>
+<a href="profile.html" class="bottom-nav-item">
+<img src="https://img.icons8.com/ios-filled/64/ffffff/user-male-circle.png" alt="حساب" class="bottom-nav-icon-img">
+<span>حساب</span>
+</a>
+</nav>
+<!-- اسکریپت‌های صفحه محصول -->
+<script>
+const toPersianNum = num => num.toString().replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
+// تغییر تصویر اصلی گالری با کلیک روی تامبنیل
+function changeImage(thumbElement, imgSrc) {
+document.querySelectorAll('.thumb-item').forEach(el => el.classList.remove('active'));
+thumbElement.classList.add('active');
+document.getElementById('mainProductImg').src = imgSrc;
+}
+// زوم ذره‌بینی (Lens Zoom) روی عکس محصول هنگام هاور موس
+const zoomContainer = document.getElementById('zoomContainer');
+const mainProductImg = document.getElementById('mainProductImg');
+zoomContainer.addEventListener('mousemove', function(e) {
+const rect = this.getBoundingClientRect();
+const x = ((e.clientX - rect.left) / rect.width) * 100;
+const y = ((e.clientY - rect.top) / rect.height) * 100;
+mainProductImg.style.transformOrigin = ⁠${x}% ${y}%⁠;
+mainProductImg.style.transform = 'scale(2.2)';
+});
+zoomContainer.addEventListener('mouseleave', function() {
+mainProductImg.style.transformOrigin = 'center center';
+mainProductImg.style.transform = 'scale(1)';
+});
+// انتخاب وپینت چیپ‌های گارانتی یا سه نظام
+function selectVariant(button) {
+button.parentElement.querySelectorAll('.variant-chip').forEach(btn => btn.classList.remove('active'));
+button.classList.add('active');
+}
+// سوئیچ بین تب‌های پایین صفحه
+function switchTab(evt, tabId) {
+document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+document.getElementById(tabId).classList.add('active');
+evt.currentTarget.classList.add('active');
+}
+// اعمال تم
+function applyTheme(themeVal) {
+document.documentElement.setAttribute('data-theme', themeVal);
+localStorage.setItem('mega_abzar_theme', themeVal);
+const desktopSelect = document.getElementById('themeSelector');
+if (desktopSelect) desktopSelect.value = themeVal;
+}
+const savedTheme = localStorage.getItem('mega_abzar_theme');
+if (savedTheme) applyTheme(savedTheme);
+// مدیریت سبد خرید با LocalStorage
+let cart = JSON.parse(localStorage.getItem('mega_abzar_cart') || '[]');
+function toggleCart() {
+document.getElementById('cartDrawer').classList.toggle('active');
+document.getElementById('cartOverlay').classList.toggle('active');
+}
+function addProductToCart() {
+const title = document.querySelector('.product-main-title').innerText;
+const price = 3825000;
+const image = document.getElementById('mainProductImg').src;
+const existingItem = cart.find(item => item.title === title);
+if (existingItem) {
+existingItem.quantity += 1;
+} else {
+cart.push({ title, price, image, quantity: 1 });
+}
+saveAndUpdateCart();
+toggleCart();
+}
+function changeQuantity(index, delta) {
+if (!cart[index]) return;
+cart[index].quantity += delta;
+if (cart[index].quantity <= 0) {
+cart.splice(index, 1);
+}
+saveAndUpdateCart();
+}
+function removeFromCart(index) {
+cart.splice(index, 1);
+saveAndUpdateCart();
+}
+function saveAndUpdateCart() {
+localStorage.setItem('mega_abzar_cart', JSON.stringify(cart));
+updateCartUI();
+}
+function updateCartUI() {
+const cartBody = document.getElementById('cartBody');
+const cartCount = document.getElementById('cartCount');
+const cartCountMobileBottom = document.getElementById('cartCountMobileBottom');
+const cartTotalPrice = document.getElementById('cartTotalPrice');
+const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+const persianTotal = toPersianNum(totalItems);
+if (cartCount) cartCount.innerText = persianTotal;
+if (cartCountMobileBottom) cartCountMobileBottom.innerText = persianTotal;
+if (cart.length === 0) {
+cartBody.innerHTML = ⁠<p class="empty-cart-text">سبد خرید شما در حال حاضر خالی است.</p>⁠;
+cartTotalPrice.innerText = '۰';
+return;
+}
+let html = '';
+let total = 0;
+cart.forEach((item, index) => {
+total += item.price * item.quantity;
+html += ⁠ <div class="cart-item"> <img src="${item.image}" alt="${item.title}" class="cart-item-img"> <div class="cart-item-details"> <h4 class="cart-item-title">${item.title}</h4> <div class="cart-item-price">${toPersianNum((item.price * item.quantity).toLocaleString())} تومان</div> <div class="cart-qty-controls"> <button class="qty-btn" onclick="changeQuantity(${index}, 1)">+</button> <span class="qty-number">${toPersianNum(item.quantity)}</span> <button class="qty-btn" onclick="changeQuantity(${index}, -1)">−</button> </div> </div> <button class="cart-item-remove" onclick="removeFromCart(${index})" title="حذف"> <img src="https://img.icons8.com/ios-glyphs/60/ffffff/trash--v1.png" alt="حذف"> </button> </div>⁠;
+});
+cartBody.innerHTML = html;
+cartTotalPrice.innerText = toPersianNum(total.toLocaleString());
+}
+updateCartUI();
+</script>
 </body>
 </html>
