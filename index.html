@@ -1122,32 +1122,35 @@
             margin: 0 auto;
             padding: 0 30px;
         }
-        .footer-features {
-            display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 20px;
-            padding-bottom: 30px;
-            border-bottom: 1px solid var(--border-color);
-            margin-bottom: 30px;
-        }
-        .feature-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            flex: 1 1 200px;
-            justify-content: center;
-        }
-        .feature-icon {
-            width: 34px;
-            height: 34px;
-            filter: var(--icon-active-filter);
-        }
-        .feature-text {
-            font-size: 14px;
-            font-weight: 700;
-            color: var(--text-color);
-        }
+        @media (max-width: 992px) {
+    /* تنظیم بخش ویژگی‌های فوتر به صورت گرید ۲ در ۲ فشرده و زیبا در موبایل */
+    .footer-features {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 12px !important;
+        padding-bottom: 20px !important;
+        margin-bottom: 20px !important;
+    }
+    .feature-item {
+        background-color: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 10px;
+        padding: 12px 10px;
+        flex-direction: column;
+        text-align: center;
+        gap: 8px !important;
+        justify-content: center;
+    }
+    .feature-icon {
+        width: 28px !important;
+        height: 28px !important;
+    }
+    .feature-text {
+        font-size: 11.5px !important;
+        line-height: 1.4;
+    }
+}
+ 
         .footer-main {
             display: flex;
             flex-wrap: wrap;
