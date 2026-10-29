@@ -1088,7 +1088,29 @@
         .cart-footer { padding: 18px; border-top: 1px solid var(--border-color); background-color: var(--bg-color); }
         .cart-total { display: flex; justify-content: space-between; margin-bottom: 14px; font-size: 15px; font-weight: 800; }
         .btn-checkout { width: 100%; background-color: var(--accent-color); color: #fff; border: none; padding: 12px; border-radius: 9px; font-family: inherit; font-size: 14.5px; font-weight: 800; cursor: pointer; }
-
+      
+        /* استایل کامل ستون‌های فوتر (مشابه index.html) */
+        .footer-main { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 40px; margin-bottom: 40px; text-align: right; }
+        .footer-col { flex: 1 1 200px; }
+        .footer-logo { height: 50px; margin-bottom: 15px; }
+        .footer-contact { font-size: 14px; color: var(--text-muted); line-height: 2; margin-bottom: 20px; }
+        .footer-contact strong { color: var(--text-color); }
+        .footer-title { font-size: 16px; font-weight: 700; margin-bottom: 20px; color: var(--text-color); position: relative; padding-bottom: 10px; }
+        .footer-title::after { content: ''; position: absolute; right: 0; bottom: 0; width: 40px; height: 3px; background-color: var(--accent-color); border-radius: 2px; }
+        .footer-links { list-style: none; padding: 0; margin: 0; }
+        .footer-links li { margin-bottom: 12px; }
+        .footer-links a { color: var(--text-muted); text-decoration: none; font-size: 14px; transition: color 0.3s; }
+        .footer-links a:hover { color: var(--accent-color); }
+        .social-icons { display: flex; gap: 12px; margin-top: 15px; }
+        .social-btn { display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 50%; transition: all 0.3s; }
+        .social-btn img { width: 20px; height: 20px; filter: var(--icon-filter); transition: filter 0.3s; }
+        .social-btn:hover { background-color: var(--accent-color); border-color: var(--accent-color); transform: translateY(-3px); }
+        .social-btn:hover img { filter: brightness(0) invert(1); }
+        .trust-symbols { display: flex; gap: 15px; }
+        .trust-symbol { width: 90px; height: 90px; background-color: #fff; border-radius: 8px; display: flex; align-items: center; justify-content: center; padding: 8px; color: #121212; font-weight: 800; font-size: 12px; text-align: center; }
+        @media (max-width: 992px) {
+            .footer-main { flex-direction: column; gap: 20px; }
+        }
         /* نوار پایین موبایل */
         .mobile-bottom-nav { display: none; }
 
@@ -1570,33 +1592,74 @@
         </main>
     </div>
 
-    <!-- فوتر -->
-    <footer class="footer">
-        <div class="footer-container">
-            <div class="footer-features">
-                <div class="feature-item">
-                    <img src="https://img.icons8.com/ios-filled/64/ffffff/delivery.png" alt="ارسال" class="feature-icon">
-                    <span class="feature-text">ارسال سریع (تیپاکس و باربری)</span>
+   <!-- فوتر کامل فروشگاه (مشابه صفحه اصلی) -->
+<footer class="footer">
+    <div class="footer-container">
+        <div class="footer-features">
+            <div class="feature-item">
+                <img src="https://img.icons8.com/ios-filled/64/ffffff/delivery.png" alt="ارسال سریع" class="feature-icon">
+                <span class="feature-text">ارسال سریع به سراسر کشور (تیپاکس و باربری)</span>
+            </div>
+            <div class="feature-item">
+                <img src="https://img.icons8.com/ios-filled/64/ffffff/guarantee.png" alt="تضمین اصالت" class="feature-icon">
+                <span class="feature-text">تضمین ۱۰۰٪ اصالت فیزیکی کالا</span>
+            </div>
+            <div class="feature-item">
+                <img src="https://img.icons8.com/ios-filled/64/ffffff/return-purchase.png" alt="ضمانت بازگشت" class="feature-icon">
+                <span class="feature-text">۷ روز مهلت تست و بازگشت کالا</span>
+            </div>
+            <div class="feature-item">
+                <img src="https://img.icons8.com/ios-filled/64/ffffff/headset.png" alt="پشتیبانی" class="feature-icon">
+                <span class="feature-text">مشاوره تخصصی پیش از خرید</span>
+            </div>
+        </div>
+        <div class="footer-main">
+            <div class="footer-col" style="flex: 1 1 300px;">
+                <img src="image.png" alt="مگا ابزار" class="footer-logo" onerror="this.onerror=null; this.src='https://img.icons8.com/ios-filled/100/e53935/maintenance.png';">
+                <div class="footer-contact">
+                    پاسخگویی از ساعت ۸ صبح تا ۸ شب<br>
+                    شماره تماس: <strong>۰۸۷-۱۲۳۴۵۶۷۸</strong><br>
+                    آدرس فروشگاه مرکزی: <strong>بانه، میدان جهاد، مجتمع تجاری مگا ابزار، پلاک ۱۲</strong>
                 </div>
-                <div class="feature-item">
-                    <img src="https://img.icons8.com/ios-filled/64/ffffff/guarantee.png" alt="اصالت" class="feature-icon">
-                    <span class="feature-text">تضمین ۱۰۰٪ اصالت کالا</span>
+                <div class="social-icons">
+                    <a href="#" class="social-btn" title="اینستاگرام"><img src="https://img.icons8.com/ios-glyphs/60/ffffff/instagram-new.png" alt="Instagram"></a>
+                    <a href="#" class="social-btn" title="تلگرام"><img src="https://img.icons8.com/ios-glyphs/60/ffffff/telegram-app.png" alt="Telegram"></a>
+                    <a href="#" class="social-btn" title="واتساپ"><img src="https://img.icons8.com/ios-glyphs/60/ffffff/whatsapp.png" alt="WhatsApp"></a>
                 </div>
-                <div class="feature-item">
-                    <img src="https://img.icons8.com/ios-filled/64/ffffff/return-purchase.png" alt="بازگشت" class="feature-icon">
-                    <span class="feature-text">۷ روز ضمانت بازگشت</span>
-                </div>
-                <div class="feature-item">
-                    <img src="https://img.icons8.com/ios-filled/64/ffffff/headset.png" alt="پشتیبانی" class="feature-icon">
-                    <span class="feature-text">مشاوره تخصصی خرید ابزار</span>
+            </div>
+            <div class="footer-col">
+                <h4 class="footer-title">دسترسی سریع</h4>
+                <ul class="footer-links">
+                    <li><a href="about.html">درباره مگا ابزار</a></li>
+                    <li><a href="contact.html">تماس با ما</a></li>
+                    <li><a href="faq.html">سوالات متداول</a></li>
+                    <li><a href="contact.html#complaints">ثبت شکایات و پیشنهادات</a></li>
+                    <li><a href="blog.html">وبلاگ آموزشی ابزارشناسی</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4 class="footer-title">راهنمای خرید و ارسال</h4>
+                <ul class="footer-links">
+                    <li><a href="guide.html#order">نحوه ثبت سفارش آنلاین</a></li>
+                    <li><a href="guide.html#shipping">رویه ارسال کالاهای سنگین (باربری)</a></li>
+                    <li><a href="guide.html#payment">شیوه‌های پرداخت و درگاه شاپرک</a></li>
+                    <li><a href="terms.html#return">شرایط بازگشت کالا و گارانتی</a></li>
+                    <li><a href="terms.html">قوانین و حریم خصوصی</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4 class="footer-title">نمادهای اعتماد الکترونیکی</h4>
+                <div class="trust-symbols">
+                    <div class="trust-symbol">نماد اعتماد<br>(e-Namad)</div>
+                    <div class="trust-symbol">نشان ملی<br>(ساماندهی)</div>
                 </div>
             </div>
         </div>
-        <div class="footer-bottom">
-            کلیه حقوق مادی و معنوی این سایت متعلق به فروشگاه آنلاین «مگا ابزار» (بانه) می‌باشد.
-        </div>
-    </footer>
-
+    </div>
+    <div class="footer-bottom">
+        کلیه حقوق مادی و معنوی این سایت متعلق به فروشگاه آنلاین «مگا ابزار» می‌باشد. توسعه اختصاصی بدون فریم‌ورک.
+    </div>
+</footer>
     <!-- کشوی سبد خرید -->
     <div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
     <div class="cart-drawer" id="cartDrawer">
