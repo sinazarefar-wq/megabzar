@@ -1,8 +1,8 @@
-// layout.js - ماژول مرکزی هدر، مگامنوی دو پنلی، سبد خرید، جستجوی زنده و فوتر مگا ابزار
+// layout.js - ماژول مرکزی هدر دو ردیفه هوشمند، مگامنو، سبد خرید و فوتر مگا ابزار
 
 const toPersianNum = num => num.toString().replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
 
-// ۱. استایل‌های مشترک کل سایت (تزریق خودکار در <head>)
+// ۱. استایل‌های مشترک کل سایت (هدر دو ردیفه، مگامنوی بدون پرش و فوتر)
 const sharedStyles = `
 :root, [data-theme="dark"] {
     --bg-color: #121212;
@@ -43,6 +43,7 @@ const sharedStyles = `
     --icon-filter: invert(65%) sepia(15%) saturate(400%) hue-rotate(175deg) brightness(95%) contrast(90%);
     --icon-active-filter: invert(65%) sepia(85%) saturate(1500%) hue-rotate(355deg) brightness(100%) contrast(95%);
 }
+
 * { box-sizing: border-box; outline: none; }
 body {
     font-family: 'Vazirmatn', Tahoma, sans-serif;
@@ -53,6 +54,7 @@ body {
     overflow-x: hidden;
     transition: background-color 0.4s ease, color 0.4s ease;
 }
+
 .page-transition {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     background-color: var(--bg-color); z-index: 9999;
@@ -67,26 +69,65 @@ body {
 .transition-logo { width: 110px; animation: pulse 0.8s infinite alternate; }
 @keyframes pulse { from { transform: scale(1); } to { transform: scale(1.12); } }
 
-/* هدر و مگامنوی دو پنلی */
-.header { background-color: var(--secondary-bg); border-bottom: 2px solid var(--accent-color); position: sticky; top: 0; z-index: 1000; }
-.header-container { display: flex; align-items: center; justify-content: space-between; padding: 10px 30px; max-width: 1400px; margin: 0 auto; flex-wrap: wrap; gap: 15px; position: relative; }
-.logo-img { height: 60px; width: auto; object-fit: contain; transition: transform 0.3s; }
+/* هدر دو ردیفه هوشمند (Sticky دو مرحله‌ای) */
+.header {
+    background-color: var(--secondary-bg);
+    border-bottom: 2px solid var(--accent-color);
+    position: sticky; top: 0; z-index: 1000;
+    transition: transform 0.3s ease, background-color 0.4s ease;
+}
+.header.hide-nav-tier .header-nav-row {
+    transform: translateY(-100%);
+    max-height: 0;
+    padding: 0;
+    opacity: 0;
+    overflow: hidden;
+    border-top: none;
+}
+
+/* ردیف اول هدر (همیشه ثابت) */
+.header-main-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 30px; max-width: 1400px; margin: 0 auto; gap: 15px; position: relative;
+}
+.logo-img { height: 52px; width: auto; object-fit: contain; transition: transform 0.3s; }
 .logo-img:hover { transform: scale(1.05); }
 .menu-toggle { display: none; font-size: 24px; cursor: pointer; color: var(--text-color); user-select: none; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 10px; width: 42px; height: 42px; align-items: center; justify-content: center; }
-.nav-wrapper { display: flex; align-items: center; flex-grow: 1; justify-content: space-between; margin-right: 25px; }
-.nav-menu { display: flex; gap: 22px; list-style: none; margin: 0; padding: 0; align-items: center; }
-.nav-menu > li > a { color: var(--text-color); text-decoration: none; font-size: 15px; font-weight: 600; padding: 14px 0; display: flex; align-items: center; gap: 6px; cursor: pointer; transition: color 0.3s; user-select: none; }
+
+/* ردیف دوم هدر (نوار منو و مگامنو که موقع اسکرول به پایین مخفی می‌شود) */
+.header-nav-row {
+    background-color: var(--bg-color);
+    border-top: 1px solid var(--border-color);
+    padding: 0 30px;
+    max-height: 55px;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.nav-container {
+    max-width: 1400px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between;
+}
+.nav-menu { display: flex; gap: 24px; list-style: none; margin: 0; padding: 0; align-items: center; }
+.nav-menu > li > a {
+    color: var(--text-color); text-decoration: none; font-size: 14.5px; font-weight: 700;
+    padding: 12px 0; display: flex; align-items: center; gap: 6px; cursor: pointer; transition: color 0.3s; user-select: none;
+}
 .nav-menu > li > a:hover, .has-megamenu.open > a { color: var(--accent-color); }
-.arrow { font-size: 11px; transition: transform 0.3s; }
+.arrow { font-size: 10px; transition: transform 0.3s; }
 .has-megamenu:hover > a .arrow, .has-megamenu.open > a .arrow { transform: rotate(180deg); }
 
+/* مگامنوی دو پنلی ثابت با تأخیر هوشمند برای جلوگیری از پرش موس */
 .has-megamenu { position: static !important; }
-.megamenu-panel { display: none; position: absolute; top: 100%; right: 30px; left: 30px; background-color: var(--secondary-bg); border: 1px solid var(--border-color); border-top: 3px solid var(--accent-color); border-radius: 0 0 18px 18px; box-shadow: 0 24px 55px rgba(0, 0, 0, 0.65); z-index: 1500; overflow: hidden; }
-.megamenu-panel::before { content: ''; position: absolute; top: -20px; right: 0; left: 0; height: 20px; background: transparent; }
+.megamenu-panel {
+    display: none; position: absolute; top: 100%; right: 30px; left: 30px;
+    background-color: var(--secondary-bg); border: 1px solid var(--border-color);
+    border-top: 3px solid var(--accent-color); border-radius: 0 0 18px 18px;
+    box-shadow: 0 24px 55px rgba(0, 0, 0, 0.65); z-index: 1500; overflow: hidden;
+}
+.megamenu-panel::before { content: ''; position: absolute; top: -25px; right: 0; left: 0; height: 25px; background: transparent; }
 @media (min-width: 993px) {
     .has-megamenu:hover .megamenu-panel, .has-megamenu.open .megamenu-panel { display: block; animation: megaFadeIn 0.2s ease forwards; }
 }
 @keyframes megaFadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
 .megamenu-two-pane { display: grid; grid-template-columns: 270px 1fr; height: 410px; }
 .megamenu-sidebar { background-color: var(--bg-color); border-left: 1px solid var(--border-color); padding: 12px 10px; display: flex; flex-direction: column; gap: 4px; overflow-y: auto; }
 .mega-tab-link { display: flex; align-items: center; justify-content: space-between; padding: 11px 14px; border-radius: 10px; text-decoration: none; color: var(--text-muted); font-size: 13.5px; font-weight: 700; transition: all 0.2s ease; }
@@ -95,6 +136,7 @@ body {
 .mega-tab-arrow { font-size: 11px; opacity: 0; transform: translateX(4px); transition: all 0.2s ease; }
 .mega-tab-link:hover, .mega-tab-link.active { background-color: var(--card-bg); color: var(--accent-color); }
 .mega-tab-link:hover .mega-tab-arrow, .mega-tab-link.active .mega-tab-arrow { opacity: 1; transform: translateX(0); color: var(--accent-color); }
+
 .megamenu-content-area { padding: 24px 28px; background-color: var(--secondary-bg); overflow-y: auto; display: flex; flex-direction: column; justify-content: space-between; }
 .mega-pane { display: none; height: 100%; flex-direction: column; justify-content: space-between; }
 .mega-pane.active { display: flex; animation: paneFade 0.18s ease; }
@@ -104,6 +146,8 @@ body {
 .mega-pane-main-link::before { content: ''; width: 4px; height: 18px; background-color: var(--accent-color); border-radius: 2px; }
 .mega-pane-main-link:hover { color: var(--accent-color); }
 .mega-pane-view-all { font-size: 12.5px; font-weight: 700; color: var(--accent-color); text-decoration: none; background-color: var(--accent-soft); padding: 6px 14px; border-radius: 20px; transition: opacity 0.2s; }
+.mega-pane-view-all:hover { opacity: 0.85; }
+
 .mega-pane-columns { display: grid; grid-template-columns: repeat(3, 1fr) 230px; gap: 22px; align-items: start; }
 .mega-subcol { display: flex; flex-direction: column; gap: 10px; }
 .mega-subcol-title { font-size: 13.5px; font-weight: 800; color: var(--text-color); text-decoration: none; display: flex; align-items: center; gap: 6px; padding-bottom: 6px; border-bottom: 1px dashed var(--border-color); transition: color 0.2s; }
@@ -125,7 +169,7 @@ body {
 .megamenu-promo-link:hover { color: var(--accent-color); }
 .megamenu-all-btn { background-color: var(--accent-color); color: #fff; text-decoration: none; padding: 7px 18px; border-radius: 20px; font-size: 12.5px; font-weight: 800; }
 
-/* جستجو و اکشن‌های هدر */
+/* جستجو و سبد خرید هدر */
 .search-container { position: relative; flex-grow: 1; max-width: 420px; margin: 0 20px; }
 .search-box-wrapper { position: relative; width: 100%; display: flex; align-items: center; }
 .search-bar { width: 100%; background-color: var(--bg-color); border: 1.5px solid var(--border-color); border-radius: 14px; padding: 11px 42px 11px 18px; color: var(--text-color); font-family: inherit; font-size: 14px; transition: all 0.3s; }
@@ -225,7 +269,7 @@ select.btn-action { appearance: none; padding-left: 22px; cursor: pointer; }
 .mobile-bottom-nav { display: none; }
 @media (max-width: 992px) {
     body { padding-bottom: 68px; }
-    .header-container { padding: 10px 15px; gap: 8px; }
+    .header-main-row { padding: 10px 15px; gap: 8px; }
     .logo { display: none; }
     .menu-toggle { display: flex; order: 1; }
     .search-container { order: 2; flex-grow: 1; max-width: calc(100% - 52px); margin: 0; }
@@ -243,19 +287,19 @@ select.btn-action { appearance: none; padding-left: 22px; cursor: pointer; }
 }
 `;
 
-// تزریق فوری استایل‌ها در بالای صفحه
 const styleEl = document.createElement('style');
 styleEl.innerHTML = sharedStyles;
 document.head.insertBefore(styleEl, document.head.firstChild);
 
-// ۲. کدهای HTML هدر و فوتر
+// ۲. قالب HTML هدر دو ردیفه هوشمند
 const headerTemplate = `
 <div class="page-transition" id="pageTransition">
     <img src="image.png" alt="مگا ابزار" class="transition-logo" onerror="this.onerror=null; this.src='https://img.icons8.com/ios-filled/100/e53935/maintenance.png';">
 </div>
 
-<header class="header">
-    <div class="header-container">
+<header class="header" id="siteHeaderEl">
+    <!-- ردیف اول: لوگو، جستجو و سبد خرید (همیشه ثابت) -->
+    <div class="header-main-row">
         <a href="index.html" class="logo">
             <img src="image.png" alt="مگا ابزار" class="logo-img" onerror="this.onerror=null; this.src='https://img.icons8.com/ios-filled/100/e53935/maintenance.png';">
         </a>
@@ -273,8 +317,25 @@ const headerTemplate = `
             <div class="live-search-results" id="liveSearchResults"></div>
         </div>
 
-        <div class="nav-wrapper" id="navWrapper">
-            <nav>
+        <div class="header-actions">
+            <select id="themeSelector" class="btn-action" onchange="applyTheme(this.value)">
+                <option value="dark">🌙 تاریک</option>
+                <option value="light">☀️ روشن</option>
+                <option value="navy">👷‍♂️ سرمه‌ای</option>
+            </select>
+            <button class="btn-action" onclick="window.location.href='profile.html'">ورود / ثبت‌نام</button>
+            <button class="btn-cart-modern" onclick="toggleCart()">
+                <img src="https://img.icons8.com/ios-filled/64/ffffff/shopping-cart.png" alt="سبد">
+                <span>سبد خرید</span>
+                <span class="header-cart-badge" id="cartCount">۰</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- ردیف دوم: منوی ناوبری و مگامنوی دو پنلی (موقع اسکرول به پایین مخفی می‌شود) -->
+    <div class="header-nav-row">
+        <div class="nav-container">
+            <nav class="nav-wrapper" id="navWrapper">
                 <ul class="nav-menu">
                     <li><a href="index.html">صفحه اصلی</a></li>
                     <li class="has-megamenu" id="desktopMegaMenu">
@@ -661,9 +722,7 @@ const headerTemplate = `
                             </div>
 
                             <div class="megamenu-bottom-bar">
-                                <a href="catalog.html?filter=special" class="megamenu-promo-link">
-                                    🔥 مشاهده ابزارهای دارای تخفیف ویژه امروز با تضمین اصالت بانه
-                                </a>
+                                <a href="catalog.html?filter=special" class="megamenu-promo-link">🔥 مشاهده ابزارهای دارای تخفیف ویژه امروز با تضمین اصالت بانه</a>
                                 <a href="catalog.html" class="megamenu-all-btn">ورود به کاتالوگ جامع محصولات ❯</a>
                             </div>
                         </div>
@@ -673,25 +732,12 @@ const headerTemplate = `
                     <li><a href="index.html#blogSection">مجله ابزارشناسی</a></li>
                 </ul>
             </nav>
-
-            <div class="header-actions">
-                <select id="themeSelector" class="btn-action" onchange="applyTheme(this.value)">
-                    <option value="dark">🌙 تاریک</option>
-                    <option value="light">☀️ روشن</option>
-                    <option value="navy">👷‍♂️ سرمه‌ای</option>
-                </select>
-                <button class="btn-action" onclick="window.location.href='profile.html'">ورود / ثبت‌نام</button>
-                <button class="btn-cart-modern" onclick="toggleCart()">
-                    <img src="https://img.icons8.com/ios-filled/64/ffffff/shopping-cart.png" alt="سبد">
-                    <span>سبد خرید</span>
-                    <span class="header-cart-badge" id="cartCount">۰</span>
-                </button>
-            </div>
         </div>
     </div>
 </header>
 `;
 
+// ۳. قالب HTML فوتر کامل
 const footerTemplate = `
 <footer class="footer">
     <div class="footer-container">
@@ -840,7 +886,7 @@ const footerTemplate = `
 </div>
 
 <nav class="mobile-bottom-nav">
-    <a href="index.html" class="bottom-nav-item" id="navHomeMobile">
+    <a href="index.html" class="bottom-nav-item active">
         <img src="https://img.icons8.com/ios-filled/64/ffffff/home.png" alt="خانه" class="bottom-nav-icon-img">
         <span>خانه</span>
     </a>
@@ -860,14 +906,14 @@ const footerTemplate = `
 </nav>
 `;
 
-// ۳. رندر خودکار هدر و فوتر در محل‌های مشخص‌شده
+// ۴. تزریق در صفحات
 const headerTarget = document.getElementById('site-header');
 if (headerTarget) headerTarget.innerHTML = headerTemplate;
 
 const footerTarget = document.getElementById('site-footer');
 if (footerTarget) footerTarget.innerHTML = footerTemplate;
 
-// ۴. منطق‌های مشترک (تم، مگامنو، جستجوی زنده، ترنزیشن و سبد خرید)
+// ۵. اسکریپت‌های تعاملی مشترک (اسکرول هوشمند هدر، تم، مگامنو و سبد خرید)
 function hideTransition() {
     const pt = document.getElementById('pageTransition');
     if (pt) {
@@ -889,6 +935,20 @@ function applyTheme(themeVal) {
 const savedTheme = localStorage.getItem('mega_abzar_theme');
 if (savedTheme) applyTheme(savedTheme);
 
+// اسکرول هوشمند هدر دو ردیفه
+let lastScrollY = window.scrollY;
+const headerEl = document.getElementById('siteHeaderEl');
+window.addEventListener('scroll', () => {
+    if (!headerEl) return;
+    const currentScrollY = window.scrollY;
+    if (currentScrollY > 70 && currentScrollY > lastScrollY) {
+        headerEl.classList.add('hide-nav-tier');
+    } else if (currentScrollY < lastScrollY || currentScrollY <= 20) {
+        headerEl.classList.remove('hide-nav-tier');
+    }
+    lastScrollY = currentScrollY;
+}, { passive: true });
+
 function toggleMegaMenu(e) {
     e.preventDefault();
     e.stopPropagation();
@@ -909,7 +969,7 @@ function toggleCatSheet() {
     document.getElementById('catSheetOverlay').classList.toggle('active');
 }
 
-// دیتابیس جستجوی زنده در تمام صفحات
+// دیتابیس جستجوی زنده سراسری
 const globalSearchDB = [
     { id: '1', title: 'دریل چکشی دیوالت مدل DWD024 توان ۶۵۰ وات', brand: 'DEWALT', price: '۳,۸۲۵,۰۰۰ تومان', image: 'https://images.unsplash.com/photo-1504148455328-c376907d081c?q=80&w=500&auto=format&fit=crop' },
     { id: '2', title: 'مینی فرز دسته بلند ماکیتا 9558HN اصل', brand: 'MAKITA', price: '۲,۹۵۰,۰۰۰ تومان', image: 'https://images.unsplash.com/photo-1572981779307-38b8cabb2407?q=80&w=500&auto=format&fit=crop' },
@@ -965,7 +1025,7 @@ document.addEventListener('click', e => {
     }
 });
 
-// مدیریت سبد خرید کشویی در کل سایت
+// مدیریت سبد خرید
 let cart = JSON.parse(localStorage.getItem('mega_abzar_cart') || '[]');
 
 function toggleCart() {
@@ -1040,7 +1100,6 @@ function updateCartUI() {
     cartTotalPrice.innerText = toPersianNum(total.toLocaleString());
 }
 
-// اتصال خودکار دکمه‌های افزودن به سبد خرید و کلیک کارت‌ها در هر صفحه
 document.addEventListener('DOMContentLoaded', () => {
     updateCartUI();
 
