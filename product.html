@@ -2,8 +2,15 @@
 <html dir="rtl" lang="fa" data-theme="dark">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>مشخصات و خرید محصول | مگا ابزار</title>
+    <script>
+    // اعمال فوری تم قبل از رندر شدن صفحه برای جلوگیری از پرش یا فراموشی تم
+    (function() {
+        const savedTheme = localStorage.getItem('mega_abzar_theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+    })();
+</script>
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         /* استایل‌های اختصاصی صفحه محصول (استایل‌های هدر، مگامنو، فوتر و سبد خرید از layout.js تزریق می‌شوند) */
@@ -833,61 +840,49 @@
     <div id="site-footer"></div>
 
     <!-- ۷. فراخوانی فایل مرکزی هدر و فوتر -->
+    <script src="products.js"></script>
     <script src="layout.js"></script>
+    <script src="cart.js"></script>
 
     <!-- ۸. اسکریپت‌های اختصاصی صفحه محصول -->
     <script>
-        // دیتابیس محصولات برای بارگذاری پویا بر اساس ?id= در URL
-        const productsDB = {
-            1: { title: 'دریل چکشی دیوالت مدل DWD024 توان ۶۵۰ وات اورجینال', brand: 'DEWALT', model: 'DWD024', power: '۶۵۰ وات واقعی', sku: 'MEGA-DW-024', price: 3825000, oldPrice: '۴,۵۰۰,۰۰۰ تومان', image: 'https://images.unsplash.com/photo-1504148455328-c376907d081c?q=80&w=800&auto=format&fit=crop', catTitle: 'ابزار برقی و شارژی', catSlug: 'power-tools' },
-            2: { title: 'مینی فرز دسته بلند ماکیتا مدل 9558HN اصل ژاپن', brand: 'MAKITA', model: '9558HN', power: '۸۴۰ وات صنعتی', sku: 'MEGA-MK-9558', price: 2950000, oldPrice: '', image: 'https://images.unsplash.com/photo-1572981779307-38b8cabb2407?q=80&w=800&auto=format&fit=crop', catTitle: 'ابزار برقی و شارژی', catSlug: 'power-tools' },
-            3: { title: 'مجموعه ۱۲۸ عددی ابزار دستی و بکس رونیکس مدل RH-27128', brand: 'RONIX', model: 'RH-27128', power: 'فولاد کروم وانادیوم', sku: 'MEGA-RN-128', price: 5200000, oldPrice: '۵,۸۰۰,۰۰۰ تومان', image: 'https://images.unsplash.com/photo-1530124566582-a618bc2615dc?q=80&w=800&auto=format&fit=crop', catTitle: 'ابزار دستی و مکانیکی', catSlug: 'hand-tools' },
-            4: { title: 'متر لیزری ۵۰ متری بوش مدل GLM 50 C بلوتوث‌دار', brand: 'BOSCH', model: 'GLM 50 C', power: 'برد دقیق ۵۰ متر', sku: 'MEGA-BS-50C', price: 4100000, oldPrice: '', image: 'https://images.unsplash.com/photo-1581092335397-9583eb92d232?q=80&w=800&auto=format&fit=crop', catTitle: 'تراز لیزری و ابزار دقیق', catSlug: 'measuring' },
-            5: { title: 'دریل پیچ‌گوشتی شارژی براشلس میلواکی ۱۸ ولت مدل M18', brand: 'MILWAUKEE', model: 'M18-BL', power: '۱۸ ولت لیتیوم (۲ باتری)', sku: 'MEGA-MW-18', price: 8300000, oldPrice: '۹,۲۰۰,۰۰۰ تومان', image: 'https://images.unsplash.com/photo-1586864387967-d02ef85d93e8?q=80&w=800&auto=format&fit=crop', catTitle: 'ابزار برقی و شارژی', catSlug: 'power-tools' },
-            6: { title: 'بتن‌کن ۴ شیار هیلتی مدل TE 2-S اورجینال بانه', brand: 'HILTI', model: 'TE 2-S', power: '۶۵۰ وات (۳ ژول)', sku: 'MEGA-HL-TE2', price: 11200000, oldPrice: '۱۲,۰۰۰,۰۰۰ تومان', image: 'https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?q=80&w=800&auto=format&fit=crop', catTitle: 'ابزار برقی و شارژی', catSlug: 'power-tools' },
-            7: { title: 'فرز آهنگری سنگین آ ا گ ۲۲۰۰ وات مدل WS 22-230', brand: 'AEG', model: 'WS 22-230', power: '۲۲۰۰ وات (صفحه ۲۳۰)', sku: 'MEGA-AEG-22', price: 4900000, oldPrice: '', image: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?q=80&w=800&auto=format&fit=crop', catTitle: 'ابزار برقی و شارژی', catSlug: 'power-tools' },
-            8: { title: 'تراز لیزری ۳۶۰ درجه سه خط کرون مدل CT44048', brand: 'CROWN', model: 'CT44048', power: 'لیزر سبز ۳۶۰ درجه', sku: 'MEGA-CR-440', price: 3450000, oldPrice: '', image: 'https://images.unsplash.com/photo-1581092335397-9583eb92d232?q=80&w=800&auto=format&fit=crop', catTitle: 'تراز لیزری و ابزار دقیق', catSlug: 'measuring' },
-            101: { title: 'بکس شارژی براشلس دیوالت ۲۰ ولت مدل DCF899', brand: 'DEWALT', model: 'DCF899', power: '۲۰ ولت (۹۵۰ نیوتن‌متر)', sku: 'MEGA-DW-899', price: 11310000, oldPrice: '۱۴,۵۰۰,۰۰۰ تومان', image: 'https://images.unsplash.com/photo-1504148455328-c376907d081c?q=80&w=800&auto=format&fit=crop', catTitle: 'ابزار برقی و شارژی', catSlug: 'power-tools' },
-            102: { title: 'اینورتر جوشکاری ۲۵۰ آمپر صنعتی رونیکس مدل RH-4625', brand: 'RONIX', model: 'RH-4625', power: '۲۵۰ آمپر واقعی IGBT', sku: 'MEGA-RN-4625', price: 6390000, oldPrice: '۷,۸۰۰,۰۰۰ تومان', image: 'https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?q=80&w=800&auto=format&fit=crop', catTitle: 'اینورتر و جوشکاری', catSlug: 'welding' },
-            103: { title: 'کارواش صنعتی دینامی بوش مدل AQT 140 بار', brand: 'BOSCH', model: 'AQT 140', power: '۱۴۰ بار (موتور القایی)', sku: 'MEGA-BS-140', price: 6900000, oldPrice: '۹,۲۰۰,۰۰۰ تومان', image: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?q=80&w=800&auto=format&fit=crop', catTitle: 'ابزار بادی و کمپرسور', catSlug: 'pneumatic' },
-            104: { title: 'چکش تخریب ۱۶ کیلویی ماکیتا مدل HM1307C', brand: 'MAKITA', model: 'HM1307C', power: '۱۵۱۰ وات (۳۳.۸ ژول)', sku: 'MEGA-MK-1307', price: 27200000, oldPrice: '۳۲,۰۰۰,۰۰۰ تومان', image: 'https://images.unsplash.com/photo-1586864387967-d02ef85d93e8?q=80&w=800&auto=format&fit=crop', catTitle: 'ابزار برقی و شارژی', catSlug: 'power-tools' },
-            105: { title: 'پک کامل دریل و مینی‌فرز شارژی میلواکی M18', brand: 'MILWAUKEE', model: 'M18-COMBO', power: '۱۸ ولت براشلس (پک ۲ عددی)', sku: 'MEGA-MW-COMBO', price: 15600000, oldPrice: '۱۹,۵۰۰,۰۰۰ تومان', image: 'https://images.unsplash.com/photo-1530124566582-a618bc2615dc?q=80&w=800&auto=format&fit=crop', catTitle: 'ابزار دستی و مکانیکی', catSlug: 'hand-tools' },
-            106: { title: 'اره پروفیل‌بر صنعتی آ ا گ مدل SMT 355 توان ۲۳۰۰ وات', brand: 'AEG', model: 'SMT 355', power: '۲۳۰۰ وات صنعتی', sku: 'MEGA-AEG-355', price: 9230000, oldPrice: '۱۱,۴۰۰,۰۰۰ تومان', image: 'https://images.unsplash.com/photo-1572981779307-38b8cabb2407?q=80&w=800&auto=format&fit=crop', catTitle: 'ابزار برقی و شارژی', catSlug: 'power-tools' }
-        };
-
-        let currentLoadedProduct = productsDB[1];
+        let currentLoadedProduct = PRODUCTS[0];
 
         function loadProductFromUrl() {
             const params = new URLSearchParams(window.location.search);
             const id = params.get('id') || '1';
-            const prod = productsDB[id] || productsDB[1];
+            const prod = getProduct(id) || PRODUCTS[0];
+            const pageTitle = prod.pageTitle || prod.title;
+            const catTitle = CATEGORY_TITLES[prod.category] || 'همه ابزارآلات';
+            const img = productImage(prod, 800);
+            const oldPriceText = prod.oldPrice ? formatPrice(prod.oldPrice) : '';
             currentLoadedProduct = prod;
 
-            document.title = `${prod.title} | مگا ابزار`;
-            document.getElementById('breadcrumbProdTitle').innerText = prod.title;
+            document.title = `${pageTitle} | مگا ابزار`;
+            document.getElementById('breadcrumbProdTitle').innerText = pageTitle;
             const catLink = document.getElementById('breadcrumbCatLink');
-            catLink.innerText = prod.catTitle;
-            catLink.href = `catalog.html?cat=${prod.catSlug}`;
+            catLink.innerText = catTitle;
+            catLink.href = `catalog.html?cat=${prod.category}`;
 
             document.getElementById('prodBrandLabel').innerText = `برند اصلی: ${prod.brand}`;
-            document.getElementById('prodMainTitle').innerText = prod.title;
+            document.getElementById('prodMainTitle').innerText = pageTitle;
             document.getElementById('prodSku').innerText = prod.sku;
-            document.getElementById('mainProductImg').src = prod.image;
+            document.getElementById('mainProductImg').src = img;
 
             const firstThumbImg = document.querySelector('#thumbList .thumb-item img');
             if (firstThumbImg) {
-                firstThumbImg.src = prod.image;
-                document.querySelector('#thumbList .thumb-item').setAttribute('onclick', `changeImage(this, '${prod.image}')`);
+                firstThumbImg.src = img;
+                document.querySelector('#thumbList .thumb-item').setAttribute('onclick', `changeImage(this, '${img}')`);
             }
 
-            document.getElementById('prodOldPrice').innerText = prod.oldPrice;
-            document.getElementById('prodOldPrice').style.display = prod.oldPrice ? 'block' : 'none';
-            document.getElementById('prodNewPrice').innerText = `${toPersianNum(prod.price.toLocaleString())} تومان`;
+            document.getElementById('prodOldPrice').innerText = oldPriceText;
+            document.getElementById('prodOldPrice').style.display = oldPriceText ? 'block' : 'none';
+            document.getElementById('prodNewPrice').innerText = formatPrice(prod.price);
 
             document.getElementById('specBrand').innerText = prod.brand;
-            document.getElementById('specModel').innerText = prod.model;
-            document.getElementById('specPower').innerText = prod.power;
-            document.getElementById('descHeading').innerText = `بررسی تخصصی ${prod.title}`;
+            document.getElementById('specModel').innerText = prod.model || '—';
+            document.getElementById('specPower').innerText = prod.powerSpec;
+            document.getElementById('descHeading').innerText = `بررسی تخصصی ${pageTitle}`;
         }
 
         // تغییر تصویر اصلی گالری و زوم ذره‌بینی
@@ -929,14 +924,7 @@
 
         // افزودن محصول اصلی صفحه به سبد خرید سراسری (متصل به layout.js)
         function addMainProductToCart() {
-            const title = currentLoadedProduct.title;
-            const price = currentLoadedProduct.price;
-            const image = document.getElementById('mainProductImg').src;
-            const existingItem = cart.find(item => item.title === title);
-            if (existingItem) existingItem.quantity += 1;
-            else cart.push({ title, price, image, quantity: 1 });
-            saveAndUpdateCart();
-            toggleCart();
+            addToCart(currentLoadedProduct.id);
         }
 
         // ثبت دیدگاه جدید توسط کاربر

@@ -4,9 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>فروشگاه و کاتالوگ تخصصی ابزارآلات | مگا ابزار</title>
+    <script>
+    // اعمال فوری تم قبل از رندر شدن صفحه برای جلوگیری از پرش یا فراموشی تم
+    (function() {
+        const savedTheme = localStorage.getItem('mega_abzar_theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+    })();
+</script>
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        /* متغیرهای تکمیلی اختصاصی کاتالوگ (متغیرهای اصلی تم از layout.js تزریق می‌شوند) */
         :root {
             --success-color: #10b981;
         }
@@ -135,8 +141,8 @@
             border-radius: 14px;
             padding: 18px;
             position: sticky;
-            top: 90px;
-            max-height: calc(100vh - 110px);
+            top: 85px;
+            max-height: calc(100vh - 100px);
             overflow-y: auto;
             scrollbar-width: thin;
         }
@@ -200,7 +206,6 @@
             user-select: none;
         }
 
-        /* سوییچ تاگل (فقط کالاهای موجود / تخفیف‌دار) */
         .toggle-row {
             display: flex;
             justify-content: space-between;
@@ -240,7 +245,6 @@
             transform: translateX(18px);
         }
 
-        /* لیست چک‌باکس‌های فیلتر */
         .filter-options-list {
             display: flex;
             flex-direction: column;
@@ -283,7 +287,6 @@
             color: var(--text-muted);
         }
 
-        /* اسلایدر قیمت */
         .price-slider {
             width: 100%;
             accent-color: var(--accent-color);
@@ -426,7 +429,7 @@
             color: #fff;
         }
 
-        /* نوار تگ‌های فیلتر فعال (Active Filter Chips) */
+        /* نوار تگ‌های فیلتر فعال */
         .active-filters-bar {
             display: none;
             align-items: center;
@@ -459,7 +462,7 @@
             font-weight: 900;
         }
 
-        /* ۵. شبکه محصولات کاتالوگ (Grid & List Views) */
+        /* ۵. شبکه محصولات کاتالوگ */
         .catalog-products-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
@@ -642,7 +645,7 @@
             cursor: not-allowed;
         }
 
-        /* حالت نمایش لیستی (List View) */
+        /* حالت نمایش لیستی */
         .catalog-products-grid.list-view {
             grid-template-columns: 1fr;
             gap: 14px;
@@ -679,7 +682,6 @@
             padding-right: 20px;
         }
 
-        /* حالت عدم وجود نتیجه */
         .empty-catalog-state {
             grid-column: 1 / -1;
             background-color: var(--secondary-bg);
@@ -698,7 +700,7 @@
             margin: 0 0 18px 0;
         }
 
-        /* ۶. صفحه‌بندی (Pagination) */
+        /* ۶. صفحه‌بندی */
         .pagination-bar {
             display: flex;
             justify-content: center;
@@ -728,7 +730,6 @@
             color: #fff;
         }
 
-        /* واکنش‌گرایی اختصاصی کاتالوگ در موبایل و تبلت */
         @media (max-width: 992px) {
             .catalog-hero-inner { padding: 0 15px; }
             .catalog-page-title { font-size: 18px; }
@@ -740,7 +741,6 @@
                 gap: 14px;
             }
 
-            /* تبدیل سایدبار فیلتر به کشوی تمام‌قد موبایل */
             .filter-sidebar {
                 position: fixed;
                 top: 0;
@@ -854,7 +854,7 @@
 </head>
 <body>
 
-    <!-- ۱. جایگاه تزریق خودکار هدر، مگامنوی دو پنلی و ترنزیشن از فایل layout.js -->
+    <!-- ۱. جایگاه تزریق خودکار هدر از layout.js -->
     <div id="site-header"></div>
 
     <!-- ۲. هدر فرعی کاتالوگ و نوار زیردسته‌های سریع -->
@@ -889,9 +889,9 @@
     <!-- ۳. لایه Overlay برای کشوی فیلتر موبایل -->
     <div class="filter-drawer-overlay" id="filterDrawerOverlay" onclick="toggleMobileFilters()"></div>
 
-    <!-- ۴. کانتینر اصلی کاتالوگ (سایدبار فیلتر + شبکه محصولات) -->
+    <!-- ۴. کانتینر اصلی کاتالوگ -->
     <div class="catalog-container">
-        
+
         <!-- سایدبار فیلترها -->
         <aside class="filter-sidebar" id="filterSidebar">
             <div class="filter-sidebar-header">
@@ -902,7 +902,6 @@
                 </div>
             </div>
 
-            <!-- فیلتر وضعیت موجودی و تخفیف -->
             <div class="filter-section">
                 <label class="toggle-row">
                     <span>فقط کالاهای موجود در انبار بانه</span>
@@ -914,62 +913,44 @@
                 </label>
             </div>
 
-            <!-- فیلتر دسته‌بندی -->
             <div class="filter-section">
                 <div class="filter-section-head">دسته‌بندی تخصصی</div>
                 <div class="filter-options-list" id="catCheckboxList">
                     <label class="filter-option-item">
-                        <span class="filter-option-right">
-                            <input type="checkbox" value="power-tools" onchange="syncQuickPillsAndFilter()"> ابزار برقی و شارژی
-                        </span>
+                        <span class="filter-option-right"><input type="checkbox" value="power-tools" onchange="syncQuickPillsAndFilter()"> ابزار برقی و شارژی</span>
                         <span class="filter-badge-count">۶</span>
                     </label>
                     <label class="filter-option-item">
-                        <span class="filter-option-right">
-                            <input type="checkbox" value="welding" onchange="syncQuickPillsAndFilter()"> اینورتر و جوشکاری
-                        </span>
+                        <span class="filter-option-right"><input type="checkbox" value="welding" onchange="syncQuickPillsAndFilter()"> اینورتر و جوشکاری</span>
                         <span class="filter-badge-count">۱</span>
                     </label>
                     <label class="filter-option-item">
-                        <span class="filter-option-right">
-                            <input type="checkbox" value="hand-tools" onchange="syncQuickPillsAndFilter()"> ابزار دستی و مکانیکی
-                        </span>
+                        <span class="filter-option-right"><input type="checkbox" value="hand-tools" onchange="syncQuickPillsAndFilter()"> ابزار دستی و مکانیکی</span>
                         <span class="filter-badge-count">۲</span>
                     </label>
                     <label class="filter-option-item">
-                        <span class="filter-option-right">
-                            <input type="checkbox" value="measuring" onchange="syncQuickPillsAndFilter()"> تراز لیزری و ابزار دقیق
-                        </span>
+                        <span class="filter-option-right"><input type="checkbox" value="measuring" onchange="syncQuickPillsAndFilter()"> تراز لیزری و ابزار دقیق</span>
                         <span class="filter-badge-count">۲</span>
                     </label>
                     <label class="filter-option-item">
-                        <span class="filter-option-right">
-                            <input type="checkbox" value="pneumatic" onchange="syncQuickPillsAndFilter()"> ابزار بادی و کمپرسور
-                        </span>
+                        <span class="filter-option-right"><input type="checkbox" value="pneumatic" onchange="syncQuickPillsAndFilter()"> ابزار بادی و کمپرسور</span>
                         <span class="filter-badge-count">۱</span>
                     </label>
                     <label class="filter-option-item">
-                        <span class="filter-option-right">
-                            <input type="checkbox" value="gardening" onchange="syncQuickPillsAndFilter()"> اره موتوری و باغبانی
-                        </span>
+                        <span class="filter-option-right"><input type="checkbox" value="gardening" onchange="syncQuickPillsAndFilter()"> اره موتوری و باغبانی</span>
                         <span class="filter-badge-count">۱</span>
                     </label>
                     <label class="filter-option-item">
-                        <span class="filter-option-right">
-                            <input type="checkbox" value="safety" onchange="syncQuickPillsAndFilter()"> ایمنی و حفاظت فردی
-                        </span>
+                        <span class="filter-option-right"><input type="checkbox" value="safety" onchange="syncQuickPillsAndFilter()"> ایمنی و حفاظت فردی</span>
                         <span class="filter-badge-count">۱</span>
                     </label>
                     <label class="filter-option-item">
-                        <span class="filter-option-right">
-                            <input type="checkbox" value="accessories" onchange="syncQuickPillsAndFilter()"> مته، صفحه برش و جانبی
-                        </span>
+                        <span class="filter-option-right"><input type="checkbox" value="accessories" onchange="syncQuickPillsAndFilter()"> مته، صفحه برش و جانبی</span>
                         <span class="filter-badge-count">۱</span>
                     </label>
                 </div>
             </div>
 
-            <!-- فیلتر برند سازنده -->
             <div class="filter-section">
                 <div class="filter-section-head">برند سازنده</div>
                 <div class="filter-options-list" id="brandCheckboxList">
@@ -1008,7 +989,6 @@
                 </div>
             </div>
 
-            <!-- فیلتر سقف قیمت -->
             <div class="filter-section">
                 <div class="filter-section-head">سقف بودجه (تومان)</div>
                 <input type="range" id="priceRangeSlider" class="price-slider" min="1000000" max="35000000" step="500000" value="35000000" oninput="updatePriceSliderLabel(this.value)">
@@ -1018,7 +998,6 @@
                 </div>
             </div>
 
-            <!-- فیلتر نوع تغذیه -->
             <div class="filter-section">
                 <div class="filter-section-head">منبع تغذیه</div>
                 <div class="filter-options-list" id="powerCheckboxList">
@@ -1035,15 +1014,13 @@
             </div>
         </aside>
 
-        <!-- دکمه چسبان پایین کشوی فیلتر در موبایل -->
         <div class="mobile-filter-Sticky-footer">
             <button class="btn-apply-mobile-filters" onclick="toggleMobileFilters()">مشاهده محصولات فیلترشده</button>
         </div>
 
         <!-- بخش اصلی نمایش محصولات -->
         <main class="catalog-main-area">
-            
-            <!-- نوار ابزار بالای محصولات -->
+
             <div class="catalog-toolbar">
                 <div class="toolbar-right">
                     <button class="btn-mobile-filter-trigger" onclick="toggleMobileFilters()">
@@ -1076,13 +1053,10 @@
                 </div>
             </div>
 
-            <!-- نوار تگ‌های فیلتر فعال -->
             <div class="active-filters-bar" id="activeFiltersBar"></div>
 
-            <!-- شبکه محصولات -->
             <div class="catalog-products-grid" id="catalogProductsGrid"></div>
 
-            <!-- صفحه‌بندی -->
             <div class="pagination-bar">
                 <button class="page-btn active">۱</button>
                 <button class="page-btn" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">۲</button>
@@ -1092,42 +1066,23 @@
         </main>
     </div>
 
-    <!-- ۵. جایگاه تزریق خودکار فوتر ۴ ستونه، کشوی سبد خرید، کشوی دسته‌بندی موبایل و نوار پایین از فایل layout.js -->
+    <!-- ۵. جایگاه تزریق خودکار فوتر از layout.js -->
     <div id="site-footer"></div>
 
-    <!-- ۶. فراخوانی فایل مرکزی هدر و فوتر -->
+    <!-- ۶. فراخوانی اسکریپت‌های پروژه (تضمین هماهنگی با layout.js و products.js) -->
+    <script src="products.js"></script>
     <script src="layout.js"></script>
+    <script src="cart.js"></script>
 
-    <!-- ۷. اسکریپت‌های اختصاصی فیلترینگ و مرتب‌سازی کاتالوگ -->
+    <!-- ۷. اسکریپت‌های اختصاصی کاتالوگ -->
     <script>
-        // دیتابیس کامل محصولات کاتالوگ (پوشش‌دهنده تمام ۸ دسته‌بندی مگامنو)
-        const catalogData = [
-            { id: 1, title: 'دریل چکشی دیوالت مدل DWD024 توان ۶۵۰ وات', brand: 'DEWALT', category: 'power-tools', power: 'برقی', price: 3825000, oldPrice: 4500000, discount: 15, inStock: true, rating: '۴.۸', specs: ['۶۵۰ وات', 'سه‌نظام ۱۳', 'چکشی'], image: 'https://images.unsplash.com/photo-1504148455328-c376907d081c?q=80&w=500&auto=format&fit=crop', sales: 95 },
-            { id: 2, title: 'مینی فرز دسته بلند ماکیتا مدل 9558HN اورجینال', brand: 'MAKITA', category: 'power-tools', power: 'برقی', price: 2950000, oldPrice: 0, discount: 0, inStock: true, rating: '۴.۹', specs: ['۸۴۰ وات', '۱۱۰۰۰ دور', 'صفحه ۱۱۵'], image: 'https://images.unsplash.com/photo-1572981779307-38b8cabb2407?q=80&w=500&auto=format&fit=crop', sales: 88 },
-            { id: 3, title: 'مجموعه ۱۲۸ عددی ابزار دستی و بکس رونیکس RH-27128', brand: 'RONIX', category: 'hand-tools', power: 'دستی', price: 5200000, oldPrice: 5800000, discount: 10, inStock: true, rating: '۴.۷', specs: ['کروم وانادیوم', '۱۲۸ پارچه', 'کیف BMC'], image: 'https://images.unsplash.com/photo-1530124566582-a618bc2615dc?q=80&w=500&auto=format&fit=crop', sales: 82 },
-            { id: 4, title: 'متر لیزری ۵۰ متری بوش مدل GLM 50 C بلوتوث‌دار', brand: 'BOSCH', category: 'measuring', power: 'شارژی', price: 4100000, oldPrice: 0, discount: 0, inStock: true, rating: '۴.۹', specs: ['برد ۵۰ متر', 'بلوتوث', 'ضدغبار IP54'], image: 'https://images.unsplash.com/photo-1581092335397-9583eb92d232?q=80&w=500&auto=format&fit=crop', sales: 76 },
-            { id: 5, title: 'دریل پیچ‌گوشتی شارژی براشلس میلواکی ۱۸ ولت M18', brand: 'MILWAUKEE', category: 'power-tools', power: 'شارژی', price: 8300000, oldPrice: 9200000, discount: 10, inStock: true, rating: '۵.۰', specs: ['۱۸ ولت', 'موتور براشلس', '۲ باتری'], image: 'https://images.unsplash.com/photo-1586864387967-d02ef85d93e8?q=80&w=500&auto=format&fit=crop', sales: 91 },
-            { id: 6, title: 'بتن‌کن ۴ شیار هیلتی مدل TE 2-S اورجینال بانه', brand: 'HILTI', category: 'power-tools', power: 'برقی', price: 11200000, oldPrice: 12000000, discount: 7, inStock: true, rating: '۴.۹', specs: ['۶۵۰ وات', '۴ شیار SDS', 'ضدلرزش'], image: 'https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?q=80&w=500&auto=format&fit=crop', sales: 64 },
-            { id: 7, title: 'فرز آهنگری سنگین آ ا گ ۲۲۰۰ وات مدل WS 22-230', brand: 'AEG', category: 'power-tools', power: 'برقی', price: 4900000, oldPrice: 0, discount: 0, inStock: false, rating: '۴.۶', specs: ['۲۲۰۰ وات', 'صفحه ۲۳۰', 'سافت استارت'], image: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?q=80&w=500&auto=format&fit=crop', sales: 55 },
-            { id: 8, title: 'تراز لیزری ۳۶۰ درجه سه خط کرون مدل CT44048', brand: 'CROWN', category: 'measuring', power: 'شارژی', price: 3450000, oldPrice: 0, discount: 0, inStock: true, rating: '۴.۸', specs: ['نور سبز', '۳۶۰ درجه', 'پایه مگنتی'], image: 'https://images.unsplash.com/photo-1581092335397-9583eb92d232?q=80&w=500&auto=format&fit=crop', sales: 72 },
-            { id: 101, title: 'بکس شارژی براشلس دیوالت ۲۰ ولت مدل DCF899', brand: 'DEWALT', category: 'power-tools', power: 'شارژی', price: 11310000, oldPrice: 14500000, discount: 22, inStock: true, rating: '۵.۰', specs: ['۹۵۰ نیوتن‌متر', '۲۰ ولت', 'درایو ۱/۲'], image: 'https://images.unsplash.com/photo-1504148455328-c376907d081c?q=80&w=500&auto=format&fit=crop', sales: 98 },
-            { id: 102, title: 'اینورتر جوشکاری ۲۵۰ آمپر صنعتی رونیکس RH-4625', brand: 'RONIX', category: 'welding', power: 'برقی', price: 6390000, oldPrice: 7800000, discount: 18, inStock: true, rating: '۴.۸', specs: ['۲۵۰ آمپر واقعی', 'IGBT', 'دو ولوم'], image: 'https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?q=80&w=500&auto=format&fit=crop', sales: 89 },
-            { id: 103, title: 'کارواش صنعتی دینامی بوش مدل AQT 140 بار', brand: 'BOSCH', category: 'pneumatic', power: 'برقی', price: 6900000, oldPrice: 9200000, discount: 25, inStock: true, rating: '۴.۷', specs: ['۱۴۰ بار', 'موتور القایی', 'شیلنگ ۸ متری'], image: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?q=80&w=500&auto=format&fit=crop', sales: 73 },
-            { id: 104, title: 'چکش تخریب ۱۶ کیلویی ماکیتا مدل HM1307C', brand: 'MAKITA', category: 'power-tools', power: 'برقی', price: 27200000, oldPrice: 32000000, discount: 15, inStock: true, rating: '۴.۹', specs: ['۱۵۱۰ وات', '۳۳.۸ ژول', 'قلم شش‌گوش'], image: 'https://images.unsplash.com/photo-1586864387967-d02ef85d93e8?q=80&w=500&auto=format&fit=crop', sales: 60 },
-            { id: 105, title: 'پک کامل دریل و مینی‌فرز شارژی میلواکی M18', brand: 'MILWAUKEE', category: 'hand-tools', power: 'شارژی', price: 15600000, oldPrice: 19500000, discount: 20, inStock: true, rating: '۵.۰', specs: ['پک ۲ دستگاه', 'کیف ضدضربه', 'شارژر سریع'], image: 'https://images.unsplash.com/photo-1530124566582-a618bc2615dc?q=80&w=500&auto=format&fit=crop', sales: 84 },
-            { id: 106, title: 'اره پروفیل‌بر صنعتی آ ا گ مدل SMT 355 توان ۲۳۰۰ وات', brand: 'AEG', category: 'power-tools', power: 'برقی', price: 9230000, oldPrice: 11400000, discount: 19, inStock: true, rating: '۴.۸', specs: ['۲۳۰۰ وات', 'صفحه ۳۵۵', 'گیره سریع'], image: 'https://images.unsplash.com/photo-1572981779307-38b8cabb2407?q=80&w=500&auto=format&fit=crop', sales: 77 },
-            { id: 107, title: 'اره زنجیری شارژی ۲۰ ولت براشلس دیوالت مدل DCM565', brand: 'DEWALT', category: 'gardening', power: 'شارژی', price: 9850000, oldPrice: 11200000, discount: 12, inStock: true, rating: '۴.۹', specs: ['ساتور ۳۰ سانت', 'ترمز زنجیر', 'روغن‌کاری خودکار'], image: 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?q=80&w=500&auto=format&fit=crop', sales: 69 }
-        ];
-
         let currentSort = 'bestselling';
 
-        // باز و بسته کردن کشوی فیلتر در موبایل
         function toggleMobileFilters() {
             document.getElementById('filterSidebar').classList.toggle('active');
             document.getElementById('filterDrawerOverlay').classList.toggle('active');
         }
 
-        // تغییر حالت نمایش (Grid / List)
         function setCatalogView(mode) {
             const grid = document.getElementById('catalogProductsGrid');
             const btnGrid = document.getElementById('btnGridView');
@@ -1143,7 +1098,6 @@
             }
         }
 
-        // تغییر حالت مرتب‌سازی
         function setSortMode(sortKey) {
             currentSort = sortKey;
             document.querySelectorAll('#desktopSortGroup .sort-pill').forEach(btn => {
@@ -1154,14 +1108,12 @@
             applyCatalogFilters();
         }
 
-        // اسلایدر قیمت
         function updatePriceSliderLabel(val) {
             const num = parseInt(val);
             document.getElementById('priceSliderCurrentVal').innerText = `تا ${toPersianNum(num.toLocaleString())} تومان`;
             applyCatalogFilters();
         }
 
-        // هماهنگی نوار قرص‌های دسته‌بندی بالا با چک‌باکس‌های سایدبار
         document.querySelectorAll('#quickCatsBar .quick-cat-pill').forEach(pill => {
             pill.addEventListener('click', function() {
                 document.querySelectorAll('#quickCatsBar .quick-cat-pill').forEach(p => p.classList.remove('active'));
@@ -1191,7 +1143,6 @@
             applyCatalogFilters();
         }
 
-        // موتور اصلی فیلترینگ، مرتب‌سازی و رندر کارت‌ها
         function applyCatalogFilters() {
             const headerSearchInput = document.getElementById('searchInput');
             const searchQuery = headerSearchInput ? headerSearchInput.value.trim().toLowerCase() : '';
@@ -1203,7 +1154,7 @@
             const selectedBrands = Array.from(document.querySelectorAll('#brandCheckboxList input:checked')).map(i => i.value);
             const selectedPowers = Array.from(document.querySelectorAll('#powerCheckboxList input:checked')).map(i => i.value);
 
-            let filtered = catalogData.filter(item => {
+            let filtered = PRODUCTS.filter(item => {
                 if (searchQuery && !item.title.toLowerCase().includes(searchQuery) && !item.brand.toLowerCase().includes(searchQuery)) return false;
                 if (onlyInStock && !item.inStock) return false;
                 if (onlyDiscount && item.discount === 0) return false;
@@ -1246,7 +1197,7 @@
                         <span class="badge-stock ${item.inStock ? '' : 'out'}">${item.inStock ? 'موجود در انبار' : 'ناموجود'}</span>
                     </div>
                     <div class="cat-product-img-box">
-                        <img src="${item.image}" alt="${item.title}" class="cat-product-img" loading="lazy">
+                        <img src="${productImage(item, 500)}" alt="${item.title}" class="cat-product-img" loading="lazy">
                     </div>
                     <div class="cat-product-body">
                         <div class="cat-product-main-info">
@@ -1261,8 +1212,8 @@
                         </div>
                         <div class="cat-product-footer">
                             <div class="cat-price-wrap">
-                                ${item.oldPrice > 0 ? `<span class="cat-old-price">${toPersianNum(item.oldPrice.toLocaleString())}</span>` : ''}
-                                <span class="cat-new-price">${toPersianNum(item.price.toLocaleString())} تومان</span>
+                                ${item.oldPrice ? `<span class="cat-old-price">${toPersianNum(item.oldPrice.toLocaleString())}</span>` : ''}
+                                <span class="cat-new-price">${formatPrice(item.price)}</span>
                             </div>
                             <button class="btn-cat-add" ${!item.inStock ? 'disabled' : ''} onclick="addProductFromCatalog(${item.id}, event)">
                                 ${item.inStock ? '🛒 افزودن به سبد خرید' : 'فعلاً ناموجود'}
@@ -1311,14 +1262,13 @@
             applyCatalogFilters();
         }
 
-        // افزودن محصول از کارت‌های کاتالوگ به سبد خرید سراسری (تعریف‌شده در layout.js)
         function addProductFromCatalog(id, e) {
             e.stopPropagation();
-            const prod = catalogData.find(p => p.id === id);
+            const prod = PRODUCTS.find(p => p.id === id);
             if (!prod) return;
             const existing = cart.find(item => item.title === prod.title);
             if (existing) existing.quantity += 1;
-            else cart.push({ title: prod.title, price: prod.price, image: prod.image, quantity: 1 });
+            else cart.push({ title: prod.title, price: prod.price, image: productImage(prod, 300), quantity: 1 });
             saveAndUpdateCart();
             toggleCart();
         }
@@ -1333,7 +1283,6 @@
             setTimeout(() => { window.location.href = `product.html?id=${id}`; }, 350);
         }
 
-        // اتصال کادر جستجوی هدر (تزریق‌شده توسط layout.js) به فیلتر زنده کاتالوگ و خواندن پارامترهای URL
         const headerSearchEl = document.getElementById('searchInput');
         if (headerSearchEl) {
             headerSearchEl.addEventListener('input', applyCatalogFilters);
@@ -1346,7 +1295,6 @@
             const filterParam = params.get('filter');
             const sortParam = params.get('sort');
 
-            // نگاشت زیردسته‌های خاص به دسته‌های اصلی کاتالوگ
             const catMap = {
                 'drills': 'power-tools',
                 'grinders': 'power-tools',
@@ -1385,7 +1333,7 @@
             }
         }
 
-        initFromUrlParams();
+        document.addEventListener('DOMContentLoaded', initFromUrlParams);
     </script>
 </body>
 </html>

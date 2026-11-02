@@ -2,8 +2,15 @@
 <html dir="rtl" lang="fa" data-theme="dark">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>مگا ابزار | فروشگاه تخصصی ابزارآلات صنعتی و کارگاهی</title>
+    <script>
+    // اعمال فوری تم قبل از رندر شدن صفحه برای جلوگیری از پرش یا فراموشی تم
+    (function() {
+        const savedTheme = localStorage.getItem('mega_abzar_theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+    })();
+</script>
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         /* استایل‌های اختصاصی محتوای صفحه اصلی (استایل‌های هدر، فوتر و سبد خرید به layout.js منتقل شده‌اند) */
@@ -970,7 +977,7 @@
         <div class="h-scroll-container">
             <button class="h-scroll-arrow arrow-right" onclick="scrollTrack('productsTrack', 1)">❮</button>
             <div class="h-scroll-track" id="productsTrack">
-                
+
                 <div class="product-card clickable-item" data-id="1">
                     <span class="badge-discount">۱۵٪ تخفیف</span>
                     <div class="product-image-wrapper">
@@ -1186,7 +1193,9 @@
     <div id="site-footer"></div>
 
     <!-- ۱. فراخوانی فایل مرکزی هدر و فوتر -->
+    <script src="products.js"></script>
     <script src="layout.js"></script>
+    <script src="cart.js"></script>
 
     <!-- ۲. اسکریپت‌های اختصاصی صفحه اصلی (اسلایدر، تایمر مگا آف و اسکرول افقی) -->
     <script>
