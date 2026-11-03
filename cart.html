@@ -12,33 +12,18 @@
     </script>
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        /* استایل‌های اختصاصی صفحه سبد خرید (هدر، فوتر و کشوی سبد از layout.js می‌آیند) */
-        .breadcrumb-container {
-            max-width: 1400px; margin: 20px auto 0; padding: 0 30px;
-            font-size: 13px; color: var(--text-muted);
-            display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
-        }
+        .breadcrumb-container { max-width: 1400px; margin: 20px auto 0; padding: 0 30px; font-size: 13px; color: var(--text-muted); display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
         .breadcrumb-container a { color: var(--text-muted); text-decoration: none; }
         .breadcrumb-container a:hover { color: var(--accent-color); }
-
         .cart-page { max-width: 1400px; margin: 0 auto; padding: 20px 30px 60px; }
         .cart-page-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 20px; }
         .cart-page-head h1 { margin: 0; font-size: 24px; font-weight: 800; }
         .cart-page-head h1 small { font-size: 14px; color: var(--text-muted); font-weight: 500; margin-right: 8px; }
-        .btn-clear {
-            background: transparent; border: 1px solid var(--border-color); color: var(--text-muted);
-            padding: 8px 14px; border-radius: 10px; font-family: inherit; font-size: 13px; font-weight: 600; cursor: pointer;
-            transition: all .2s;
-        }
+        .btn-clear { background: transparent; border: 1px solid var(--border-color); color: var(--text-muted); padding: 8px 14px; border-radius: 10px; font-family: inherit; font-size: 13px; font-weight: 600; cursor: pointer; transition: all .2s; }
         .btn-clear:hover { border-color: var(--accent-color); color: var(--accent-color); }
-
         .cart-layout { display: grid; grid-template-columns: 1fr 360px; gap: 24px; align-items: start; }
-
         .cart-lines { display: flex; flex-direction: column; gap: 14px; }
-        .cart-line {
-            display: grid; grid-template-columns: 110px 1fr auto; gap: 18px; align-items: center;
-            background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 14px;
-        }
+        .cart-line { display: grid; grid-template-columns: 110px 1fr auto; gap: 18px; align-items: center; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 14px; }
         .cart-line-img { width: 110px; height: 110px; border-radius: 12px; background: var(--image-bg); overflow: hidden; display: block; }
         .cart-line-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
         .cart-line-brand { font-size: 11.5px; font-weight: 800; color: var(--accent-color); letter-spacing: .5px; }
@@ -48,26 +33,15 @@
         .cart-line-unit { font-size: 12.5px; color: var(--text-muted); display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
         .cart-line-unit s { opacity: .7; }
         .cart-line-off { background: var(--accent-soft); color: var(--accent-color); padding: 2px 8px; border-radius: 20px; font-weight: 800; font-size: 11.5px; }
-
         .cart-line-side { display: flex; flex-direction: column; align-items: flex-end; gap: 12px; }
         .qty-box { display: inline-flex; align-items: center; border: 1px solid var(--border-color); border-radius: 10px; overflow: hidden; background: var(--secondary-bg); }
-        .qty-box button {
-            width: 36px; height: 36px; border: none; background: transparent; color: var(--text-color);
-            font-size: 18px; font-family: inherit; cursor: pointer; transition: background .2s;
-        }
+        .qty-box button { width: 36px; height: 36px; border: none; background: transparent; color: var(--text-color); font-size: 18px; font-family: inherit; cursor: pointer; transition: background .2s; }
         .qty-box button:hover { background: var(--accent-soft); color: var(--accent-color); }
         .qty-box span { min-width: 38px; text-align: center; font-weight: 800; }
         .cart-line-total { font-size: 16px; font-weight: 800; }
-        .btn-remove {
-            background: transparent; border: none; color: var(--text-muted); font-family: inherit; font-size: 12.5px;
-            cursor: pointer; padding: 2px 0; display: inline-flex; align-items: center; gap: 4px;
-        }
+        .btn-remove { background: transparent; border: none; color: var(--text-muted); font-family: inherit; font-size: 12.5px; cursor: pointer; padding: 2px 0; display: inline-flex; align-items: center; gap: 4px; }
         .btn-remove:hover { color: var(--accent-color); }
-
-        .cart-summary {
-            background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 20px;
-            position: sticky; top: 150px;
-        }
+        .cart-summary { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 20px; position: sticky; top: 150px; }
         .cart-summary h2 { margin: 0 0 16px; font-size: 17px; font-weight: 800; }
         .sum-row { display: flex; justify-content: space-between; gap: 10px; padding: 9px 0; font-size: 14px; color: var(--text-muted); }
         .sum-row b { color: var(--text-color); font-weight: 700; }
@@ -77,37 +51,25 @@
         .ship-hint { background: var(--accent-soft); border-radius: 10px; padding: 10px 12px; font-size: 12.5px; line-height: 1.8; margin-top: 8px; }
         .ship-bar { height: 6px; border-radius: 6px; background: var(--border-color); margin-top: 8px; overflow: hidden; }
         .ship-bar i { display: block; height: 100%; background: var(--accent-color); border-radius: 6px; transition: width .3s; }
-        .btn-go-checkout {
-            display: block; text-align: center; text-decoration: none; margin-top: 16px;
-            background: var(--accent-color); color: #fff; padding: 14px; border-radius: 12px; font-size: 15px; font-weight: 800;
-        }
+        .btn-go-checkout { display: block; text-align: center; text-decoration: none; margin-top: 16px; background: var(--accent-color); color: #fff; padding: 14px; border-radius: 12px; font-size: 15px; font-weight: 800; }
         .btn-go-checkout:hover { filter: brightness(1.08); }
         .link-continue { display: block; text-align: center; margin-top: 12px; font-size: 13px; color: var(--text-muted); text-decoration: none; }
         .link-continue:hover { color: var(--accent-color); }
-
         .cart-empty { text-align: center; padding: 70px 20px; background: var(--card-bg); border: 1px dashed var(--border-color); border-radius: 18px; }
         .cart-empty .big { font-size: 56px; }
         .cart-empty h2 { margin: 14px 0 6px; font-size: 20px; }
         .cart-empty p { color: var(--text-muted); margin: 0 0 22px; }
         .cart-empty a { display: inline-block; background: var(--accent-color); color: #fff; padding: 12px 26px; border-radius: 12px; text-decoration: none; font-weight: 800; }
-
         .suggest { margin-top: 40px; }
         .suggest h2 { font-size: 18px; margin: 0 0 14px; }
         .suggest-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; }
-        .suggest-card {
-            background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 14px; padding: 12px;
-            display: flex; flex-direction: column; gap: 8px; text-decoration: none; color: inherit; transition: border-color .2s;
-        }
+        .suggest-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 14px; padding: 12px; display: flex; flex-direction: column; gap: 8px; text-decoration: none; color: inherit; transition: border-color .2s; }
         .suggest-card:hover { border-color: var(--accent-color); }
         .suggest-card img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 10px; background: var(--image-bg); }
         .suggest-card h3 { margin: 0; font-size: 13px; line-height: 1.7; font-weight: 600; flex: 1; }
         .suggest-card .p { font-weight: 800; font-size: 14px; }
-        .suggest-card button {
-            border: 1px solid var(--accent-color); background: transparent; color: var(--accent-color);
-            border-radius: 10px; padding: 8px; font-family: inherit; font-weight: 700; cursor: pointer;
-        }
+        .suggest-card button { border: 1px solid var(--accent-color); background: transparent; color: var(--accent-color); border-radius: 10px; padding: 8px; font-family: inherit; font-weight: 700; cursor: pointer; }
         .suggest-card button:hover { background: var(--accent-color); color: #fff; }
-
         @media (max-width: 992px) {
             .cart-layout { grid-template-columns: 1fr; }
             .cart-summary { position: static; }
@@ -122,18 +84,13 @@
     </style>
 </head>
 <body>
-    <div class="page-transition" id="pageTransition"><img src="image.png" class="transition-logo" alt=""></div>
     <div id="site-header"></div>
-
     <nav class="breadcrumb-container" aria-label="مسیر">
         <a href="index.html">خانه</a><span>/</span>
         <span style="color: var(--text-color); font-weight: 700;">سبد خرید</span>
     </nav>
-
     <main class="cart-page" id="cartPageRoot" aria-live="polite"></main>
-
     <div id="site-footer"></div>
-
     <script src="products.js"></script>
     <script src="store.js"></script>
     <script src="layout.js"></script>
@@ -142,7 +99,6 @@
         function renderCartPage() {
             const root = document.getElementById('cartPageRoot');
             if (!root) return;
-
             if (cart.length === 0) {
                 root.innerHTML = `
                     <div class="cart-empty">
@@ -153,7 +109,6 @@
                     </div>` + suggestionsHTML();
                 return;
             }
-
             let originalTotal = 0, payable = 0;
             const lines = cart.map(item => {
                 const p = getProduct(item.id);
@@ -184,7 +139,6 @@
             }).join('');
 
             const saving = originalTotal - payable;
-            // قوانین ارسال از تنظیمات فروشگاه و فیلد «ارسال رایگان» محصولات می‌آید (calcShipping در store.js)
             const ship = calcShipping(cart);
             const shipCfg = getSettings().shipping;
             const grand = payable + ship.fee;
@@ -223,7 +177,6 @@
             saveAndUpdateCart();
         }
 
-        // پیشنهاد چند محصول موجود که هنوز در سبد نیستند
         function suggestionsHTML() {
             const inCart = new Set(cart.map(i => String(i.id)));
             const picks = PRODUCTS.filter(p => p.inStock && !inCart.has(String(p.id)))
@@ -239,7 +192,6 @@
                     </a>`).join('') + `</div></section>`;
         }
 
-        // در صفحه سبد، کشوی کناری باز نمی‌شود چون خود صفحه به‌روز می‌شود
         function addToCartQuiet(id) {
             const p = getProduct(id);
             if (!p || !p.inStock) return;
@@ -248,7 +200,6 @@
             saveAndUpdateCart();
         }
 
-        // هر تغییری در سبد (از این صفحه، کشو یا تب دیگر) صفحه را دوباره رسم می‌کند
         window.onCartUpdated = renderCartPage;
         renderCartPage();
     </script>
