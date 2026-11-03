@@ -1,5 +1,4 @@
-// cart.js - سبد خرید مشترک همه صفحات. آیتم‌ها فقط با id ذخیره می‌شوند: { id, quantity }
-// قیمت، عنوان و تصویر همیشه از products.js خوانده می‌شود، پس تغییر قیمت در سبد هم اعمال می‌شود.
+// cart.js - سبد خرید مشترک همه صفحات. آیتم‌ها فقط با id ذخیره می‌شوند.
 
 const CART_KEY = 'mega_abzar_cart_v2';
 
@@ -7,7 +6,6 @@ function loadCart() {
     try {
         const saved = JSON.parse(localStorage.getItem(CART_KEY) || 'null');
         if (Array.isArray(saved)) return saved.filter(i => getProduct(i.id));
-        // مهاجرت از سبد قدیمی که با عنوان محصول ذخیره می‌شد
         const old = JSON.parse(localStorage.getItem('mega_abzar_cart') || '[]');
         const migrated = [];
         old.forEach(o => {
@@ -24,7 +22,6 @@ function saveCart() {
     try { localStorage.setItem(CART_KEY, JSON.stringify(cart)); } catch (e) {}
 }
 
-// برای اینکه اگر سبد در تب دیگری عوض شد، این تب هم هماهنگ شود
 window.addEventListener('storage', e => {
     if (e.key === CART_KEY) { cart = loadCart(); updateCartUI(); }
 });
@@ -125,25 +122,28 @@ function updateCartUI() {
 document.addEventListener('DOMContentLoaded', () => {
     updateCartUI();
 
-    // دکمه‌های «افزودن به سبد» کارت‌های صفحه اصلی: شناسایی با data-id کارت
-    document.querySelectorAll('.product-card .btn-add-cart').forEach(button => {
-        button.addEventListener('click', e => {
+    // استفاده از Event Delegation سراسری برای پشتیبانی از المان‌های داینامیک (مثل محصولات مشابه در product.html)
+    document.addEventListener('click', e => {
+        const addBtn = e.target.closest('.product-card .btn-add-cart');
+        if (addBtn) {
             e.stopPropagation();
             if (window.globalDragFlag) return;
-            addToCart(button.closest('.product-card').dataset.id);
-        });
-    });
+            const card = addBtn.closest('.product-card');
+            if (card && card.dataset.id) {
+                addToCart(card.dataset.id);
+            }
+            return;
+        }
 
-    // کلیک روی آیتم‌های قابل‌کلیک با انیمیشن گذر بین صفحات
-    document.querySelectorAll('.clickable-item').forEach(item => {
-        item.addEventListener('click', function(e) {
+        const clickableCard = e.target.closest('.clickable-item');
+        if (clickableCard) {
             if (window.globalDragFlag) { e.preventDefault(); e.stopPropagation(); return; }
             if (e.target.closest('.btn-add-cart')) return;
             e.preventDefault();
-            const targetUrl = this.getAttribute('href') || `product.html?id=${this.dataset.id || 1}`;
+            const targetUrl = clickableCard.getAttribute('href') || `product.html?id=${clickableCard.dataset.id || 1}`;
             const transition = document.getElementById('pageTransition');
             if (transition) { transition.classList.remove('loaded'); transition.classList.add('active'); }
             setTimeout(() => { window.location.href = targetUrl; }, 380);
-        });
+        }
     });
 });
