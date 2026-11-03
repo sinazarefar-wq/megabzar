@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>مشخصات و خرید محصول | مگا ابزار</title>
     <script>
-    // اعمال فوری تم قبل از رندر شدن صفحه برای جلوگیری از پرش یا فراموشی تم
     (function() {
         const savedTheme = localStorage.getItem('mega_abzar_theme') || 'dark';
         document.documentElement.setAttribute('data-theme', savedTheme);
@@ -13,570 +12,77 @@
 </script>
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        /* استایل‌های اختصاصی صفحه محصول (استایل‌های هدر، مگامنو، فوتر و سبد خرید از layout.js تزریق می‌شوند) */
-
-        /* ۱. بردکرامب (مسیر راهنما) */
-        .breadcrumb-container {
-            max-width: 1400px;
-            margin: 20px auto 0 auto;
-            padding: 0 30px;
-            font-size: 13px;
-            color: var(--text-muted);
-            display: flex;
-            gap: 8px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-        .breadcrumb-container a {
-            color: var(--text-muted);
-            text-decoration: none;
-            transition: color 0.2s;
-        }
-        .breadcrumb-container a:hover {
-            color: var(--accent-color);
-        }
-
-        /* ۲. بدنه اصلی صفحه محصول (گالری + جزئیات + باکس خرید) */
-        .product-main-wrapper {
-            max-width: 1400px;
-            margin: 20px auto 40px auto;
-            padding: 0 30px;
-            display: grid;
-            grid-template-columns: 440px 1fr 330px;
-            gap: 28px;
-            align-items: start;
-        }
-
-        /* گالری تصاویر محصول و زوم ذره‌بینی */
-        .product-gallery-section {
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-            position: sticky;
-            top: 95px;
-        }
-        .main-image-container {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            height: 410px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            position: relative;
-            cursor: crosshair;
-        }
-        .main-product-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.25s ease-out;
-        }
-        .thumb-list {
-            display: flex;
-            gap: 10px;
-            overflow-x: auto;
-            padding-bottom: 5px;
-            scrollbar-width: none;
-        }
+        .breadcrumb-container { max-width: 1400px; margin: 20px auto 0 auto; padding: 0 30px; font-size: 13px; color: var(--text-muted); display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+        .breadcrumb-container a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+        .breadcrumb-container a:hover { color: var(--accent-color); }
+        .product-main-wrapper { max-width: 1400px; margin: 20px auto 40px auto; padding: 0 30px; display: grid; grid-template-columns: 440px 1fr 330px; gap: 28px; align-items: start; }
+        .product-gallery-section { display: flex; flex-direction: column; gap: 14px; position: sticky; top: 95px; }
+        .main-image-container { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; height: 410px; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; cursor: crosshair; }
+        .main-product-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.25s ease-out; }
+        .thumb-list { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; }
         .thumb-list::-webkit-scrollbar { display: none; }
-        .thumb-item {
-            flex: 0 0 82px;
-            height: 82px;
-            background-color: var(--card-bg);
-            border: 2px solid var(--border-color);
-            border-radius: 12px;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: border-color 0.2s, transform 0.2s;
-        }
-        .thumb-item.active, .thumb-item:hover {
-            border-color: var(--accent-color);
-            transform: translateY(-2px);
-        }
-        .thumb-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        /* ستون میانی: اطلاعات و متغیرهای محصول */
-        .product-details-section {
-            display: flex;
-            flex-direction: column;
-            gap: 18px;
-        }
-        .product-brand-label {
-            color: var(--accent-color);
-            font-weight: 800;
-            font-size: 12.5px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        .product-main-title {
-            font-size: 22px;
-            font-weight: 900;
-            margin: 0;
-            line-height: 1.5;
-        }
-        .product-meta-row {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            font-size: 13px;
-            color: var(--text-muted);
-            flex-wrap: wrap;
-            padding-bottom: 14px;
-            border-bottom: 1px solid var(--border-color);
-        }
-        .product-rating {
-            color: #f59e0b;
-            font-weight: 800;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-        .variants-box {
-            background-color: var(--secondary-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 14px;
-            padding: 16px 18px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        .variant-title {
-            font-size: 13.5px;
-            font-weight: 800;
-        }
-        .variant-options {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-        .variant-chip {
-            background-color: var(--card-bg);
-            border: 1.5px solid var(--border-color);
-            color: var(--text-color);
-            padding: 8px 15px;
-            border-radius: 10px;
-            font-family: inherit;
-            font-size: 13px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .variant-chip.active, .variant-chip:hover {
-            border-color: var(--accent-color);
-            color: var(--accent-color);
-            background-color: var(--accent-soft);
-        }
-        .features-bullet-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            gap: 9px;
-            font-size: 13.5px;
-            color: var(--text-muted);
-        }
-        .features-bullet-list li {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .features-bullet-list li::before {
-            content: '•';
-            color: var(--accent-color);
-            font-weight: 900;
-            font-size: 18px;
-        }
-
-        /* ستون چپ: باکس خرید صنعتی (Buy Box) */
-        .buy-box {
-            background-color: var(--secondary-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 22px;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            position: sticky;
-            top: 95px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        }
-        .stock-status {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 13px;
-            font-weight: 700;
-            color: #10b981;
-        }
-        .stock-dot {
-            width: 9px;
-            height: 9px;
-            background-color: #10b981;
-            border-radius: 50%;
-            box-shadow: 0 0 8px #10b981;
-        }
-        .buy-box-info-row {
-            display: flex;
-            justify-content: space-between;
-            font-size: 12.5px;
-            color: var(--text-muted);
-            padding-bottom: 12px;
-            border-bottom: 1px solid var(--border-color);
-        }
-        .buy-box-price {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 15px;
-        }
-        .buy-old-price {
-            color: var(--text-muted);
-            text-decoration: line-through;
-            font-size: 13px;
-            margin-bottom: 4px;
-        }
-        .buy-new-price {
-            font-size: 22px;
-            font-weight: 900;
-            color: var(--text-color);
-        }
-        .btn-add-to-cart-lg {
-            width: 100%;
-            background: linear-gradient(135deg, var(--accent-color), #b71c1c);
-            color: #fff;
-            border: none;
-            padding: 14px;
-            border-radius: 12px;
-            font-family: inherit;
-            font-size: 15px;
-            font-weight: 900;
-            cursor: pointer;
-            transition: opacity 0.3s, transform 0.2s, box-shadow 0.2s;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 0 4px 15px rgba(229, 57, 53, 0.35);
-        }
-        .btn-add-to-cart-lg:hover {
-            opacity: 0.95;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(229, 57, 53, 0.5);
-        }
-
-        /* ۳. بخش تب‌های مشخصات، بررسی تخصصی و نظرات */
-        .product-tabs-wrapper {
-            max-width: 1400px;
-            margin: 40px auto;
-            padding: 0 30px;
-        }
-        .tabs-header {
-            display: flex;
-            gap: 15px;
-            border-bottom: 2px solid var(--border-color);
-            margin-bottom: 25px;
-            overflow-x: auto;
-            scrollbar-width: none;
-        }
+        .thumb-item { flex: 0 0 82px; height: 82px; background-color: var(--card-bg); border: 2px solid var(--border-color); border-radius: 12px; overflow: hidden; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: border-color 0.2s, transform 0.2s; }
+        .thumb-item.active, .thumb-item:hover { border-color: var(--accent-color); transform: translateY(-2px); }
+        .thumb-item img { width: 100%; height: 100%; object-fit: cover; }
+        .product-details-section { display: flex; flex-direction: column; gap: 18px; }
+        .product-brand-label { color: var(--accent-color); font-weight: 800; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .product-main-title { font-size: 22px; font-weight: 900; margin: 0; line-height: 1.5; }
+        .product-meta-row { display: flex; align-items: center; gap: 20px; font-size: 13px; color: var(--text-muted); flex-wrap: wrap; padding-bottom: 14px; border-bottom: 1px solid var(--border-color); }
+        .product-rating { color: #f59e0b; font-weight: 800; display: flex; align-items: center; gap: 4px; }
+        .variants-box { background-color: var(--secondary-bg); border: 1px solid var(--border-color); border-radius: 14px; padding: 16px 18px; display: flex; flex-direction: column; gap: 12px; }
+        .variant-title { font-size: 13.5px; font-weight: 800; }
+        .variant-options { display: flex; gap: 10px; flex-wrap: wrap; }
+        .variant-chip { background-color: var(--card-bg); border: 1.5px solid var(--border-color); color: var(--text-color); padding: 8px 15px; border-radius: 10px; font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+        .variant-chip.active, .variant-chip:hover { border-color: var(--accent-color); color: var(--accent-color); background-color: var(--accent-soft); }
+        .features-bullet-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 9px; font-size: 13.5px; color: var(--text-muted); }
+        .features-bullet-list li { display: flex; align-items: center; gap: 8px; }
+        .features-bullet-list li::before { content: '•'; color: var(--accent-color); font-weight: 900; font-size: 18px; }
+        .buy-box { background-color: var(--secondary-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 22px; display: flex; flex-direction: column; gap: 16px; position: sticky; top: 95px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        .stock-status { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; color: #10b981; }
+        .stock-dot { width: 9px; height: 9px; background-color: #10b981; border-radius: 50%; box-shadow: 0 0 8px #10b981; }
+        .buy-box-info-row { display: flex; justify-content: space-between; font-size: 12.5px; color: var(--text-muted); padding-bottom: 12px; border-bottom: 1px solid var(--border-color); }
+        .buy-box-price { display: flex; flex-direction: column; align-items: flex-end; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; }
+        .buy-old-price { color: var(--text-muted); text-decoration: line-through; font-size: 13px; margin-bottom: 4px; }
+        .buy-new-price { font-size: 22px; font-weight: 900; color: var(--text-color); }
+        .btn-add-to-cart-lg { width: 100%; background: linear-gradient(135deg, var(--accent-color), #b71c1c); color: #fff; border: none; padding: 14px; border-radius: 12px; font-family: inherit; font-size: 15px; font-weight: 900; cursor: pointer; transition: opacity 0.3s, transform 0.2s, box-shadow 0.2s; display: flex; justify-content: center; align-items: center; gap: 8px; box-shadow: 0 4px 15px rgba(229, 57, 53, 0.35); }
+        .btn-add-to-cart-lg:hover { opacity: 0.95; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(229, 57, 53, 0.5); }
+        .product-tabs-wrapper { max-width: 1400px; margin: 40px auto; padding: 0 30px; }
+        .tabs-header { display: flex; gap: 15px; border-bottom: 2px solid var(--border-color); margin-bottom: 25px; overflow-x: auto; scrollbar-width: none; }
         .tabs-header::-webkit-scrollbar { display: none; }
-        .tab-btn {
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            font-family: inherit;
-            font-size: 15.5px;
-            font-weight: 800;
-            padding: 12px 20px;
-            cursor: pointer;
-            position: relative;
-            transition: color 0.3s;
-            white-space: nowrap;
-        }
-        .tab-btn.active {
-            color: var(--accent-color);
-        }
-        .tab-btn.active::after {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background-color: var(--accent-color);
-            border-radius: 2px;
-        }
-        .tab-content {
-            display: none;
-            background-color: var(--secondary-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 25px;
-        }
-        .tab-content.active {
-            display: block;
-            animation: fadeInTab 0.25s ease;
-        }
-        @keyframes fadeInTab {
-            from { opacity: 0; transform: translateY(4px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .specs-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
+        .tab-btn { background: none; border: none; color: var(--text-muted); font-family: inherit; font-size: 15.5px; font-weight: 800; padding: 12px 20px; cursor: pointer; position: relative; transition: color 0.3s; white-space: nowrap; }
+        .tab-btn.active { color: var(--accent-color); }
+        .tab-btn.active::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 100%; height: 3px; background-color: var(--accent-color); border-radius: 2px; }
+        .tab-content { display: none; background-color: var(--secondary-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 25px; }
+        .tab-content.active { display: block; animation: fadeInTab 0.25s ease; }
+        @keyframes fadeInTab { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+        .specs-table { width: 100%; border-collapse: collapse; }
         .specs-table tr { border-bottom: 1px solid var(--border-color); }
         .specs-table tr:last-child { border-bottom: none; }
         .specs-table td { padding: 14px 10px; font-size: 14px; }
         .specs-table td:first-child { color: var(--text-muted); font-weight: 700; width: 32%; }
         .specs-table td:last-child { font-weight: 800; }
-
-        /* فرم ثبت نظر جدید */
-        .review-item {
-            padding: 14px 0;
-            border-bottom: 1px solid var(--border-color);
-        }
+        .review-item { padding: 14px 0; border-bottom: 1px solid var(--border-color); }
         .review-item:last-of-type { border-bottom: none; }
-        .review-header {
-            display: flex;
-            justify-content: space-between;
-            font-size: 13px;
-            font-weight: 800;
-            margin-bottom: 6px;
-        }
-        .review-form-box {
-            margin-top: 25px;
-            padding-top: 20px;
-            border-top: 1px dashed var(--border-color);
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        .review-input, .review-textarea {
-            width: 100%;
-            background-color: var(--bg-color);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            padding: 10px 14px;
-            color: var(--text-color);
-            font-family: inherit;
-            font-size: 13.5px;
-        }
-        .review-input:focus, .review-textarea:focus {
-            border-color: var(--accent-color);
-        }
-
-        /* ۴. اسلایدر محصولات مشابه و مکمل */
-        .section-wrapper {
-            padding: 20px 30px 35px 30px;
-            max-width: 1400px;
-            margin: 0 auto;
-            position: relative;
-            user-select: none;
-        }
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 12px;
-        }
-        .section-title {
-            font-size: 20px;
-            font-weight: 800;
-            margin: 0;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .section-title::before {
-            content: '';
-            display: inline-block;
-            width: 5px;
-            height: 22px;
-            background-color: var(--accent-color);
-            border-radius: 3px;
-        }
-        .view-all {
-            color: var(--text-muted);
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 600;
-            transition: color 0.3s;
-        }
+        .review-header { display: flex; justify-content: space-between; font-size: 13px; font-weight: 800; margin-bottom: 6px; }
+        .review-form-box { margin-top: 25px; padding-top: 20px; border-top: 1px dashed var(--border-color); display: flex; flex-direction: column; gap: 12px; }
+        .review-input, .review-textarea { width: 100%; background-color: var(--bg-color); border: 1px solid var(--border-color); border-radius: 10px; padding: 10px 14px; color: var(--text-color); font-family: inherit; font-size: 13.5px; }
+        .review-input:focus, .review-textarea:focus { border-color: var(--accent-color); }
+        .section-wrapper { padding: 20px 30px 35px 30px; max-width: 1400px; margin: 0 auto; position: relative; user-select: none; }
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; }
+        .section-title { font-size: 20px; font-weight: 800; margin: 0; display: flex; align-items: center; gap: 10px; }
+        .section-title::before { content: ''; display: inline-block; width: 5px; height: 22px; background-color: var(--accent-color); border-radius: 3px; }
+        .view-all { color: var(--text-muted); text-decoration: none; font-size: 14px; font-weight: 600; transition: color 0.3s; }
         .view-all:hover { color: var(--accent-color); }
-
-        .h-scroll-container {
-            position: relative;
-            display: flex;
-            align-items: center;
-            width: 100%;
-        }
-        .h-scroll-track {
-            display: flex;
-            overflow-x: auto;
-            gap: 14px;
-            padding: 12px 2px;
-            scrollbar-width: none;
-            width: 100%;
-            -webkit-overflow-scrolling: touch;
-            cursor: grab;
-            user-select: none;
-            -webkit-user-select: none;
-        }
-        .h-scroll-track.dragging {
-            cursor: grabbing;
-            scroll-behavior: auto !important;
-        }
+        .h-scroll-container { position: relative; display: flex; align-items: center; width: 100%; }
+        .h-scroll-track { display: flex; overflow-x: auto; gap: 14px; padding: 12px 2px; scrollbar-width: none; width: 100%; -webkit-overflow-scrolling: touch; cursor: grab; user-select: none; -webkit-user-select: none; }
+        .h-scroll-track.dragging { cursor: grabbing; scroll-behavior: auto !important; }
         .h-scroll-track::-webkit-scrollbar { display: none; }
-        .h-scroll-track a, .h-scroll-track img {
-            -webkit-user-drag: none;
-            user-select: none;
-        }
-        .h-scroll-arrow {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background-color: var(--secondary-bg);
-            border: 1px solid var(--border-color);
-            color: var(--text-color);
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
-            cursor: pointer;
-            z-index: 15;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            font-size: 16px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.45);
-            transition: all 0.25s;
-        }
-        .h-scroll-arrow:hover {
-            background-color: var(--accent-color);
-            border-color: var(--accent-color);
-            color: #fff;
-        }
+        .h-scroll-track a, .h-scroll-track img { -webkit-user-drag: none; user-select: none; }
+        .h-scroll-arrow { position: absolute; top: 50%; transform: translateY(-50%); background-color: var(--secondary-bg); border: 1px solid var(--border-color); color: var(--text-color); width: 42px; height: 42px; border-radius: 50%; cursor: pointer; z-index: 15; display: none; align-items: center; justify-content: center; font-size: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.45); transition: all 0.25s; }
+        .h-scroll-arrow:hover { background-color: var(--accent-color); border-color: var(--accent-color); color: #fff; }
         .arrow-right { right: -18px; }
         .arrow-left { left: -18px; }
-        @media (min-width: 993px) {
-            .h-scroll-container:hover .h-scroll-arrow { display: flex; }
-        }
-
-        .product-card {
-            flex: 0 0 220px;
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            overflow: hidden;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            cursor: grab;
-            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-        }
-        .product-card:hover {
-            border-color: var(--accent-color);
-            transform: translateY(-4px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-        }
-        .badge-discount {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background-color: var(--accent-color);
-            color: #fff;
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 11px;
-            font-weight: 800;
-            z-index: 2;
-            pointer-events: none;
-        }
-        .product-image-wrapper {
-            background-color: var(--image-bg);
-            aspect-ratio: 1 / 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            border-bottom: 1px solid var(--border-color);
-            pointer-events: none;
-        }
-        .product-image {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.4s ease;
-        }
-        .product-card:hover .product-image { transform: scale(1.06); }
-        .product-info {
-            padding: 14px;
-            display: flex;
-            flex-direction: column;
-            flex-grow: 1;
-            pointer-events: none;
-        }
-        .product-brand {
-            color: var(--text-muted);
-            font-size: 11px;
-            margin-bottom: 4px;
-            text-transform: uppercase;
-            font-weight: 800;
-        }
-        .product-name {
-            font-size: 13.5px;
-            font-weight: 700;
-            color: var(--text-color);
-            margin: 0 0 10px 0;
-            line-height: 1.6;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-        .product-price {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            margin-bottom: 14px;
-            margin-top: auto;
-        }
-        .old-price { color: var(--text-muted); text-decoration: line-through; font-size: 12px; margin-bottom: 2px; }
-        .new-price { color: var(--text-color); font-size: 15px; font-weight: 900; }
-        .btn-add-cart {
-            width: 100%;
-            background-color: transparent;
-            color: var(--accent-color);
-            border: 1.5px solid var(--accent-color);
-            padding: 9px;
-            border-radius: 8px;
-            font-family: inherit;
-            font-size: 13px;
-            font-weight: 800;
-            cursor: pointer;
-            transition: all 0.25s;
-            z-index: 5;
-            position: relative;
-            pointer-events: auto;
-        }
-        .btn-add-cart:hover {
-            background-color: var(--accent-color);
-            color: #fff;
-        }
-
-        /* ۵. واکنش‌گرایی اختصاصی صفحه محصول در موبایل و تبلت */
+        @media (min-width: 993px) { .h-scroll-container:hover .h-scroll-arrow { display: flex; } }
         @media (max-width: 992px) {
             .breadcrumb-container { padding: 0 15px; margin-top: 14px; font-size: 12px; }
             .product-main-wrapper { grid-template-columns: 1fr; gap: 20px; padding: 0 15px; margin-top: 14px; }
@@ -586,50 +92,29 @@
             .buy-box { position: static; box-shadow: none; }
             .product-tabs-wrapper { padding: 0 15px; margin: 25px auto; }
             .section-wrapper { padding: 15px; }
-            .product-card { flex: 0 0 168px; }
         }
     </style>
 </head>
 <body>
-
-    <!-- ۱. جایگاه تزریق خودکار هدر، مگامنوی دو پنلی و ترنزیشن از فایل layout.js -->
     <div id="site-header"></div>
-
-    <!-- ۲. بردکرامب پویا -->
     <nav class="breadcrumb-container">
-        <a href="index.html">مگا ابزار</a>
-        <span>❯</span>
-        <a href="catalog.html">فروشگاه</a>
-        <span>❯</span>
-        <a href="catalog.html?cat=power-tools" id="breadcrumbCatLink">ابزار برقی و شارژی</a>
-        <span>❯</span>
+        <a href="index.html">مگا ابزار</a><span>❯</span>
+        <a href="catalog.html">فروشگاه</a><span>❯</span>
+        <a href="catalog.html?cat=power-tools" id="breadcrumbCatLink">ابزار برقی و شارژی</a><span>❯</span>
         <span id="breadcrumbProdTitle" style="color: var(--text-color); font-weight: 700;">دریل چکشی دیوالت مدل DWD024</span>
     </nav>
-
-    <!-- ۳. بدنه اصلی صفحه محصول -->
     <main class="product-main-wrapper">
-        <!-- ستون ۱: گالری تصاویر محصول با زوم ذره‌بینی -->
         <div class="product-gallery-section">
             <div class="main-image-container" id="zoomContainer">
                 <img src="https://images.unsplash.com/photo-1504148455328-c376907d081c?q=80&w=800&auto=format&fit=crop" alt="تصویر محصول" class="main-product-img" id="mainProductImg">
             </div>
             <div class="thumb-list" id="thumbList">
-                <div class="thumb-item active" onclick="changeImage(this, 'https://images.unsplash.com/photo-1504148455328-c376907d081c?q=80&w=800&auto=format&fit=crop')">
-                    <img src="https://images.unsplash.com/photo-1504148455328-c376907d081c?q=80&w=200&auto=format&fit=crop" alt="نما ۱">
-                </div>
-                <div class="thumb-item" onclick="changeImage(this, 'https://images.unsplash.com/photo-1572981779307-38b8cabb2407?q=80&w=800&auto=format&fit=crop')">
-                    <img src="https://images.unsplash.com/photo-1572981779307-38b8cabb2407?q=80&w=200&auto=format&fit=crop" alt="نما ۲">
-                </div>
-                <div class="thumb-item" onclick="changeImage(this, 'https://images.unsplash.com/photo-1581092335397-9583eb92d232?q=80&w=800&auto=format&fit=crop')">
-                    <img src="https://images.unsplash.com/photo-1581092335397-9583eb92d232?q=80&w=200&auto=format&fit=crop" alt="نما ۳">
-                </div>
-                <div class="thumb-item" onclick="changeImage(this, 'https://images.unsplash.com/photo-1586864387967-d02ef85d93e8?q=80&w=800&auto=format&fit=crop')">
-                    <img src="https://images.unsplash.com/photo-1586864387967-d02ef85d93e8?q=80&w=200&auto=format&fit=crop" alt="نما ۴">
-                </div>
+                <div class="thumb-item active" onclick="changeImage(this, 'https://images.unsplash.com/photo-1504148455328-c376907d081c?q=80&w=800&auto=format&fit=crop')"><img src="https://images.unsplash.com/photo-1504148455328-c376907d081c?q=80&w=200&auto=format&fit=crop" alt=""></div>
+                <div class="thumb-item" onclick="changeImage(this, 'https://images.unsplash.com/photo-1572981779307-38b8cabb2407?q=80&w=800&auto=format&fit=crop')"><img src="https://images.unsplash.com/photo-1572981779307-38b8cabb2407?q=80&w=200&auto=format&fit=crop" alt=""></div>
+                <div class="thumb-item" onclick="changeImage(this, 'https://images.unsplash.com/photo-1581092335397-9583eb92d232?q=80&w=800&auto=format&fit=crop')"><img src="https://images.unsplash.com/photo-1581092335397-9583eb92d232?q=80&w=200&auto=format&fit=crop" alt=""></div>
+                <div class="thumb-item" onclick="changeImage(this, 'https://images.unsplash.com/photo-1586864387967-d02ef85d93e8?q=80&w=800&auto=format&fit=crop')"><img src="https://images.unsplash.com/photo-1586864387967-d02ef85d93e8?q=80&w=200&auto=format&fit=crop" alt=""></div>
             </div>
         </div>
-
-        <!-- ستون ۲: اطلاعات و مشخصات میانی محصول -->
         <div class="product-details-section">
             <span class="product-brand-label" id="prodBrandLabel">برند اصلی: DEWALT</span>
             <h1 class="product-main-title" id="prodMainTitle">دریل چکشی دیوالت مدل DWD024 توان ۶۵۰ وات اورجینال</h1>
@@ -637,8 +122,6 @@
                 <div class="product-rating" id="prodRating">⭐ ۴.۹ (از ۲۸ دیدگاه خریداران)</div>
                 <div>کد کالا: <strong style="color: var(--text-color);" id="prodSku">MEGA-DW-024</strong></div>
             </div>
-
-            <!-- انتخاب پکیج یا نوع تجهیز -->
             <div class="variants-box">
                 <span class="variant-title">انتخاب پکیج و متعلقات:</span>
                 <div class="variant-options">
@@ -646,8 +129,6 @@
                     <button class="variant-chip" onclick="selectVariant(this)">پکیج کمبو + ست مته و کیف BMC</button>
                 </div>
             </div>
-
-            <!-- انتخاب گارانتی -->
             <div class="variants-box">
                 <span class="variant-title">انتخاب گارانتی و ضمانت اصالت:</span>
                 <div class="variant-options">
@@ -655,7 +136,6 @@
                     <button class="variant-chip" onclick="selectVariant(this)">۲۴ ماه ضمانت طلایی تعویض قطعات صنعتی</button>
                 </div>
             </div>
-
             <div>
                 <h4 style="margin: 0 0 10px 0; font-size: 14px;">ویژگی‌های برجسته دستگاه:</h4>
                 <ul class="features-bullet-list" id="prodHighlights">
@@ -666,25 +146,14 @@
                 </ul>
             </div>
         </div>
-
-        <!-- ستون ۳: باکس خرید سمت چپ (Buy Box) -->
         <div class="buy-box">
             <div class="stock-status" id="stockStatus">
                 <div class="stock-dot" id="stockDot"></div>
                 <span id="stockText">موجود در انبار مرکزی بانه (ارسال فوری)</span>
             </div>
-            <div class="buy-box-info-row">
-                <span>روش ارسال:</span>
-                <strong style="color: var(--text-color);">تیپاکس / باربری سراسری</strong>
-            </div>
-            <div class="buy-box-info-row">
-                <span>هزینه ارسال:</span>
-                <strong style="color: var(--text-color);" id="prodShipCost">—</strong>
-            </div>
-            <div class="buy-box-info-row">
-                <span>ضمانت اصالت:</span>
-                <strong style="color: var(--text-color);">۱۰۰٪ اورجینال (شرط کارشناسی)</strong>
-            </div>
+            <div class="buy-box-info-row"><span>روش ارسال:</span><strong style="color: var(--text-color);">تیپاکس / باربری سراسری</strong></div>
+            <div class="buy-box-info-row"><span>هزینه ارسال:</span><strong style="color: var(--text-color);" id="prodShipCost">—</strong></div>
+            <div class="buy-box-info-row"><span>ضمانت اصالت:</span><strong style="color: var(--text-color);">۱۰۰٪ اورجینال (شرط کارشناسی)</strong></div>
             <div class="buy-box-price">
                 <span class="buy-old-price" id="prodOldPrice">۴,۵۰۰,۰۰۰ تومان</span>
                 <span class="buy-new-price" id="prodNewPrice">۳,۸۲۵,۰۰۰ تومان</span>
@@ -697,15 +166,12 @@
             </div>
         </div>
     </main>
-
-    <!-- ۴. تب‌های پایین صفحه (مشخصات فنی، بررسی تخصصی، نظرات) -->
     <div class="product-tabs-wrapper">
         <div class="tabs-header">
             <button class="tab-btn active" onclick="switchTab(event, 'tabSpecs')">مشخصات فنی</button>
             <button class="tab-btn" onclick="switchTab(event, 'tabDesc')">بررسی تخصصی</button>
             <button class="tab-btn" onclick="switchTab(event, 'tabReviews')">دیدگاه خریداران</button>
         </div>
-
         <div id="tabSpecs" class="tab-content active">
             <table class="specs-table" id="specsTableBody">
                 <tr><td>برند سازنده</td><td id="specBrand">دیوالت (DEWALT)</td></tr>
@@ -718,34 +184,18 @@
                 <tr><td>تضمین اصالت</td><td>واردات مستقیم بانه با هولوگرام اصالت</td></tr>
             </table>
         </div>
-
         <div id="tabDesc" class="tab-content">
             <h3 style="margin-top: 0; color: var(--accent-color);" id="descHeading">بررسی تخصصی دریل چکشی دیوالت DWD024</h3>
-            <p style="line-height: 1.9; font-size: 14px; color: var(--text-muted);" id="descBody">
-                این ابزار صنعتی یکی از محبوب‌ترین و بادوام‌ترین دستگاه‌ها در پروژه‌های ساختمانی، نصابی و کارگاه‌های صنعتی است. طراحی مهندسی‌شده بدنه در کنار تقسیم وزن استاندارد باعث شده است تا تکنسین‌ها در کارهای مداوم و طولانی‌مدت دچار خستگی مچ دست نشوند. قطعات داخلی و آرمیچر این مدل در برابر نفوذ گردوغبار کارگاهی عایق‌بندی شده و طول عمر بسیار بالایی را در شرایط سخت کاری تضمین می‌کند.
-            </p>
+            <p style="line-height: 1.9; font-size: 14px; color: var(--text-muted);" id="descBody">این ابزار صنعتی یکی از محبوب‌ترین و بادوام‌ترین دستگاه‌ها در پروژه‌های ساختمانی، نصابی و کارگاه‌های صنعتی است.</p>
         </div>
-
         <div id="tabReviews" class="tab-content">
             <h3 style="margin-top: 0; font-size: 16px;">نظرات ثبت‌شده توسط خریداران</h3>
             <div id="reviewsListContainer">
                 <div class="review-item">
-                    <div class="review-header">
-                        <span>مهدی مرادی (خریدار از تهران)</span>
-                        <span style="color: #f59e0b;">★★★★★</span>
-                    </div>
-                    <p style="margin: 0; font-size: 13.5px; color: var(--text-muted);">«واقعاً دستگاه خوش‌دست و پرقدرتیه، توی کارگاه ام‌دی‌اف و نصب مرتب ازش استفاده می‌کنم و کاملاً اورجینال بود.»</p>
-                </div>
-                <div class="review-item">
-                    <div class="review-header">
-                        <span>کیوان صیادی (خریدار از تبریز)</span>
-                        <span style="color: #f59e0b;">★★★★★</span>
-                    </div>
-                    <p style="margin: 0; font-size: 13.5px; color: var(--text-muted);">«بسته‌بندی عالی بود و ۲ روزه با تیپاکس از بانه رسید دستم. سریال بدنه رو هم چک کردم کاملاً اصل بود.»</p>
+                    <div class="review-header"><span>مهدی مرادی (خریدار از تهران)</span><span style="color: #f59e0b;">★★★★★</span></div>
+                    <p style="margin: 0; font-size: 13.5px; color: var(--text-muted);">«واقعاً دستگاه خوش‌دست و پرقدرتیه.»</p>
                 </div>
             </div>
-
-            <!-- فرم ثبت نظر جدید -->
             <form class="review-form-box" onsubmit="submitNewReview(event)">
                 <h4 style="margin: 0; font-size: 14.5px;">ثبت دیدگاه جدید شما</h4>
                 <input type="text" id="reviewerName" class="review-input" placeholder="نام و نام خانوادگی شما" required>
@@ -754,8 +204,6 @@
             </form>
         </div>
     </div>
-
-    <!-- ۵. اسلایدر محصولات مشابه و مکمل -->
     <section class="section-wrapper">
         <div class="section-header">
             <h2 class="section-title">محصولات مشابه و مکمل</h2>
@@ -763,22 +211,15 @@
         </div>
         <div class="h-scroll-container">
             <button class="h-scroll-arrow arrow-right" onclick="scrollTrack('relatedTrack', 1)">❮</button>
-            <div class="h-scroll-track" id="relatedTrack">
-            </div>
+            <div class="h-scroll-track" id="relatedTrack"></div>
             <button class="h-scroll-arrow arrow-left" onclick="scrollTrack('relatedTrack', -1)">❯</button>
         </div>
     </section>
-
-    <!-- ۶. جایگاه تزریق خودکار فوتر ۴ ستونه، کشوی سبد خرید، کشوی دسته‌بندی موبایل و نوار پایین از فایل layout.js -->
     <div id="site-footer"></div>
-
-    <!-- ۷. فراخوانی فایل مرکزی هدر و فوتر -->
     <script src="products.js"></script>
     <script src="store.js"></script>
     <script src="layout.js"></script>
     <script src="cart.js"></script>
-
-    <!-- ۸. اسکریپت‌های اختصاصی صفحه محصول -->
     <script>
         let currentLoadedProduct = PRODUCTS[0];
 
@@ -818,7 +259,6 @@
             document.getElementById('specPower').innerText = prod.powerSpec;
             document.getElementById('descHeading').innerText = `بررسی تخصصی ${pageTitle}`;
 
-            // موجودی و هزینه ارسال از داده محصول و تنظیمات فروشگاه
             const stockText = document.getElementById('stockText');
             const btn = document.getElementById('btnAddMain');
             stockText.innerText = prod.inStock ? 'موجود در انبار مرکزی بانه (ارسال فوری)' : 'این کالا فعلاً ناموجود است';
@@ -830,16 +270,14 @@
             const sh = getSettings().shipping;
             document.getElementById('prodShipCost').innerText =
                 !sh.enabled || prod.freeShipping ? 'رایگان'
-                : sh.freeFromEnabled ? `${formatPrice(sh.fee)} (رایگان برای خرید بالای ${formatPrice(sh.freeFrom)})`
+                : sh.freeFromEnabled ? `${formatPrice(sh.fee)} (رایگان برای خرید بالای چه ${formatPrice(sh.freeFrom)})`
                 : formatPrice(sh.fee);
 
-            // محصولات مشابه: ابتدا هم‌دسته، بعد بقیه
             const others = PRODUCTS.filter(x => x.id !== prod.id);
             const related = others.filter(x => x.category === prod.category).concat(others.filter(x => x.category !== prod.category)).slice(0, 8);
             document.getElementById('relatedTrack').innerHTML = related.map(productCardHTML).join('');
         }
 
-        // تغییر تصویر اصلی گالری و زوم ذره‌بینی
         function changeImage(thumbElement, imgSrc) {
             document.querySelectorAll('.thumb-item').forEach(el => el.classList.remove('active'));
             thumbElement.classList.add('active');
@@ -848,7 +286,6 @@
 
         const zoomContainer = document.getElementById('zoomContainer');
         const mainProductImg = document.getElementById('mainProductImg');
-
         zoomContainer.addEventListener('mousemove', function(e) {
             if (window.innerWidth <= 992) return;
             const rect = this.getBoundingClientRect();
@@ -857,13 +294,11 @@
             mainProductImg.style.transformOrigin = `${x}% ${y}%`;
             mainProductImg.style.transform = 'scale(2)';
         });
-
         zoomContainer.addEventListener('mouseleave', function() {
             mainProductImg.style.transformOrigin = 'center center';
             mainProductImg.style.transform = 'scale(1)';
         });
 
-        // انتخاب متغیرها و سوئیچ تب‌ها
         function selectVariant(button) {
             button.parentElement.querySelectorAll('.variant-chip').forEach(btn => btn.classList.remove('active'));
             button.classList.add('active');
@@ -876,75 +311,32 @@
             evt.currentTarget.classList.add('active');
         }
 
-        // افزودن محصول اصلی صفحه به سبد خرید سراسری (متصل به layout.js)
         function addMainProductToCart() {
             addToCart(currentLoadedProduct.id);
         }
 
-        // ثبت دیدگاه جدید توسط کاربر
         function submitNewReview(e) {
             e.preventDefault();
             const name = document.getElementById('reviewerName').value.trim();
             const text = document.getElementById('reviewerText').value.trim();
             if (!name || !text) return;
-
             const container = document.getElementById('reviewsListContainer');
             const newItem = document.createElement('div');
             newItem.className = 'review-item';
             newItem.innerHTML = `
-                <div class="review-header">
-                    <span>${name} (دیدگاه جدید)</span>
-                    <span style="color: #f59e0b;">★★★★★</span>
-                </div>
+                <div class="review-header"><span>${name} (دیدگاه جدید)</span><span style="color: #f59e0b;">★★★★★</span></div>
                 <p style="margin: 0; font-size: 13.5px; color: var(--text-muted);">«${text}»</p>
             `;
             container.prepend(newItem);
             e.target.reset();
         }
 
-        // موتور اسکرول افقی محصولات مشابه
         function scrollTrack(trackId, direction) {
             const track = document.getElementById(trackId);
             if (!track || !track.firstElementChild) return;
             const cardWidth = track.firstElementChild.offsetWidth + 14;
             track.scrollBy({ left: direction * (cardWidth * 2), behavior: 'smooth' });
         }
-
-        window.globalDragFlag = false;
-        document.querySelectorAll('.h-scroll-track').forEach(track => {
-            let isDown = false, startX = 0, startScrollLeft = 0, velX = 0, momentumID = null;
-            track.addEventListener('dragstart', e => e.preventDefault());
-            track.addEventListener('mousedown', e => {
-                if (e.button !== 0) return;
-                isDown = true; window.globalDragFlag = false;
-                track.classList.add('dragging');
-                cancelAnimationFrame(momentumID);
-                startX = e.pageX; startScrollLeft = track.scrollLeft; velX = 0;
-            });
-            track.addEventListener('mousemove', e => {
-                if (!isDown) return;
-                e.preventDefault();
-                const walk = (e.pageX - startX) * 1.35;
-                if (Math.abs(walk) > 6) window.globalDragFlag = true;
-                const prev = track.scrollLeft;
-                track.scrollLeft = startScrollLeft - walk;
-                velX = track.scrollLeft - prev;
-            });
-            const stopDrag = () => {
-                if (!isDown) return;
-                isDown = false; track.classList.remove('dragging');
-                function step() {
-                    if (Math.abs(velX) > 0.5) {
-                        track.scrollLeft += velX; velX *= 0.92;
-                        momentumID = requestAnimationFrame(step);
-                    }
-                }
-                momentumID = requestAnimationFrame(step);
-                setTimeout(() => { window.globalDragFlag = false; }, 60);
-            };
-            track.addEventListener('mouseup', stopDrag);
-            track.addEventListener('mouseleave', stopDrag);
-        });
 
         loadProductFromUrl();
     </script>
