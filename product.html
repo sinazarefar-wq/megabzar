@@ -669,13 +669,17 @@
 
         <!-- ستون ۳: باکس خرید سمت چپ (Buy Box) -->
         <div class="buy-box">
-            <div class="stock-status">
-                <div class="stock-dot"></div>
-                <span>موجود در انبار مرکزی بانه (ارسال فوری)</span>
+            <div class="stock-status" id="stockStatus">
+                <div class="stock-dot" id="stockDot"></div>
+                <span id="stockText">موجود در انبار مرکزی بانه (ارسال فوری)</span>
             </div>
             <div class="buy-box-info-row">
                 <span>روش ارسال:</span>
                 <strong style="color: var(--text-color);">تیپاکس / باربری سراسری</strong>
+            </div>
+            <div class="buy-box-info-row">
+                <span>هزینه ارسال:</span>
+                <strong style="color: var(--text-color);" id="prodShipCost">—</strong>
             </div>
             <div class="buy-box-info-row">
                 <span>ضمانت اصالت:</span>
@@ -685,8 +689,8 @@
                 <span class="buy-old-price" id="prodOldPrice">۴,۵۰۰,۰۰۰ تومان</span>
                 <span class="buy-new-price" id="prodNewPrice">۳,۸۲۵,۰۰۰ تومان</span>
             </div>
-            <button class="btn-add-to-cart-lg" onclick="addMainProductToCart()">
-                <span>🛒 افزودن به سبد خرید</span>
+            <button class="btn-add-to-cart-lg" id="btnAddMain" onclick="addMainProductToCart()">
+                <span id="btnAddMainText">🛒 افزودن به سبد خرید</span>
             </button>
             <div style="font-size: 12px; color: var(--text-muted); line-height: 1.6; text-align: center; border-top: 1px solid var(--border-color); padding-top: 12px;">
                 🛡️ ۷ روز ضمانت بازگشت وجه در صورت عدم اصالت فیزیکی کالا
@@ -760,77 +764,6 @@
         <div class="h-scroll-container">
             <button class="h-scroll-arrow arrow-right" onclick="scrollTrack('relatedTrack', 1)">❮</button>
             <div class="h-scroll-track" id="relatedTrack">
-                <div class="product-card clickable-item" data-id="2">
-                    <div class="product-image-wrapper">
-                        <img src="https://images.unsplash.com/photo-1572981779307-38b8cabb2407?q=80&w=500&auto=format&fit=crop" class="product-image" alt="مینی فرز">
-                    </div>
-                    <div class="product-info">
-                        <span class="product-brand">MAKITA</span>
-                        <h3 class="product-name">مینی فرز دسته بلند ماکیتا 9558HN اصل</h3>
-                        <div class="product-price">
-                            <span class="new-price">۲,۹۵۰,۰۰۰ تومان</span>
-                        </div>
-                        <button class="btn-add-cart">افزودن به سبد خرید</button>
-                    </div>
-                </div>
-
-                <div class="product-card clickable-item" data-id="3">
-                    <span class="badge-discount">ارسال رایگان</span>
-                    <div class="product-image-wrapper">
-                        <img src="https://images.unsplash.com/photo-1530124566582-a618bc2615dc?q=80&w=500&auto=format&fit=crop" class="product-image" alt="جعبه ابزار">
-                    </div>
-                    <div class="product-info">
-                        <span class="product-brand">RONIX</span>
-                        <h3 class="product-name">مجموعه ۱۲۸ عددی ابزار دستی رونیکس RH-27128</h3>
-                        <div class="product-price">
-                            <span class="new-price">۵,۲۰۰,۰۰۰ تومان</span>
-                        </div>
-                        <button class="btn-add-cart">افزودن به سبد خرید</button>
-                    </div>
-                </div>
-
-                <div class="product-card clickable-item" data-id="4">
-                    <div class="product-image-wrapper">
-                        <img src="https://images.unsplash.com/photo-1581092335397-9583eb92d232?q=80&w=500&auto=format&fit=crop" class="product-image" alt="متر لیزری">
-                    </div>
-                    <div class="product-info">
-                        <span class="product-brand">BOSCH</span>
-                        <h3 class="product-name">متر لیزری بوش مدل GLM 50 C بلوتوث‌دار</h3>
-                        <div class="product-price">
-                            <span class="new-price">۴,۱۰۰,۰۰۰ تومان</span>
-                        </div>
-                        <button class="btn-add-cart">افزودن به سبد خرید</button>
-                    </div>
-                </div>
-
-                <div class="product-card clickable-item" data-id="5">
-                    <div class="product-image-wrapper">
-                        <img src="https://images.unsplash.com/photo-1586864387967-d02ef85d93e8?q=80&w=500&auto=format&fit=crop" class="product-image" alt="پیچ گوشتی شارژی">
-                    </div>
-                    <div class="product-info">
-                        <span class="product-brand">MILWAUKEE</span>
-                        <h3 class="product-name">دریل پیچ‌گوشتی شارژی براشلس میلواکی ۱۸ ولت</h3>
-                        <div class="product-price">
-                            <span class="new-price">۸,۳۰۰,۰۰۰ تومان</span>
-                        </div>
-                        <button class="btn-add-cart">افزودن به سبد خرید</button>
-                    </div>
-                </div>
-
-                <div class="product-card clickable-item" data-id="6">
-                    <div class="product-image-wrapper">
-                        <img src="https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?q=80&w=500&auto=format&fit=crop" alt="بتن کن">
-                    </div>
-                    <div class="product-info">
-                        <span class="product-brand">HILTI</span>
-                        <h3 class="product-name">بتن‌کن ۴ شیار هیلتی مدل TE 2 اورجینال</h3>
-                        <div class="product-price">
-                            <span class="old-price">۱۲,۰۰۰,۰۰۰</span>
-                            <span class="new-price">۱۱,۲۰۰,۰۰۰ تومان</span>
-                        </div>
-                        <button class="btn-add-cart">افزودن به سبد خرید</button>
-                    </div>
-                </div>
             </div>
             <button class="h-scroll-arrow arrow-left" onclick="scrollTrack('relatedTrack', -1)">❯</button>
         </div>
@@ -841,6 +774,7 @@
 
     <!-- ۷. فراخوانی فایل مرکزی هدر و فوتر -->
     <script src="products.js"></script>
+    <script src="store.js"></script>
     <script src="layout.js"></script>
     <script src="cart.js"></script>
 
@@ -853,7 +787,7 @@
             const id = params.get('id') || '1';
             const prod = getProduct(id) || PRODUCTS[0];
             const pageTitle = prod.pageTitle || prod.title;
-            const catTitle = CATEGORY_TITLES[prod.category] || 'همه ابزارآلات';
+            const catTitle = (getCategory(prod.category) || {}).title || 'همه ابزارآلات';
             const img = productImage(prod, 800);
             const oldPriceText = prod.oldPrice ? formatPrice(prod.oldPrice) : '';
             currentLoadedProduct = prod;
@@ -883,6 +817,26 @@
             document.getElementById('specModel').innerText = prod.model || '—';
             document.getElementById('specPower').innerText = prod.powerSpec;
             document.getElementById('descHeading').innerText = `بررسی تخصصی ${pageTitle}`;
+
+            // موجودی و هزینه ارسال از داده محصول و تنظیمات فروشگاه
+            const stockText = document.getElementById('stockText');
+            const btn = document.getElementById('btnAddMain');
+            stockText.innerText = prod.inStock ? 'موجود در انبار مرکزی بانه (ارسال فوری)' : 'این کالا فعلاً ناموجود است';
+            document.getElementById('stockDot').style.background = prod.inStock ? '' : '#888';
+            btn.disabled = !prod.inStock;
+            btn.style.opacity = prod.inStock ? '' : '.5';
+            btn.style.cursor = prod.inStock ? '' : 'not-allowed';
+            document.getElementById('btnAddMainText').innerText = prod.inStock ? '🛒 افزودن به سبد خرید' : 'فعلاً ناموجود';
+            const sh = getSettings().shipping;
+            document.getElementById('prodShipCost').innerText =
+                !sh.enabled || prod.freeShipping ? 'رایگان'
+                : sh.freeFromEnabled ? `${formatPrice(sh.fee)} (رایگان برای خرید بالای ${formatPrice(sh.freeFrom)})`
+                : formatPrice(sh.fee);
+
+            // محصولات مشابه: ابتدا هم‌دسته، بعد بقیه
+            const others = PRODUCTS.filter(x => x.id !== prod.id);
+            const related = others.filter(x => x.category === prod.category).concat(others.filter(x => x.category !== prod.category)).slice(0, 8);
+            document.getElementById('relatedTrack').innerHTML = related.map(productCardHTML).join('');
         }
 
         // تغییر تصویر اصلی گالری و زوم ذره‌بینی

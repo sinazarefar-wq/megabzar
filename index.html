@@ -723,486 +723,155 @@
     <!-- جایگاه تزریق خودکار هدر، مگامنو و ترنزیشن از فایل layout.js -->
     <div id="site-header"></div>
 
-    <!-- اسلایدر هیرو -->
-    <div class="hero-section" dir="ltr" onmouseenter="stopAutoSlide()" onmouseleave="startAutoSlide()">
-        <div class="hero-slider" id="sliderContainer">
-            <div class="slide" dir="rtl">
-                <img class="hero-media" src="https://images.unsplash.com/photo-1504148455328-c376907d081c?q=80&w=1920&auto=format&fit=crop" alt="ابزارآلات صنعتی">
-                <div class="hero-overlay"></div>
-                <div class="hero-content">
-                    <span class="hero-badge">واردات مستقیم از بانه</span>
-                    <h1 class="hero-title">مرجع تخصصی ابزارآلات صنعتی و کارگاهی</h1>
-                    <p class="hero-subtitle">تامین‌کننده مستقیم برترین برندهای جهانی (دیوالت، ماکیتا، بوش و میلواکی) با تضمین ۱۰۰٪ اصالت کالا.</p>
-                    <div class="hero-buttons">
-                        <a href="catalog.html" class="btn-hero btn-hero-primary">مشاهده کاتالوگ محصولات</a>
-                        <a href="#megaOfferSection" class="btn-hero btn-hero-secondary">🔥 تخفیف‌های امروز</a>
-                    </div>
-                </div>
-            </div>
-            <div class="slide" dir="rtl">
-                <video class="hero-media" autoplay loop muted playsinline poster="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=1920&auto=format&fit=crop">
-                    <source src="https://assets.mixkit.co/videos/preview/mixkit-welder-working-with-a-welding-machine-226-large.mp4" type="video/mp4">
-                </video>
-                <div class="hero-overlay"></div>
-                <div class="hero-content">
-                    <span class="hero-badge">قدرت بی‌رقیب در پروژه‌ها</span>
-                    <h1 class="hero-title">تجهیزات جوشکاری و برشکاری سنگین</h1>
-                    <p class="hero-subtitle">جدیدترین نسل اینورترهای صنعتی، فرزهای آهنگری و اره پروفیل‌بر با گارانتی معتبر.</p>
-                    <div class="hero-buttons">
-                        <a href="catalog.html?cat=welding" class="btn-hero btn-hero-primary">خرید تجهیزات جوش و برش</a>
-                    </div>
-                </div>
-            </div>
-            <div class="slide" dir="rtl">
-                <img class="hero-media" src="https://images.unsplash.com/photo-1530124566582-a618bc2615dc?q=80&w=1920&auto=format&fit=crop" alt="جعبه ابزار و ست‌های مکانیکی">
-                <div class="hero-overlay"></div>
-                <div class="hero-content">
-                    <span class="hero-badge">تجهیز کامل تعمیرگاه</span>
-                    <h1 class="hero-title">ست‌های کامل آچار، بکس و ابزار دستی</h1>
-                    <p class="hero-subtitle">مجموعه‌های حرفه‌ای کروم-وانادیوم مقاوم در برابر فشار برای مکانیک‌ها و تکنسین‌های صنعتی.</p>
-                    <div class="hero-buttons">
-                        <a href="catalog.html?cat=hand-tools" class="btn-hero btn-hero-primary">مشاهده ابزارهای دستی</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <button class="slider-arrow slider-prev" onclick="changeSlide(-1)">❮</button>
-        <button class="slider-arrow slider-next" onclick="changeSlide(1)">❯</button>
-        <div class="slider-dots" id="sliderDots"></div>
-    </div>
-
-    <!-- ۱. دسته‌بندی‌های تخصصی -->
-    <section class="section-wrapper">
-        <div class="section-header">
-            <h2 class="section-title">دسته‌بندی‌های تخصصی</h2>
-            <a href="catalog.html" class="view-all">همه دسته‌ها ❯</a>
-        </div>
-        <div class="h-scroll-container">
-            <button class="h-scroll-arrow arrow-right" onclick="scrollTrack('catsTrack', 1)">❮</button>
-            <div class="h-scroll-track" id="catsTrack">
-                <a href="catalog.html?cat=power-tools" class="category-card clickable-item">
-                    <img src="https://images.unsplash.com/photo-1504148455328-c376907d081c?q=80&w=600&auto=format&fit=crop" alt="ابزار برقی">
-                    <div class="category-overlay"></div>
-                    <div class="category-glass-caption">
-                        <span class="category-name">ابزار برقی و شارژی</span>
-                        <span class="category-count">۳۴۰+ محصول</span>
-                    </div>
-                </a>
-                <a href="catalog.html?cat=hand-tools" class="category-card clickable-item">
-                    <img src="https://images.unsplash.com/photo-1530124566582-a618bc2615dc?q=80&w=600&auto=format&fit=crop" alt="ابزار دستی">
-                    <div class="category-overlay"></div>
-                    <div class="category-glass-caption">
-                        <span class="category-name">ابزار دستی و مکانیکی</span>
-                        <span class="category-count">۵۲۰+ محصول</span>
-                    </div>
-                </a>
-                <a href="catalog.html?cat=welding" class="category-card clickable-item">
-                    <img src="https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?q=80&w=600&auto=format&fit=crop" alt="جوش و برش">
-                    <div class="category-overlay"></div>
-                    <div class="category-glass-caption">
-                        <span class="category-name">اینورتر و جوشکاری</span>
-                        <span class="category-count">۱۲۰+ محصول</span>
-                    </div>
-                </a>
-                <a href="catalog.html?cat=measuring" class="category-card clickable-item">
-                    <img src="https://images.unsplash.com/photo-1581092335397-9583eb92d232?q=80&w=600&auto=format&fit=crop" alt="ابزار دقیق">
-                    <div class="category-overlay"></div>
-                    <div class="category-glass-caption">
-                        <span class="category-name">تراز لیزری و دقیق</span>
-                        <span class="category-count">۹۵+ محصول</span>
-                    </div>
-                </a>
-                <a href="catalog.html?cat=pneumatic" class="category-card clickable-item">
-                    <img src="https://images.unsplash.com/photo-1572981779307-38b8cabb2407?q=80&w=600&auto=format&fit=crop" alt="ابزار بادی">
-                    <div class="category-overlay"></div>
-                    <div class="category-glass-caption">
-                        <span class="category-name">ابزار بادی و کمپرسور</span>
-                        <span class="category-count">۱۵۰+ محصول</span>
-                    </div>
-                </a>
-                <a href="catalog.html?cat=gardening" class="category-card clickable-item">
-                    <img src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?q=80&w=600&auto=format&fit=crop" alt="ابزار باغبانی">
-                    <div class="category-overlay"></div>
-                    <div class="category-glass-caption">
-                        <span class="category-name">اره موتوری و باغبانی</span>
-                        <span class="category-count">۱۱۰+ محصول</span>
-                    </div>
-                </a>
-                <a href="catalog.html?cat=safety" class="category-card clickable-item">
-                    <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=600&auto=format&fit=crop" alt="تجهیزات ایمنی">
-                    <div class="category-overlay"></div>
-                    <div class="category-glass-caption">
-                        <span class="category-name">ایمنی و حفاظت فردی</span>
-                        <span class="category-count">۸۰+ محصول</span>
-                    </div>
-                </a>
-                <a href="catalog.html?cat=accessories" class="category-card clickable-item">
-                    <img src="https://images.unsplash.com/photo-1586864387967-d02ef85d93e8?q=80&w=600&auto=format&fit=crop" alt="مته و صفحه برش">
-                    <div class="category-overlay"></div>
-                    <div class="category-glass-caption">
-                        <span class="category-name">مته و صفحه برش</span>
-                        <span class="category-count">۶۰۰+ محصول</span>
-                    </div>
-                </a>
-            </div>
-            <button class="h-scroll-arrow arrow-left" onclick="scrollTrack('catsTrack', -1)">❯</button>
-        </div>
-    </section>
-
-    <!-- ۲. پیشنهاد شگفت‌انگیز «مگا آف» -->
-    <section class="section-wrapper" id="megaOfferSection">
-        <div class="mega-offer-box">
-            <div class="mega-offer-info">
-                <span class="mega-offer-tag">🔥 حراج ویژه بانه</span>
-                <h2 class="mega-offer-title">پیشنهاد شگفت‌انگیز مگا آف</h2>
-                <p class="mega-offer-desc">تخفیف‌های استثنایی و محدود روی ابزارآلات صنعتی منتخب با ارسال فوری.</p>
-                <div class="countdown-timer">
-                    <div class="time-box"><span class="time-val" id="timerSeconds">۴۵</span><span class="time-label">ثانیه</span></div>
-                    <div class="time-box"><span class="time-val" id="timerMinutes">۲۸</span><span class="time-label">دقیقه</span></div>
-                    <div class="time-box"><span class="time-val" id="timerHours">۰۷</span><span class="time-label">ساعت</span></div>
-                </div>
-                <a href="catalog.html?filter=special" class="btn-hero btn-hero-secondary" style="padding: 8px 20px; font-size: 13px; display: inline-flex;">مشاهده همه ❯</a>
-            </div>
-
-            <div class="mega-offer-track-wrapper h-scroll-container">
-                <button class="h-scroll-arrow arrow-right" onclick="scrollTrack('offerTrack', 1)">❮</button>
-                <div class="h-scroll-track" id="offerTrack">
-                    <div class="product-card clickable-item" data-id="101">
-                        <span class="badge-discount">۲۲٪ تخفیف</span>
-                        <div class="product-image-wrapper">
-                            <img src="https://images.unsplash.com/photo-1504148455328-c376907d081c?q=80&w=500&auto=format&fit=crop" class="product-image" alt="بکس شارژی دیوالت">
-                        </div>
-                        <div class="product-info">
-                            <span class="product-brand">DEWALT</span>
-                            <h3 class="product-name">بکس شارژی براشلس دیوالت ۲۰ ولت مدل DCF899</h3>
-                            <div class="product-price">
-                                <span class="old-price">۱۴,۵۰۰,۰۰۰</span>
-                                <span class="new-price">۱۱,۳۱۰,۰۰۰ تومان</span>
-                            </div>
-                            <button class="btn-add-cart">افزودن به سبد خرید</button>
-                        </div>
-                    </div>
-
-                    <div class="product-card clickable-item" data-id="102">
-                        <span class="badge-discount">۱۸٪ تخفیف</span>
-                        <div class="product-image-wrapper">
-                            <img src="https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?q=80&w=500&auto=format&fit=crop" class="product-image" alt="اینورتر جوشکاری">
-                        </div>
-                        <div class="product-info">
-                            <span class="product-brand">RONIX</span>
-                            <h3 class="product-name">اینورتر جوشکاری ۲۵۰ آمپر صنعتی رونیکس RH-4625</h3>
-                            <div class="product-price">
-                                <span class="old-price">۷,۸۰۰,۰۰۰</span>
-                                <span class="new-price">۶,۳۹۰,۰۰۰ تومان</span>
-                            </div>
-                            <button class="btn-add-cart">افزودن به سبد خرید</button>
-                        </div>
-                    </div>
-
-                    <div class="product-card clickable-item" data-id="103">
-                        <span class="badge-discount">۲۵٪ تخفیف</span>
-                        <div class="product-image-wrapper">
-                            <img src="https://images.unsplash.com/photo-1581092160607-ee22621dd758?q=80&w=500&auto=format&fit=crop" class="product-image" alt="کارواش صنعتی">
-                        </div>
-                        <div class="product-info">
-                            <span class="product-brand">BOSCH</span>
-                            <h3 class="product-name">کارواش صنعتی دینامی بوش مدل AQT 140 بار</h3>
-                            <div class="product-price">
-                                <span class="old-price">۹,۲۰۰,۰۰۰</span>
-                                <span class="new-price">۶,۹۰۰,۰۰۰ تومان</span>
-                            </div>
-                            <button class="btn-add-cart">افزودن به سبد خرید</button>
-                        </div>
-                    </div>
-
-                    <div class="product-card clickable-item" data-id="104">
-                        <span class="badge-discount">۱۵٪ تخفیف</span>
-                        <div class="product-image-wrapper">
-                            <img src="https://images.unsplash.com/photo-1586864387967-d02ef85d93e8?q=80&w=500&auto=format&fit=crop" class="product-image" alt="چکش تخریب">
-                        </div>
-                        <div class="product-info">
-                            <span class="product-brand">MAKITA</span>
-                            <h3 class="product-name">چکش تخریب ۱۶ کیلویی ماکیتا مدل HM1307C</h3>
-                            <div class="product-price">
-                                <span class="old-price">۳۲,۰۰۰,۰۰۰</span>
-                                <span class="new-price">۲۷,۲۰۰,۰۰۰ تومان</span>
-                            </div>
-                            <button class="btn-add-cart">افزودن به سبد خرید</button>
-                        </div>
-                    </div>
-
-                    <div class="product-card clickable-item" data-id="105">
-                        <span class="badge-discount">۲۰٪ تخفیف</span>
-                        <div class="product-image-wrapper">
-                            <img src="https://images.unsplash.com/photo-1530124566582-a618bc2615dc?q=80&w=500&auto=format&fit=crop" class="product-image" alt="بکس بادی">
-                        </div>
-                        <div class="product-info">
-                            <span class="product-brand">MILWAUKEE</span>
-                            <h3 class="product-name">پک کامل دریل و مینی‌فرز شارژی میلواکی M18</h3>
-                            <div class="product-price">
-                                <span class="old-price">۱۹,۵۰۰,۰۰۰</span>
-                                <span class="new-price">۱۵,۶۰۰,۰۰۰ تومان</span>
-                            </div>
-                            <button class="btn-add-cart">افزودن به سبد خرید</button>
-                        </div>
-                    </div>
-
-                    <div class="product-card clickable-item" data-id="106">
-                        <span class="badge-discount">۱۹٪ تخفیف</span>
-                        <div class="product-image-wrapper">
-                            <img src="https://images.unsplash.com/photo-1572981779307-38b8cabb2407?q=80&w=500&auto=format&fit=crop" class="product-image" alt="پروفیل بر">
-                        </div>
-                        <div class="product-info">
-                            <span class="product-brand">AEG</span>
-                            <h3 class="product-name">اره پروفیل‌بر صنعتی آ ا گ مدل SMT 355</h3>
-                            <div class="product-price">
-                                <span class="old-price">۱۱,۴۰۰,۰۰۰</span>
-                                <span class="new-price">۹,۲۳۰,۰۰۰ تومان</span>
-                            </div>
-                            <button class="btn-add-cart">افزودن به سبد خرید</button>
-                        </div>
-                    </div>
-                </div>
-                <button class="h-scroll-arrow arrow-left" onclick="scrollTrack('offerTrack', -1)">❯</button>
-            </div>
-        </div>
-    </section>
-
-    <!-- ۳. پرفروش‌ترین ابزارها -->
-    <main class="section-wrapper">
-        <div class="section-header">
-            <h2 class="section-title">پرفروش‌ترین ابزارها</h2>
-            <a href="catalog.html?sort=bestselling" class="view-all">مشاهده همه محصولات ❯</a>
-        </div>
-        <div class="h-scroll-container">
-            <button class="h-scroll-arrow arrow-right" onclick="scrollTrack('productsTrack', 1)">❮</button>
-            <div class="h-scroll-track" id="productsTrack">
-
-                <div class="product-card clickable-item" data-id="1">
-                    <span class="badge-discount">۱۵٪ تخفیف</span>
-                    <div class="product-image-wrapper">
-                        <img src="https://images.unsplash.com/photo-1504148455328-c376907d081c?q=80&w=500&auto=format&fit=crop" class="product-image" alt="دریل چکشی">
-                    </div>
-                    <div class="product-info">
-                        <span class="product-brand">DEWALT</span>
-                        <h3 class="product-name">دریل چکشی دیوالت مدل DWD024 توان ۶۵۰ وات</h3>
-                        <div class="product-price">
-                            <span class="old-price">۴,۵۰۰,۰۰۰</span>
-                            <span class="new-price">۳,۸۲۵,۰۰۰ تومان</span>
-                        </div>
-                        <button class="btn-add-cart">افزودن به سبد خرید</button>
-                    </div>
-                </div>
-
-                <div class="product-card clickable-item" data-id="2">
-                    <div class="product-image-wrapper">
-                        <img src="https://images.unsplash.com/photo-1572981779307-38b8cabb2407?q=80&w=500&auto=format&fit=crop" class="product-image" alt="مینی فرز">
-                    </div>
-                    <div class="product-info">
-                        <span class="product-brand">MAKITA</span>
-                        <h3 class="product-name">مینی فرز دسته بلند ماکیتا 9558HN اصل</h3>
-                        <div class="product-price">
-                            <span class="new-price">۲,۹۵۰,۰۰۰ تومان</span>
-                        </div>
-                        <button class="btn-add-cart">افزودن به سبد خرید</button>
-                    </div>
-                </div>
-
-                <div class="product-card clickable-item" data-id="3">
-                    <span class="badge-discount">ارسال رایگان</span>
-                    <div class="product-image-wrapper">
-                        <img src="https://images.unsplash.com/photo-1530124566582-a618bc2615dc?q=80&w=500&auto=format&fit=crop" class="product-image" alt="جعبه ابزار">
-                    </div>
-                    <div class="product-info">
-                        <span class="product-brand">RONIX</span>
-                        <h3 class="product-name">مجموعه ۱۲۸ عددی ابزار دستی رونیکس RH-27128</h3>
-                        <div class="product-price">
-                            <span class="new-price">۵,۲۰۰,۰۰۰ تومان</span>
-                        </div>
-                        <button class="btn-add-cart">افزودن به سبد خرید</button>
-                    </div>
-                </div>
-
-                <div class="product-card clickable-item" data-id="4">
-                    <div class="product-image-wrapper">
-                        <img src="https://images.unsplash.com/photo-1581092335397-9583eb92d232?q=80&w=500&auto=format&fit=crop" class="product-image" alt="متر لیزری">
-                    </div>
-                    <div class="product-info">
-                        <span class="product-brand">BOSCH</span>
-                        <h3 class="product-name">متر لیزری بوش مدل GLM 50 C بلوتوث‌دار</h3>
-                        <div class="product-price">
-                            <span class="new-price">۴,۱۰۰,۰۰۰ تومان</span>
-                        </div>
-                        <button class="btn-add-cart">افزودن به سبد خرید</button>
-                    </div>
-                </div>
-
-                <div class="product-card clickable-item" data-id="5">
-                    <div class="product-image-wrapper">
-                        <img src="https://images.unsplash.com/photo-1586864387967-d02ef85d93e8?q=80&w=500&auto=format&fit=crop" class="product-image" alt="پیچ گوشتی شارژی">
-                    </div>
-                    <div class="product-info">
-                        <span class="product-brand">MILWAUKEE</span>
-                        <h3 class="product-name">دریل پیچ‌گوشتی شارژی براشلس میلواکی ۱۸ ولت</h3>
-                        <div class="product-price">
-                            <span class="new-price">۸,۳۰۰,۰۰۰ تومان</span>
-                        </div>
-                        <button class="btn-add-cart">افزودن به سبد خرید</button>
-                    </div>
-                </div>
-
-                <div class="product-card clickable-item" data-id="6">
-                    <div class="product-image-wrapper">
-                        <img src="https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?q=80&w=500&auto=format&fit=crop" class="product-image" alt="بتن کن">
-                    </div>
-                    <div class="product-info">
-                        <span class="product-brand">HILTI</span>
-                        <h3 class="product-name">بتن‌کن ۴ شیار هیلتی مدل TE 2 اورجینال</h3>
-                        <div class="product-price">
-                            <span class="old-price">۱۲,۰۰۰,۰۰۰</span>
-                            <span class="new-price">۱۱,۲۰۰,۰۰۰ تومان</span>
-                        </div>
-                        <button class="btn-add-cart">افزودن به سبد خرید</button>
-                    </div>
-                </div>
-
-                <div class="product-card clickable-item" data-id="7">
-                    <div class="product-image-wrapper">
-                        <img src="https://images.unsplash.com/photo-1581092160607-ee22621dd758?q=80&w=500&auto=format&fit=crop" class="product-image" alt="فرز آهنگری">
-                    </div>
-                    <div class="product-info">
-                        <span class="product-brand">AEG</span>
-                        <h3 class="product-name">فرز آهنگری آ ا گ ۲۲۰۰ وات مدل WS22</h3>
-                        <div class="product-price">
-                            <span class="new-price">۴,۹۰۰,۰۰۰ تومان</span>
-                        </div>
-                        <button class="btn-add-cart">افزودن به سبد خرید</button>
-                    </div>
-                </div>
-
-                <div class="product-card clickable-item" data-id="8">
-                    <div class="product-image-wrapper">
-                        <img src="https://images.unsplash.com/photo-1581092335397-9583eb92d232?q=80&w=500&auto=format&fit=crop" class="product-image" alt="تراز لیزری">
-                    </div>
-                    <div class="product-info">
-                        <span class="product-brand">CROWN</span>
-                        <h3 class="product-name">تراز لیزری ۳۶۰ درجه سه خط کرون CT44048</h3>
-                        <div class="product-price">
-                            <span class="new-price">۳,۴۵۰,۰۰۰ تومان</span>
-                        </div>
-                        <button class="btn-add-cart">افزودن به سبد خرید</button>
-                    </div>
-                </div>
-            </div>
-            <button class="h-scroll-arrow arrow-left" onclick="scrollTrack('productsTrack', -1)">❯</button>
-        </div>
-    </main>
-
-    <!-- ۴. بنرهای دوقلوی تبلیغاتی -->
-    <section class="section-wrapper">
-        <div class="promo-banners-grid">
-            <a href="catalog.html?cat=welding" class="promo-banner-card clickable-item">
-                <img src="https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?q=80&w=900&auto=format&fit=crop" alt="تجهیزات جوشکاری">
-                <div class="promo-banner-overlay"></div>
-                <div class="promo-banner-content">
-                    <span class="promo-banner-tag">ضمانت ۲۴ ماهه</span>
-                    <h3 class="promo-banner-title">نسل جدید اینورترهای جوشکاری IGBT</h3>
-                    <span class="promo-banner-btn">مشاهده و خرید ❯</span>
-                </div>
-            </a>
-            <a href="catalog.html?cat=power-tools" class="promo-banner-card clickable-item">
-                <img src="https://images.unsplash.com/photo-1572981779307-38b8cabb2407?q=80&w=900&auto=format&fit=crop" alt="ابزارهای شارژی">
-                <div class="promo-banner-overlay"></div>
-                <div class="promo-banner-content">
-                    <span class="promo-banner-tag">موتورهای براشلس (Brushless)</span>
-                    <h3 class="promo-banner-title">خانواده ابزارهای شارژی ۲۰ ولت صنعتی</h3>
-                    <span class="promo-banner-btn">مشاهده و خرید ❯</span>
-                </div>
-            </a>
-        </div>
-    </section>
-
-    <!-- ۵. برندهای معتبر جهانی -->
-    <section class="section-wrapper">
-        <div class="section-header">
-            <h2 class="section-title">برندهای معتبر جهانی</h2>
-        </div>
-        <div class="h-scroll-container">
-            <button class="h-scroll-arrow arrow-right" onclick="scrollTrack('brandsTrack', 1)">❮</button>
-            <div class="h-scroll-track" id="brandsTrack">
-                <a href="catalog.html?brand=dewalt" class="brand-card clickable-item">DEWALT</a>
-                <a href="catalog.html?brand=makita" class="brand-card clickable-item">MAKITA</a>
-                <a href="catalog.html?brand=bosch" class="brand-card clickable-item">BOSCH</a>
-                <a href="catalog.html?brand=milwaukee" class="brand-card clickable-item">MILWAUKEE</a>
-                <a href="catalog.html?brand=hilti" class="brand-card clickable-item">HILTI</a>
-                <a href="catalog.html?brand=metabo" class="brand-card clickable-item">METABO</a>
-                <a href="catalog.html?brand=ronix" class="brand-card clickable-item">RONIX</a>
-                <a href="catalog.html?brand=aeg" class="brand-card clickable-item">AEG</a>
-                <a href="catalog.html?brand=crown" class="brand-card clickable-item">CROWN</a>
-                <a href="catalog.html?brand=tosan" class="brand-card clickable-item">TOSAN</a>
-                <a href="catalog.html?brand=mahak" class="brand-card clickable-item">MAHAK</a>
-                <a href="catalog.html?brand=arva" class="brand-card clickable-item">ARVA</a>
-                <a href="catalog.html?brand=total" class="brand-card clickable-item">TOTAL</a>
-                <a href="catalog.html?brand=ingco" class="brand-card clickable-item">INGCO</a>
-            </div>
-            <button class="h-scroll-arrow arrow-left" onclick="scrollTrack('brandsTrack', -1)">❯</button>
-        </div>
-    </section>
-
-    <!-- ۶. مجله تخصصی و راهنمای خرید ابزار -->
-    <section class="section-wrapper" id="blogSection">
-        <div class="section-header">
-            <h2 class="section-title">مجله تخصصی و راهنمای خرید</h2>
-            <a href="blog.html" class="view-all">ورود به وبلاگ ❯</a>
-        </div>
-        <div class="blog-grid">
-            <a href="blog.html?post=1" class="blog-card">
-                <div class="blog-img-wrapper">
-                    <img src="https://images.unsplash.com/photo-1504148455328-c376907d081c?q=80&w=600&auto=format&fit=crop" alt="راهنمای خرید دریل">
-                </div>
-                <div class="blog-body">
-                    <span class="blog-date">راهنمای خرید • ۵ دقیقه مطالعه</span>
-                    <h3 class="blog-title">تفاوت دریل چکشی، گیربکسی و بتن‌کن؛ کدام برای شما مناسب است؟</h3>
-                    <p class="blog-excerpt">بررسی کامل گشتاور، قدرت ضربه و کاربرد هر کدام از انواع دریل‌ها در پروژه‌های ساختمانی و خانگی.</p>
-                </div>
-            </a>
-            <a href="blog.html?post=2" class="blog-card">
-                <div class="blog-img-wrapper">
-                    <img src="https://images.unsplash.com/photo-1581092160607-ee22621dd758?q=80&w=600&auto=format&fit=crop" alt="تشخیص ابزار اصل">
-                </div>
-                <div class="blog-body">
-                    <span class="blog-date">تشخیص اصالت • ۴ دقیقه مطالعه</span>
-                    <h3 class="blog-title">چگونه ابزارهای اورجینال دیوالت و ماکیتا را از نسخه‌های فیک تشخیص دهیم؟</h3>
-                    <p class="blog-excerpt">نکات کلیدی بررسی سریال بدنه، کیفیت قالب‌گیری، لیبل باتری و گارانتی هنگام خرید ابزار از بانه.</p>
-                </div>
-            </a>
-            <a href="blog.html?post=3" class="blog-card">
-                <div class="blog-img-wrapper">
-                    <img src="https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?q=80&w=600&auto=format&fit=crop" alt="انتخاب اینورتر">
-                </div>
-                <div class="blog-body">
-                    <span class="blog-date">آموزش فنی • ۶ دقیقه مطالعه</span>
-                    <h3 class="blog-title">راهنمای انتخاب آمپر مناسب در خرید دستگاه جوش اینورتر</h3>
-                    <p class="blog-excerpt">برای ذوب دائمی الکترود ۳ و ۴ به چه چرخه کاری (Duty Cycle) و چه میزان آمپر واقعی نیاز داریم؟</p>
-                </div>
-            </a>
-        </div>
-    </section>
+    <!-- هیرو و بخش‌های صفحه اصلی از Store (store.js) رندر می‌شوند؛ ترتیب و نمایش آن‌ها در homeSections است -->
+    <div id="heroRoot"></div>
+    <div id="homeRoot"></div>
 
     <!-- جایگاه تزریق خودکار فوتر، کشوی سبد خرید، کشوی موبایل و نوار پایین از فایل layout.js -->
     <div id="site-footer"></div>
 
     <!-- ۱. فراخوانی فایل مرکزی هدر و فوتر -->
     <script src="products.js"></script>
+    <script src="store.js"></script>
     <script src="layout.js"></script>
     <script src="cart.js"></script>
 
     <!-- ۲. اسکریپت‌های اختصاصی صفحه اصلی (اسلایدر، تایمر مگا آف و اسکرول افقی) -->
     <script>
-        // تایمر شمارش معکوس بخش «مگا آف»
-        let remainingSeconds = (7 * 3600) + (28 * 60) + 45;
+        // ===== رندر صفحه اصلی از داده‌های Store =====
+        const hText = escapeHTML;
+        function sectionHeader(sec) {
+            return `<div class="section-header">
+                <h2 class="section-title">${hText(sec.title)}</h2>
+                ${sec.viewAllHref ? `<a href="${hText(sec.viewAllHref)}" class="view-all">${hText(sec.viewAllLabel || 'مشاهده همه')} ❯</a>` : ''}
+            </div>`;
+        }
+        function hScroll(trackId, innerHTML) {
+            return `<div class="h-scroll-container">
+                <button class="h-scroll-arrow arrow-right" onclick="scrollTrack('${trackId}', 1)" aria-label="قبلی">❮</button>
+                <div class="h-scroll-track" id="${trackId}">${innerHTML}</div>
+                <button class="h-scroll-arrow arrow-left" onclick="scrollTrack('${trackId}', -1)" aria-label="بعدی">❯</button>
+            </div>`;
+        }
+        function productsOfSection(sec) {
+            const list = getProducts().filter(p => !sec.filterTag || (p.tags || []).includes(sec.filterTag));
+            return list.slice(0, sec.limit || 12);
+        }
+
+        function renderHero() {
+            const slides = getSlides();
+            if (!slides.length) return '';
+            return `<div class="hero-section" dir="ltr" onmouseenter="stopAutoSlide()" onmouseleave="startAutoSlide()">
+                <div class="hero-slider" id="sliderContainer">
+                ${slides.map(s => `
+                    <div class="slide" dir="rtl">
+                        ${s.type === 'video'
+                            ? `<video class="hero-media" autoplay loop muted playsinline poster="${hText(imageUrl(s.poster, 1920))}"><source src="${hText(s.src)}" type="video/mp4"></video>`
+                            : `<img class="hero-media" src="${hText(imageUrl(s.src, 1920))}" alt="${hText(s.alt || s.title)}">`}
+                        <div class="hero-overlay"></div>
+                        <div class="hero-content">
+                            ${s.badge ? `<span class="hero-badge">${hText(s.badge)}</span>` : ''}
+                            <h1 class="hero-title">${hText(s.title)}</h1>
+                            ${s.subtitle ? `<p class="hero-subtitle">${hText(s.subtitle)}</p>` : ''}
+                            <div class="hero-buttons">
+                                ${(s.buttons || []).map(b => `<a href="${hText(b.href)}" class="btn-hero btn-hero-${b.style === 'primary' ? 'primary' : 'secondary'}">${hText(b.label)}</a>`).join('')}
+                            </div>
+                        </div>
+                    </div>`).join('')}
+                </div>
+                <button class="slider-arrow slider-prev" onclick="changeSlide(-1)" aria-label="اسلاید قبلی">❮</button>
+                <button class="slider-arrow slider-next" onclick="changeSlide(1)" aria-label="اسلاید بعدی">❯</button>
+                <div class="slider-dots" id="sliderDots"></div>
+            </div>`;
+        }
+
+        const homeRenderers = {
+            categories(sec) {
+                const cats = getCategories();
+                if (!cats.length) return '';
+                return `<section class="section-wrapper">${sectionHeader(sec)}${hScroll('catsTrack', cats.map(c => `
+                    <a href="catalog.html?cat=${hText(c.id)}" class="category-card clickable-item">
+                        <img src="${hText(imageUrl(c.image, 600))}" alt="${hText(c.title)}" loading="lazy">
+                        <div class="category-overlay"></div>
+                        <div class="category-glass-caption">
+                            <span class="category-name">${hText(c.title)}</span>
+                            ${c.countLabel ? `<span class="category-count">${hText(c.countLabel)}</span>` : ''}
+                        </div>
+                    </a>`).join(''))}</section>`;
+            },
+            offer(sec) {
+                const items = productsOfSection(sec);
+                if (!items.length) return '';
+                const of = getSettings().offer;
+                return `<section class="section-wrapper" id="megaOfferSection"><div class="mega-offer-box">
+                    <div class="mega-offer-info">
+                        <span class="mega-offer-tag">${hText(sec.tag)}</span>
+                        <h2 class="mega-offer-title">${hText(sec.title)}</h2>
+                        <p class="mega-offer-desc">${hText(sec.desc)}</p>
+                        ${of.countdownEnabled ? `<div class="countdown-timer">
+                            <div class="time-box"><span class="time-val" id="timerSeconds">۰۰</span><span class="time-label">ثانیه</span></div>
+                            <div class="time-box"><span class="time-val" id="timerMinutes">۰۰</span><span class="time-label">دقیقه</span></div>
+                            <div class="time-box"><span class="time-val" id="timerHours">۰۰</span><span class="time-label">ساعت</span></div>
+                        </div>` : ''}
+                        <a href="${hText(sec.viewAllHref)}" class="btn-hero btn-hero-secondary" style="padding: 8px 20px; font-size: 13px; display: inline-flex;">${hText(sec.viewAllLabel)} ❯</a>
+                    </div>
+                    <div class="mega-offer-track-wrapper h-scroll-container">
+                        <button class="h-scroll-arrow arrow-right" onclick="scrollTrack('offerTrack', 1)" aria-label="قبلی">❮</button>
+                        <div class="h-scroll-track" id="offerTrack">${items.map(productCardHTML).join('')}</div>
+                        <button class="h-scroll-arrow arrow-left" onclick="scrollTrack('offerTrack', -1)" aria-label="بعدی">❯</button>
+                    </div>
+                </div></section>`;
+            },
+            productRow(sec) {
+                const items = productsOfSection(sec);
+                if (!items.length) return '';
+                return `<section class="section-wrapper">${sectionHeader(sec)}${hScroll(sec.id + 'Track', items.map(productCardHTML).join(''))}</section>`;
+            },
+            banners() {
+                const list = getBanners();
+                if (!list.length) return '';
+                return `<section class="section-wrapper"><div class="promo-banners-grid">${list.map(b => `
+                    <a href="${hText(b.href)}" class="promo-banner-card clickable-item">
+                        <img src="${hText(imageUrl(b.image, 900))}" alt="${hText(b.alt || b.title)}" loading="lazy">
+                        <div class="promo-banner-overlay"></div>
+                        <div class="promo-banner-content">
+                            ${b.tag ? `<span class="promo-banner-tag">${hText(b.tag)}</span>` : ''}
+                            <h3 class="promo-banner-title">${hText(b.title)}</h3>
+                            <span class="promo-banner-btn">${hText(b.btn)} ❯</span>
+                        </div>
+                    </a>`).join('')}</div></section>`;
+            },
+            brands(sec) {
+                const list = getBrands();
+                if (!list.length) return '';
+                return `<section class="section-wrapper">${sectionHeader(sec)}${hScroll('brandsTrack', list.map(b =>
+                    `<a href="catalog.html?brand=${hText(b.id)}" class="brand-card clickable-item">${hText(b.name)}</a>`).join(''))}</section>`;
+            },
+            blog(sec) {
+                const list = getPosts();
+                if (!list.length) return '';
+                return `<section class="section-wrapper" id="blogSection">${sectionHeader(sec)}<div class="blog-grid">${list.map(a => `
+                    <a href="${hText(a.href)}" class="blog-card">
+                        <div class="blog-img-wrapper"><img src="${hText(imageUrl(a.image, 600))}" alt="${hText(a.alt || a.title)}" loading="lazy"></div>
+                        <div class="blog-body">
+                            <span class="blog-date">${hText(a.meta)}</span>
+                            <h3 class="blog-title">${hText(a.title)}</h3>
+                            <p class="blog-excerpt">${hText(a.excerpt)}</p>
+                        </div>
+                    </a>`).join('')}</div></section>`;
+            }
+        };
+
+        document.getElementById('heroRoot').innerHTML = renderHero();
+        document.getElementById('homeRoot').innerHTML = Store.get('homeSections')
+            .filter(sec => sec.enabled !== false && homeRenderers[sec.type])
+            .map(sec => homeRenderers[sec.type](sec)).join('');
+
+        // تایمر شمارش معکوس بخش «مگا آف» (مدت از تنظیمات فروشگاه)
+        const offerCfg = getSettings().offer;
+        let remainingSeconds = offerCfg.countdownSeconds;
         setInterval(() => {
-            if (remainingSeconds <= 0) remainingSeconds = 8 * 3600;
+            if (remainingSeconds <= 0) remainingSeconds = offerCfg.resetSeconds;
             remainingSeconds--;
             const hrs = Math.floor(remainingSeconds / 3600);
             const mins = Math.floor((remainingSeconds % 3600) / 60);
@@ -1223,6 +892,7 @@
         let slideInterval = null;
 
         slides.forEach((_, i) => {
+            if (!dotsContainer) return;
             const dot = document.createElement('span');
             dot.className = 'dot' + (i === 0 ? ' active' : '');
             dot.addEventListener('click', () => { goToSlide(i); resetInterval(); });
@@ -1230,7 +900,7 @@
         });
         const dots = document.querySelectorAll('.dot');
 
-        sliderContainer.addEventListener('scroll', () => {
+        if (sliderContainer) sliderContainer.addEventListener('scroll', () => {
             const scrollLeft = sliderContainer.scrollLeft;
             const slideWidth = sliderContainer.clientWidth;
             const newIndex = Math.round(scrollLeft / slideWidth);
@@ -1242,6 +912,7 @@
         }, { passive: true });
 
         function goToSlide(index) {
+            if (!sliderContainer || !slides.length) return;
             if (index < 0) index = slides.length - 1;
             if (index >= slides.length) index = 0;
             currentSlideIndex = index;
@@ -1266,8 +937,8 @@
             stopAutoSlide();
             startAutoSlide();
         }
-        startAutoSlide();
-        sliderContainer.addEventListener('touchstart', resetInterval, { passive: true });
+        if (slides.length) startAutoSlide();
+        if (sliderContainer) sliderContainer.addEventListener('touchstart', resetInterval, { passive: true });
 
         // موتور اسکرول افقی یکپارچه برای تمامی بخش‌ها
         function scrollTrack(trackId, direction) {

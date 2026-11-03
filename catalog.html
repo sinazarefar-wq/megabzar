@@ -2,7 +2,7 @@
 <html dir="rtl" lang="fa" data-theme="dark">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>فروشگاه و کاتالوگ تخصصی ابزارآلات | مگا ابزار</title>
     <script>
     // اعمال فوری تم قبل از رندر شدن صفحه برای جلوگیری از پرش یا فراموشی تم
@@ -872,17 +872,7 @@
                 <h1 class="catalog-page-title" id="catalogPageTitle">کاتالوگ جامع ابزارآلات صنعتی و کارگاهی</h1>
             </div>
 
-            <div class="quick-cats-scroll" id="quickCatsBar">
-                <button class="quick-cat-pill active" data-cat="all">همه دسته‌ها</button>
-                <button class="quick-cat-pill" data-cat="power-tools">⚡ ابزار برقی و شارژی</button>
-                <button class="quick-cat-pill" data-cat="welding">🔥 اینورتر و جوشکاری</button>
-                <button class="quick-cat-pill" data-cat="hand-tools">🔧 ابزار دستی و مکانیکی</button>
-                <button class="quick-cat-pill" data-cat="measuring">📏 تراز لیزری و دقیق</button>
-                <button class="quick-cat-pill" data-cat="pneumatic">💨 ابزار بادی و کمپرسور</button>
-                <button class="quick-cat-pill" data-cat="gardening">🌲 اره موتوری و باغبانی</button>
-                <button class="quick-cat-pill" data-cat="safety">🦺 ایمنی و کارگاهی</button>
-                <button class="quick-cat-pill" data-cat="accessories">⚙️ مته و صفحه برش</button>
-            </div>
+            <div class="quick-cats-scroll" id="quickCatsBar"></div>
         </div>
     </section>
 
@@ -915,102 +905,26 @@
 
             <div class="filter-section">
                 <div class="filter-section-head">دسته‌بندی تخصصی</div>
-                <div class="filter-options-list" id="catCheckboxList">
-                    <label class="filter-option-item">
-                        <span class="filter-option-right"><input type="checkbox" value="power-tools" onchange="syncQuickPillsAndFilter()"> ابزار برقی و شارژی</span>
-                        <span class="filter-badge-count">۶</span>
-                    </label>
-                    <label class="filter-option-item">
-                        <span class="filter-option-right"><input type="checkbox" value="welding" onchange="syncQuickPillsAndFilter()"> اینورتر و جوشکاری</span>
-                        <span class="filter-badge-count">۱</span>
-                    </label>
-                    <label class="filter-option-item">
-                        <span class="filter-option-right"><input type="checkbox" value="hand-tools" onchange="syncQuickPillsAndFilter()"> ابزار دستی و مکانیکی</span>
-                        <span class="filter-badge-count">۲</span>
-                    </label>
-                    <label class="filter-option-item">
-                        <span class="filter-option-right"><input type="checkbox" value="measuring" onchange="syncQuickPillsAndFilter()"> تراز لیزری و ابزار دقیق</span>
-                        <span class="filter-badge-count">۲</span>
-                    </label>
-                    <label class="filter-option-item">
-                        <span class="filter-option-right"><input type="checkbox" value="pneumatic" onchange="syncQuickPillsAndFilter()"> ابزار بادی و کمپرسور</span>
-                        <span class="filter-badge-count">۱</span>
-                    </label>
-                    <label class="filter-option-item">
-                        <span class="filter-option-right"><input type="checkbox" value="gardening" onchange="syncQuickPillsAndFilter()"> اره موتوری و باغبانی</span>
-                        <span class="filter-badge-count">۱</span>
-                    </label>
-                    <label class="filter-option-item">
-                        <span class="filter-option-right"><input type="checkbox" value="safety" onchange="syncQuickPillsAndFilter()"> ایمنی و حفاظت فردی</span>
-                        <span class="filter-badge-count">۱</span>
-                    </label>
-                    <label class="filter-option-item">
-                        <span class="filter-option-right"><input type="checkbox" value="accessories" onchange="syncQuickPillsAndFilter()"> مته، صفحه برش و جانبی</span>
-                        <span class="filter-badge-count">۱</span>
-                    </label>
-                </div>
+                <div class="filter-options-list" id="catCheckboxList"></div>
             </div>
 
             <div class="filter-section">
                 <div class="filter-section-head">برند سازنده</div>
-                <div class="filter-options-list" id="brandCheckboxList">
-                    <label class="filter-option-item">
-                        <span class="filter-option-right"><input type="checkbox" value="DEWALT" onchange="applyCatalogFilters()"> دیوالت (DEWALT)</span>
-                        <span class="filter-badge-count">۳</span>
-                    </label>
-                    <label class="filter-option-item">
-                        <span class="filter-option-right"><input type="checkbox" value="MAKITA" onchange="applyCatalogFilters()"> ماکیتا (MAKITA)</span>
-                        <span class="filter-badge-count">۲</span>
-                    </label>
-                    <label class="filter-option-item">
-                        <span class="filter-option-right"><input type="checkbox" value="BOSCH" onchange="applyCatalogFilters()"> بوش (BOSCH)</span>
-                        <span class="filter-badge-count">۲</span>
-                    </label>
-                    <label class="filter-option-item">
-                        <span class="filter-option-right"><input type="checkbox" value="MILWAUKEE" onchange="applyCatalogFilters()"> میلواکی (MILWAUKEE)</span>
-                        <span class="filter-badge-count">۲</span>
-                    </label>
-                    <label class="filter-option-item">
-                        <span class="filter-option-right"><input type="checkbox" value="RONIX" onchange="applyCatalogFilters()"> رونیکس (RONIX)</span>
-                        <span class="filter-badge-count">۲</span>
-                    </label>
-                    <label class="filter-option-item">
-                        <span class="filter-option-right"><input type="checkbox" value="HILTI" onchange="applyCatalogFilters()"> هیلتی (HILTI)</span>
-                        <span class="filter-badge-count">۱</span>
-                    </label>
-                    <label class="filter-option-item">
-                        <span class="filter-option-right"><input type="checkbox" value="AEG" onchange="applyCatalogFilters()"> آ ا گ (AEG)</span>
-                        <span class="filter-badge-count">۲</span>
-                    </label>
-                    <label class="filter-option-item">
-                        <span class="filter-option-right"><input type="checkbox" value="CROWN" onchange="applyCatalogFilters()"> کرون (CROWN)</span>
-                        <span class="filter-badge-count">۱</span>
-                    </label>
-                </div>
+                <div class="filter-options-list" id="brandCheckboxList"></div>
             </div>
 
             <div class="filter-section">
                 <div class="filter-section-head">سقف بودجه (تومان)</div>
-                <input type="range" id="priceRangeSlider" class="price-slider" min="1000000" max="35000000" step="500000" value="35000000" oninput="updatePriceSliderLabel(this.value)">
+                <input type="range" id="priceRangeSlider" class="price-slider" step="500000" oninput="updatePriceSliderLabel(this.value)">
                 <div class="price-slider-labels">
-                    <span>۱ میلیون</span>
-                    <span id="priceSliderCurrentVal" style="color: var(--accent-color); font-weight: 800;">تا ۳۵,۰۰۰,۰۰۰ تومان</span>
+                    <span id="priceSliderMinLabel">۱ میلیون</span>
+                    <span id="priceSliderCurrentVal" style="color: var(--accent-color); font-weight: 800;"></span>
                 </div>
             </div>
 
             <div class="filter-section">
                 <div class="filter-section-head">منبع تغذیه</div>
-                <div class="filter-options-list" id="powerCheckboxList">
-                    <label class="filter-option-item">
-                        <span class="filter-option-right"><input type="checkbox" value="برقی" onchange="applyCatalogFilters()"> برقی (۲۲۰ ولت)</span>
-                    </label>
-                    <label class="filter-option-item">
-                        <span class="filter-option-right"><input type="checkbox" value="شارژی" onchange="applyCatalogFilters()"> شارژی (باتری لیتیوم)</span>
-                    </label>
-                    <label class="filter-option-item">
-                        <span class="filter-option-right"><input type="checkbox" value="دستی" onchange="applyCatalogFilters()"> دستی / مکانیکی</span>
-                    </label>
-                </div>
+                <div class="filter-options-list" id="powerCheckboxList"></div>
             </div>
         </aside>
 
@@ -1071,11 +985,44 @@
 
     <!-- ۶. فراخوانی اسکریپت‌های پروژه (تضمین هماهنگی با layout.js و products.js) -->
     <script src="products.js"></script>
+    <script src="store.js"></script>
     <script src="layout.js"></script>
     <script src="cart.js"></script>
 
     <!-- ۷. اسکریپت‌های اختصاصی کاتالوگ -->
     <script>
+        // داده محصولات از store.js می‌آید (درصد تخفیف از قیمت و قیمت قبلی محاسبه می‌شود)
+        const catalogData = PRODUCTS.map(p => ({ ...p, discount: discountPercent(p) }));
+        const catalogCfg = getSettings().catalog;
+        const E = escapeHTML;
+
+        // ساخت فیلترها، دسته‌ها و برندها از داده‌ها (بدون متن ثابت در HTML)
+        (function renderCatalogChrome() {
+            const cats = getCategories(), brands = getBrands(), types = getSettings().powerTypes;
+            const countBy = (key, val) => toPersianNum(catalogData.filter(p => p[key] === val).length);
+            const option = (value, label, count, handler) => `
+                <label class="filter-option-item">
+                    <span class="filter-option-right"><input type="checkbox" value="${E(value)}" onchange="${handler}"> ${label}</span>
+                    ${count !== null ? `<span class="filter-badge-count">${count}</span>` : ''}
+                </label>`;
+            document.getElementById('quickCatsBar').innerHTML =
+                `<button class="quick-cat-pill active" data-cat="all">همه دسته‌ها</button>` +
+                cats.map(c => `<button class="quick-cat-pill" data-cat="${E(c.id)}">${E(c.icon)} ${E(c.sheetTitle || c.title)}</button>`).join('');
+            document.getElementById('catCheckboxList').innerHTML =
+                cats.map(c => option(c.id, E(c.title), countBy('category', c.id), 'syncQuickPillsAndFilter()')).join('');
+            document.getElementById('brandCheckboxList').innerHTML =
+                brands.map(b => option(b.name, b.faName ? `${E(b.faName)} (${E(b.name)})` : E(b.name), countBy('brand', b.name), 'applyCatalogFilters()')).join('');
+            document.getElementById('powerCheckboxList').innerHTML =
+                types.map(t => option(t.value, E(t.label), null, 'applyCatalogFilters()')).join('');
+
+            const slider = document.getElementById('priceRangeSlider');
+            slider.min = catalogCfg.priceMin; slider.max = catalogCfg.priceMax; slider.value = catalogCfg.priceMax;
+            document.getElementById('priceSliderMinLabel').innerText = toPersianNum(Math.round(catalogCfg.priceMin / 1000000)) + ' میلیون';
+            document.getElementById('priceSliderCurrentVal').innerText = `تا ${formatPrice(catalogCfg.priceMax)}`;
+            document.getElementById('catalogPageTitle').innerText = catalogCfg.pageTitle;
+            document.getElementById('breadcrumbCurrent').innerText = catalogCfg.allBreadcrumb;
+        })();
+
         let currentSort = 'bestselling';
 
         function toggleMobileFilters() {
@@ -1110,7 +1057,7 @@
 
         function updatePriceSliderLabel(val) {
             const num = parseInt(val);
-            document.getElementById('priceSliderCurrentVal').innerText = `تا ${toPersianNum(num.toLocaleString())} تومان`;
+            document.getElementById('priceSliderCurrentVal').innerText = `تا ${formatPrice(num)}`;
             applyCatalogFilters();
         }
 
@@ -1154,7 +1101,7 @@
             const selectedBrands = Array.from(document.querySelectorAll('#brandCheckboxList input:checked')).map(i => i.value);
             const selectedPowers = Array.from(document.querySelectorAll('#powerCheckboxList input:checked')).map(i => i.value);
 
-            let filtered = PRODUCTS.filter(item => {
+            let filtered = catalogData.filter(item => {
                 if (searchQuery && !item.title.toLowerCase().includes(searchQuery) && !item.brand.toLowerCase().includes(searchQuery)) return false;
                 if (onlyInStock && !item.inStock) return false;
                 if (onlyDiscount && item.discount === 0) return false;
@@ -1197,17 +1144,17 @@
                         <span class="badge-stock ${item.inStock ? '' : 'out'}">${item.inStock ? 'موجود در انبار' : 'ناموجود'}</span>
                     </div>
                     <div class="cat-product-img-box">
-                        <img src="${productImage(item, 500)}" alt="${item.title}" class="cat-product-img" loading="lazy">
+                        <img src="${productImage(item, 500)}" alt="${escapeHTML(item.title)}" class="cat-product-img" loading="lazy">
                     </div>
                     <div class="cat-product-body">
                         <div class="cat-product-main-info">
                             <div class="cat-product-meta">
-                                <span class="cat-product-brand">${item.brand}</span>
+                                <span class="cat-product-brand">${E(item.brand)}</span>
                                 <span class="cat-product-rating">★ ${item.rating}</span>
                             </div>
-                            <h3 class="cat-product-title">${item.title}</h3>
+                            <h3 class="cat-product-title">${E(item.title)}</h3>
                             <div class="cat-product-specs">
-                                ${item.specs.map(s => `<span class="spec-tag">${s}</span>`).join('')}
+                                ${(item.freeShipping ? ['🚚 ارسال رایگان'] : []).concat(item.specs).map(s => `<span class="spec-tag">${E(s)}</span>`).join('')}
                             </div>
                         </div>
                         <div class="cat-product-footer">
@@ -1254,23 +1201,17 @@
             if (headerSearchInput) headerSearchInput.value = '';
             document.getElementById('filterInStock').checked = false;
             document.getElementById('filterDiscount').checked = false;
-            document.getElementById('priceRangeSlider').value = 35000000;
-            document.getElementById('priceSliderCurrentVal').innerText = 'تا ۳۵,۰۰۰,۰۰۰ تومان';
+            document.getElementById('priceRangeSlider').value = catalogCfg.priceMax;
+            document.getElementById('priceSliderCurrentVal').innerText = `تا ${formatPrice(catalogCfg.priceMax)}`;
             document.querySelectorAll('.filter-options-list input[type="checkbox"]').forEach(cb => cb.checked = false);
             document.querySelectorAll('#quickCatsBar .quick-cat-pill').forEach(p => p.classList.toggle('active', p.dataset.cat === 'all'));
-            document.getElementById('breadcrumbCurrent').innerText = 'همه ابزارآلات صنعتی';
+            document.getElementById('breadcrumbCurrent').innerText = catalogCfg.allBreadcrumb;
             applyCatalogFilters();
         }
 
         function addProductFromCatalog(id, e) {
             e.stopPropagation();
-            const prod = PRODUCTS.find(p => p.id === id);
-            if (!prod) return;
-            const existing = cart.find(item => item.title === prod.title);
-            if (existing) existing.quantity += 1;
-            else cart.push({ title: prod.title, price: prod.price, image: productImage(prod, 300), quantity: 1 });
-            saveAndUpdateCart();
-            toggleCart();
+            addToCart(id);
         }
 
         function navigateToProduct(id, e) {

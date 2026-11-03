@@ -27,7 +27,6 @@ window.addEventListener('focus', syncThemeFromStorage);
 window.addEventListener('storage', syncThemeFromStorage);
 document.addEventListener('DOMContentLoaded', syncThemeFromStorage);
 
-const toPersianNum = num => num.toString().replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
 
 // ۳. استایل‌های مشترک کل سایت (هدر دو ردیفه ثابت، فاصله استاندارد زیر هدر، مگامنو و فوتر)
 const sharedStyles = `
@@ -70,6 +69,11 @@ const sharedStyles = `
     --icon-filter: invert(65%) sepia(15%) saturate(400%) hue-rotate(175deg) brightness(95%) contrast(90%);
     --icon-active-filter: invert(65%) sepia(85%) saturate(1500%) hue-rotate(355deg) brightness(100%) contrast(95%);
 }
+
+/* برچسب‌های کارت محصول که از داده محصول می‌آیند */
+.badge-free-ship { position: absolute; top: 10px; left: 10px; background: #2e9e5b; color: #fff; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 800; z-index: 2; pointer-events: none; }
+.badge-out-of-stock { position: absolute; top: 40px; right: 10px; background: #555; color: #fff; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 800; z-index: 2; pointer-events: none; }
+.btn-add-cart:disabled { opacity: .5; cursor: not-allowed; }
 
 * { box-sizing: border-box; }
 :focus-visible { outline: 2px solid var(--accent-color); outline-offset: 2px; }
@@ -345,6 +349,157 @@ const styleEl = document.createElement('style');
 styleEl.innerHTML = sharedStyles;
 document.head.insertBefore(styleEl, document.head.firstChild);
 
+// ---------- ساخت هدر و فوتر از داده‌های Store (مدیریت از پنل) ----------
+function buildMegaNav(label) {
+    const cats = getCategories();
+    const bottom = Store.get('megaBottom');
+    const sidebar = cats.map((c, i) => `
+        <a href="catalog.html?cat=${escapeHTML(c.id)}" class="mega-tab-link${i === 0 ? ' active' : ''}" data-target="pane-${escapeHTML(c.id)}" onmouseenter="activateMegaTab(this)">
+            <span class="mega-tab-right"><span class="mega-tab-icon">${escapeHTML(c.icon)}</span><span>${escapeHTML(c.title)}</span></span>
+            <span class="mega-tab-arrow">❮</span>
+        </a>`).join('');
+    const panes = cats.map((c, i) => {
+        const m = c.menu || {};
+        const f = m.featured;
+        let fPrice = f ? f.priceText : '';
+        if (f) {
+            const pid = (f.link || '').match(/product\.html\?id=(\w+)/);
+            const fp = pid && getProduct(pid[1]);
+            if (fp) fPrice = formatPrice(fp.price);
+        }
+        return `
+        <div class="mega-pane${i === 0 ? ' active' : ''}" id="pane-${escapeHTML(c.id)}">
+            <div>
+                <div class="mega-pane-top-header">
+                    <a href="catalog.html?cat=${escapeHTML(c.id)}" class="mega-pane-main-link">${escapeHTML(m.mainLabel || c.title)}</a>
+                    <a href="catalog.html?cat=${escapeHTML(c.id)}" class="mega-pane-view-all">${escapeHTML(m.viewAllLabel || 'مشاهده همه')} ❯</a>
+                </div>
+                <div class="mega-pane-columns">
+                    ${(m.columns || []).map(col => `
+                    <div class="mega-subcol">
+                        <a href="${escapeHTML(col.link)}" class="mega-subcol-title">${escapeHTML(col.title)}</a>
+                        <ul class="mega-subcol-list">
+                            ${(col.items || []).map(it => `<li><a href="${escapeHTML(it.link)}"><span>${escapeHTML(it.label)}</span>${it.badge ? `<span class="mega-item-badge">${escapeHTML(it.badge)}</span>` : ''}</a></li>`).join('')}
+                        </ul>
+                    </div>`).join('')}
+                    ${f ? `
+                    <a href="${escapeHTML(f.link)}" class="mega-featured-card">
+                        <img src="${escapeHTML(imageUrl(f.image, 400))}" alt="${escapeHTML(f.title)}">
+                        <div class="mega-featured-info">
+                            <span class="mega-featured-tag">${escapeHTML(f.tag)}</span>
+                            <span class="mega-featured-title">${escapeHTML(f.title)}</span>
+                            <span class="mega-featured-price">${escapeHTML(fPrice)}</span>
+                        </div>
+                    </a>` : ''}
+                </div>
+            </div>
+        </div>`;
+    }).join('');
+    return `
+    <li class="has-megamenu" id="desktopMegaMenu">
+        <a href="catalog.html" class="megamenu-trigger" onclick="toggleMegaMenu(event)">
+            <span>${escapeHTML(label)}</span>
+            <span class="arrow">▼</span>
+        </a>
+        <div class="megamenu-panel">
+            <div class="megamenu-two-pane">
+                <div class="megamenu-sidebar">${sidebar}</div>
+                <div class="megamenu-content-area">${panes}</div>
+            </div>
+            <div class="megamenu-bottom-bar">
+                <a href="${escapeHTML(bottom.promoHref)}" class="megamenu-promo-link">${escapeHTML(bottom.promoText)}</a>
+                <a href="${escapeHTML(bottom.allHref)}" class="megamenu-all-btn">${escapeHTML(bottom.allLabel)} ❯</a>
+            </div>
+        </div>
+    </li>`;
+}
+
+function buildNav() {
+    return '<ul class="nav-menu">' + Store.get('nav').map(item => {
+        if (item.type === 'megamenu') return buildMegaNav(item.label);
+        return `<li><a href="${escapeHTML(item.href)}">${escapeHTML(item.label)}</a></li>`;
+    }).join('') + '</ul>';
+}
+
+function buildCatSheet() {
+    return getCategories().map(c => `
+        <a href="catalog.html?cat=${escapeHTML(c.id)}" class="cat-sheet-card clickable-item">
+            <img src="${escapeHTML(imageUrl(c.image, 200))}" alt="${escapeHTML(c.title)}">
+            <span>${escapeHTML(c.sheetTitle || c.title)}</span>
+        </a>`).join('');
+}
+
+function buildFooter() {
+    const st = getSettings().store, f = Store.get('footer');
+    return `
+<footer class="footer">
+    <div class="footer-container">
+        <div class="footer-features">
+            ${f.features.map(x => `
+            <div class="feature-item">
+                <img src="${escapeHTML(x.icon)}" alt="${escapeHTML(x.alt)}" class="feature-icon">
+                <span class="feature-text">${escapeHTML(x.text)}</span>
+            </div>`).join('')}
+        </div>
+        <div class="footer-main">
+            <div class="footer-col" style="flex: 1 1 300px;">
+                <img src="${escapeHTML(st.logo)}" alt="${escapeHTML(st.name)}" class="footer-logo" onerror="this.onerror=null; this.src='https://img.icons8.com/ios-filled/100/e53935/maintenance.png';">
+                <div class="footer-contact">
+                    ${escapeHTML(st.workingHours)}<br>
+                    شماره تماس: <strong>${escapeHTML(st.phone)}</strong><br>
+                    آدرس فروشگاه مرکزی: <strong>${escapeHTML(st.address)}</strong>
+                </div>
+                <div class="social-icons">
+                    ${f.social.filter(x => x.enabled !== false && x.url).map(x => `
+                    <a href="${escapeHTML(x.url)}" target="_blank" rel="noopener" class="social-btn ${escapeHTML(x.id)}" title="${escapeHTML(x.title)}">
+                        <img src="${escapeHTML(x.icon)}" alt="${escapeHTML(x.id)}">
+                    </a>`).join('')}
+                </div>
+            </div>
+            ${f.columns.map(col => `
+            <div class="footer-col">
+                <h4 class="footer-title">${escapeHTML(col.title)}</h4>
+                <ul class="footer-links">
+                    ${col.links.map(l => `<li><a href="${escapeHTML(l.href)}">${escapeHTML(l.label)}</a></li>`).join('')}
+                </ul>
+            </div>`).join('')}
+            <div class="footer-col">
+                <h4 class="footer-title">نمادهای اعتماد الکترونیکی</h4>
+                <div class="trust-symbols">
+                    ${f.trustSymbols.map(h => `<div class="trust-symbol">${h}</div>`).join('')}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer-bottom">${escapeHTML(f.copyright)}</div>
+</footer>`;
+}
+
+const SITE = getSettings().store;
+
+// کارت محصول مشترک (صفحه اصلی و محصولات مشابه) - همه‌چیز از داده محصول می‌آید
+function productCardHTML(p) {
+    const off = discountPercent(p);
+    return `
+    <div class="product-card clickable-item" data-id="${p.id}">
+        ${off > 0 ? `<span class="badge-discount">${toPersianNum(off)}٪ تخفیف</span>` : ''}
+        ${p.freeShipping ? `<span class="badge-free-ship">ارسال رایگان</span>` : ''}
+        ${!p.inStock ? `<span class="badge-out-of-stock">ناموجود</span>` : ''}
+        <div class="product-image-wrapper">
+            <img src="${escapeHTML(productImage(p, 500))}" class="product-image" alt="${escapeHTML(p.title)}" loading="lazy">
+        </div>
+        <div class="product-info">
+            <span class="product-brand">${escapeHTML(p.brand)}</span>
+            <h3 class="product-name">${escapeHTML(p.title)}</h3>
+            <div class="product-price">
+                ${p.oldPrice > p.price ? `<span class="old-price">${toPersianNum(p.oldPrice.toLocaleString('en-US'))}</span>` : ''}
+                <span class="new-price">${formatPrice(p.price)}</span>
+            </div>
+            <button class="btn-add-cart" ${p.inStock ? '' : 'disabled'}>${p.inStock ? 'افزودن به سبد خرید' : 'فعلاً ناموجود'}</button>
+        </div>
+    </div>`;
+}
+
 // ۴. قالب HTML هدر دو ردیفه هوشمند
 const headerTemplate = `
 <div class="page-transition" id="pageTransition">
@@ -354,7 +509,7 @@ const headerTemplate = `
 <header class="header" id="siteHeaderEl">
     <div class="header-main-row">
         <a href="index.html" class="logo">
-            <img src="image.png" alt="مگا ابزار" class="logo-img" onerror="this.onerror=null; this.src='https://img.icons8.com/ios-filled/100/e53935/maintenance.png';">
+            <img src="${escapeHTML(SITE.logo)}" alt="${escapeHTML(SITE.name)}" class="logo-img" onerror="this.onerror=null; this.src='https://img.icons8.com/ios-filled/100/e53935/maintenance.png';">
         </a>
         <div class="menu-toggle" onclick="toggleCatSheet()">☰</div>
 
@@ -364,7 +519,7 @@ const headerTemplate = `
                 <input type="text" id="searchInput" class="search-bar" placeholder=" " autocomplete="off">
                 <div class="custom-search-placeholder">
                     <span>جستجو در</span>
-                    <span class="brand-highlight">مگا ابزار</span>
+                    <span class="brand-highlight">${escapeHTML(SITE.name)}</span>
                 </div>
             </div>
             <div class="live-search-results" id="liveSearchResults"></div>
@@ -388,401 +543,7 @@ const headerTemplate = `
     <div class="header-nav-row">
         <div class="nav-container">
             <nav class="nav-wrapper" id="navWrapper">
-                <ul class="nav-menu">
-                    <li><a href="index.html">صفحه اصلی</a></li>
-                    <li class="has-megamenu" id="desktopMegaMenu">
-                        <a href="catalog.html" class="megamenu-trigger" onclick="toggleMegaMenu(event)">
-                            <span>دسته‌بندی محصولات</span>
-                            <span class="arrow">▼</span>
-                        </a>
-                        <div class="megamenu-panel">
-                            <div class="megamenu-two-pane">
-                                <div class="megamenu-sidebar">
-                                    <a href="catalog.html?cat=power-tools" class="mega-tab-link active" data-target="pane-power" onmouseenter="activateMegaTab(this)">
-                                        <span class="mega-tab-right"><span class="mega-tab-icon">⚡</span><span>ابزار برقی و شارژی</span></span>
-                                        <span class="mega-tab-arrow">❮</span>
-                                    </a>
-                                    <a href="catalog.html?cat=welding" class="mega-tab-link" data-target="pane-welding" onmouseenter="activateMegaTab(this)">
-                                        <span class="mega-tab-right"><span class="mega-tab-icon">🔥</span><span>اینورتر و جوشکاری</span></span>
-                                        <span class="mega-tab-arrow">❮</span>
-                                    </a>
-                                    <a href="catalog.html?cat=hand-tools" class="mega-tab-link" data-target="pane-hand" onmouseenter="activateMegaTab(this)">
-                                        <span class="mega-tab-right"><span class="mega-tab-icon">🔧</span><span>ابزار دستی و مکانیکی</span></span>
-                                        <span class="mega-tab-arrow">❮</span>
-                                    </a>
-                                    <a href="catalog.html?cat=measuring" class="mega-tab-link" data-target="pane-measuring" onmouseenter="activateMegaTab(this)">
-                                        <span class="mega-tab-right"><span class="mega-tab-icon">📏</span><span>تراز لیزری و ابزار دقیق</span></span>
-                                        <span class="mega-tab-arrow">❮</span>
-                                    </a>
-                                    <a href="catalog.html?cat=pneumatic" class="mega-tab-link" data-target="pane-pneumatic" onmouseenter="activateMegaTab(this)">
-                                        <span class="mega-tab-right"><span class="mega-tab-icon">💨</span><span>ابزار بادی و کمپرسور</span></span>
-                                        <span class="mega-tab-arrow">❮</span>
-                                    </a>
-                                    <a href="catalog.html?cat=gardening" class="mega-tab-link" data-target="pane-gardening" onmouseenter="activateMegaTab(this)">
-                                        <span class="mega-tab-right"><span class="mega-tab-icon">🌲</span><span>اره موتوری و باغبانی</span></span>
-                                        <span class="mega-tab-arrow">❮</span>
-                                    </a>
-                                    <a href="catalog.html?cat=safety" class="mega-tab-link" data-target="pane-safety" onmouseenter="activateMegaTab(this)">
-                                        <span class="mega-tab-right"><span class="mega-tab-icon">🦺</span><span>ایمنی و حفاظت فردی</span></span>
-                                        <span class="mega-tab-arrow">❮</span>
-                                    </a>
-                                    <a href="catalog.html?cat=accessories" class="mega-tab-link" data-target="pane-accessories" onmouseenter="activateMegaTab(this)">
-                                        <span class="mega-tab-right"><span class="mega-tab-icon">⚙️</span><span>مته، صفحه برش و جانبی</span></span>
-                                        <span class="mega-tab-arrow">❮</span>
-                                    </a>
-                                </div>
-
-                                <div class="megamenu-content-area">
-                                    <div class="mega-pane active" id="pane-power">
-                                        <div>
-                                            <div class="mega-pane-top-header">
-                                                <a href="catalog.html?cat=power-tools" class="mega-pane-main-link">همه محصولات ابزار برقی و شارژی</a>
-                                                <a href="catalog.html?cat=power-tools" class="mega-pane-view-all">مشاهده آرشیو کامل (۳۴۰+ کالا) ❯</a>
-                                            </div>
-                                            <div class="mega-pane-columns">
-                                                <div class="mega-subcol">
-                                                    <a href="catalog.html?cat=power-tools" class="mega-subcol-title">دریل و پیچ‌گوشتی</a>
-                                                    <ul class="mega-subcol-list">
-                                                        <li><a href="product.html?id=1"><span>دریل چکشی دیوالت DWD024</span><span class="mega-item-badge">پرفروش</span></a></li>
-                                                        <li><a href="product.html?id=5"><span>دریل شارژی براشلس میلواکی</span></a></li>
-                                                        <li><a href="catalog.html?cat=power-tools"><span>دریل گیربکسی دو سرعته</span></a></li>
-                                                        <li><a href="catalog.html?cat=power-tools"><span>دریل ستونی کارگاهی</span></a></li>
-                                                    </ul>
-                                                </div>
-                                                <div class="mega-subcol">
-                                                    <a href="catalog.html?cat=power-tools" class="mega-subcol-title">فرز و پولیش صنعتی</a>
-                                                    <ul class="mega-subcol-list">
-                                                        <li><a href="product.html?id=2"><span>مینی‌فرز دسته بلند ماکیتا</span><span class="mega-item-badge">اصل</span></a></li>
-                                                        <li><a href="product.html?id=7"><span>فرز آهنگری سنگین AEG</span></a></li>
-                                                        <li><a href="catalog.html?cat=power-tools"><span>مینی‌فرز دیمردار</span></a></li>
-                                                        <li><a href="catalog.html?cat=power-tools"><span>پولیش اوربیتال خودرو</span></a></li>
-                                                    </ul>
-                                                </div>
-                                                <div class="mega-subcol">
-                                                    <a href="catalog.html?cat=power-tools" class="mega-subcol-title">تخریب و برش سنگین</a>
-                                                    <ul class="mega-subcol-list">
-                                                        <li><a href="product.html?id=6"><span>بتن‌کن ۴ شیار هیلتی TE 2</span></a></li>
-                                                        <li><a href="product.html?id=104"><span>چکش تخریب ۱۶ کیلویی ماکیتا</span></a></li>
-                                                        <li><a href="product.html?id=101"><span>بکس شارژی دیوالت DCF899</span><span class="mega-item-badge">۲۲٪-</span></a></li>
-                                                        <li><a href="product.html?id=106"><span>اره پروفیل‌بر صنعتی AEG</span></a></li>
-                                                    </ul>
-                                                </div>
-                                                <a href="product.html?id=101" class="mega-featured-card">
-                                                    <img src="https://images.unsplash.com/photo-1504148455328-c376907d081c?q=80&w=400&auto=format&fit=crop" alt="بکس شارژی">
-                                                    <div class="mega-featured-info">
-                                                        <span class="mega-featured-tag">🔥 پیشنهاد ویژه بانه</span>
-                                                        <span class="mega-featured-title">بکس شارژی براشلس دیوالت ۲۰ ولت</span>
-                                                        <span class="mega-featured-price">۱۱,۳۱۰,۰۰۰ تومان</span>
-                                                    </div>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="mega-pane" id="pane-welding">
-                                        <div>
-                                            <div class="mega-pane-top-header">
-                                                <a href="catalog.html?cat=welding" class="mega-pane-main-link">همه تجهیزات اینورتر و جوشکاری</a>
-                                                <a href="catalog.html?cat=welding" class="mega-pane-view-all">مشاهده آرشیو کامل (۱۲۰+ کالا) ❯</a>
-                                            </div>
-                                            <div class="mega-pane-columns">
-                                                <div class="mega-subcol">
-                                                    <a href="catalog.html?cat=welding" class="mega-subcol-title">اینورتر جوشکاری IGBT</a>
-                                                    <ul class="mega-subcol-list">
-                                                        <li><a href="product.html?id=102"><span>اینورتر ۲۵۰ آمپر رونیکس</span><span class="mega-item-badge">۱۸٪-</span></a></li>
-                                                        <li><a href="catalog.html?cat=welding"><span>اینورتر ۲۰۰ آمپر دو ولوم</span></a></li>
-                                                        <li><a href="catalog.html?cat=welding"><span>اینورتر ۳۰۰ و ۴۰۰ آمپر صنعتی</span></a></li>
-                                                    </ul>
-                                                </div>
-                                                <div class="mega-subcol">
-                                                    <a href="catalog.html?cat=welding" class="mega-subcol-title">جوش تخصصی و برش</a>
-                                                    <ul class="mega-subcol-list">
-                                                        <li><a href="catalog.html?cat=welding"><span>دستگاه جوش میگ‌مگ (CO2)</span></a></li>
-                                                        <li><a href="catalog.html?cat=welding"><span>دستگاه جوش آرگون (TIG)</span></a></li>
-                                                        <li><a href="catalog.html?cat=welding"><span>برش پلاسما هوایی</span></a></li>
-                                                    </ul>
-                                                </div>
-                                                <div class="mega-subcol">
-                                                    <a href="catalog.html?cat=welding" class="mega-subcol-title">لوازم و ایمنی جوش</a>
-                                                    <ul class="mega-subcol-list">
-                                                        <li><a href="catalog.html?cat=welding"><span>ماسک جوشکاری اتوماتیک</span></a></li>
-                                                        <li><a href="catalog.html?cat=welding"><span>انبر جوش و انبر اتصال مس</span></a></li>
-                                                        <li><a href="catalog.html?cat=welding"><span>کابل جوش نسوز تمام مس</span></a></li>
-                                                    </ul>
-                                                </div>
-                                                <a href="product.html?id=102" class="mega-featured-card">
-                                                    <img src="https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?q=80&w=400&auto=format&fit=crop" alt="اینورتر">
-                                                    <div class="mega-featured-info">
-                                                        <span class="mega-featured-tag">⚡ پرفروش‌ترین دستگاه جوش</span>
-                                                        <span class="mega-featured-title">اینورتر ۲۵۰ آمپر صنعتی رونیکس</span>
-                                                        <span class="mega-featured-price">۶,۳۹۰,۰۰۰ تومان</span>
-                                                    </div>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="mega-pane" id="pane-hand">
-                                        <div>
-                                            <div class="mega-pane-top-header">
-                                                <a href="catalog.html?cat=hand-tools" class="mega-pane-main-link">همه ابزارهای دستی و مکانیکی</a>
-                                                <a href="catalog.html?cat=hand-tools" class="mega-pane-view-all">مشاهده آرشیو کامل (۵۲۰+ کالا) ❯</a>
-                                            </div>
-                                            <div class="mega-pane-columns">
-                                                <div class="mega-subcol">
-                                                    <a href="catalog.html?cat=hand-tools" class="mega-subcol-title">ست بکس و آچارآلات</a>
-                                                    <ul class="mega-subcol-list">
-                                                        <li><a href="product.html?id=3"><span>مجموعه ۱۲۸ عددی رونیکس</span><span class="mega-item-badge">ارسال رایگان</span></a></li>
-                                                        <li><a href="catalog.html?cat=hand-tools"><span>ست آچار یکسر رینگ کروم</span></a></li>
-                                                        <li><a href="catalog.html?cat=hand-tools"><span>آچار جغجغه و بکس فشارقوی</span></a></li>
-                                                    </ul>
-                                                </div>
-                                                <div class="mega-subcol">
-                                                    <a href="catalog.html?cat=hand-tools" class="mega-subcol-title">جعبه ابزار و کیف</a>
-                                                    <ul class="mega-subcol-list">
-                                                        <li><a href="product.html?id=105"><span>پک کیف ضدضربه میلواکی M18</span></a></li>
-                                                        <li><a href="catalog.html?cat=hand-tools"><span>جعبه ابزار فلزی تاشو</span></a></li>
-                                                        <li><a href="catalog.html?cat=hand-tools"><span>کیف کمری و کوله‌پشتی ابزار</span></a></li>
-                                                    </ul>
-                                                </div>
-                                                <div class="mega-subcol">
-                                                    <a href="catalog.html?cat=hand-tools" class="mega-subcol-title">انبر و پیچ‌گوشتی</a>
-                                                    <ul class="mega-subcol-list">
-                                                        <li><a href="catalog.html?cat=hand-tools"><span>ست انبردست، سیم‌چین و دم‌باریک</span></a></li>
-                                                        <li><a href="catalog.html?cat=hand-tools"><span>انبرقفلی و آچار شلاقی</span></a></li>
-                                                        <li><a href="catalog.html?cat=hand-tools"><span>ست پیچ‌گوشتی ضربه‌خور</span></a></li>
-                                                    </ul>
-                                                </div>
-                                                <a href="product.html?id=3" class="mega-featured-card">
-                                                    <img src="https://images.unsplash.com/photo-1530124566582-a618bc2615dc?q=80&w=400&auto=format&fit=crop" alt="جعبه ابزار">
-                                                    <div class="mega-featured-info">
-                                                        <span class="mega-featured-tag">🔧 پک کامل مکانیکی</span>
-                                                        <span class="mega-featured-title">مجموعه ۱۲۸ عددی ابزار دستی رونیکس</span>
-                                                        <span class="mega-featured-price">۵,۲۰۰,۰۰۰ تومان</span>
-                                                    </div>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="mega-pane" id="pane-measuring">
-                                        <div>
-                                            <div class="mega-pane-top-header">
-                                                <a href="catalog.html?cat=measuring" class="mega-pane-main-link">همه تجهیزات تراز لیزری و ابزار دقیق</a>
-                                                <a href="catalog.html?cat=measuring" class="mega-pane-view-all">مشاهده آرشیو کامل (۹۵+ کالا) ❯</a>
-                                            </div>
-                                            <div class="mega-pane-columns">
-                                                <div class="mega-subcol">
-                                                    <a href="catalog.html?cat=measuring" class="mega-subcol-title">تراز و متر لیزری</a>
-                                                    <ul class="mega-subcol-list">
-                                                        <li><a href="product.html?id=4"><span>متر لیزری ۵۰ متری بوش GLM</span><span class="mega-item-badge">بلوتوث</span></a></li>
-                                                        <li><a href="product.html?id=8"><span>تراز لیزری ۳۶۰ درجه کرون</span></a></li>
-                                                        <li><a href="catalog.html?cat=measuring"><span>تراز لیزری ۴ بعدی نور سبز</span></a></li>
-                                                    </ul>
-                                                </div>
-                                                <div class="mega-subcol">
-                                                    <a href="catalog.html?cat=measuring" class="mega-subcol-title">ابزار دقیق مکانیکی</a>
-                                                    <ul class="mega-subcol-list">
-                                                        <li><a href="catalog.html?cat=measuring"><span>کولیس دیجیتال و ورنیه</span></a></li>
-                                                        <li><a href="catalog.html?cat=measuring"><span>میکرومتر و ساعت اندیکاتور</span></a></li>
-                                                        <li><a href="catalog.html?cat=measuring"><span>ترکمتر (آچار گشتاورسنج)</span></a></li>
-                                                    </ul>
-                                                </div>
-                                                <div class="mega-subcol">
-                                                    <a href="catalog.html?cat=measuring" class="mega-subcol-title">تستر برق و دما</a>
-                                                    <ul class="mega-subcol-list">
-                                                        <li><a href="catalog.html?cat=measuring"><span>مولتی‌متر و کلمپ‌متر دیجیتال</span></a></li>
-                                                        <li><a href="catalog.html?cat=measuring"><span>تب‌سنج و دماسنج لیزری صنعتی</span></a></li>
-                                                    </ul>
-                                                </div>
-                                                <a href="product.html?id=4" class="mega-featured-card">
-                                                    <img src="https://images.unsplash.com/photo-1581092335397-9583eb92d232?q=80&w=400&auto=format&fit=crop" alt="متر لیزری">
-                                                    <div class="mega-featured-info">
-                                                        <span class="mega-featured-tag">📏 دقت میلی‌متری</span>
-                                                        <span class="mega-featured-title">متر لیزری بوش مدل GLM 50 C</span>
-                                                        <span class="mega-featured-price">۴,۱۰۰,۰۰۰ تومان</span>
-                                                    </div>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="mega-pane" id="pane-pneumatic">
-                                        <div>
-                                            <div class="mega-pane-top-header">
-                                                <a href="catalog.html?cat=pneumatic" class="mega-pane-main-link">همه محصولات ابزار بادی و کمپرسور</a>
-                                                <a href="catalog.html?cat=pneumatic" class="mega-pane-view-all">مشاهده آرشیو کامل (۱۵۰+ کالا) ❯</a>
-                                            </div>
-                                            <div class="mega-pane-columns">
-                                                <div class="mega-subcol">
-                                                    <a href="catalog.html?cat=pneumatic" class="mega-subcol-title">کارواش و کمپرسور</a>
-                                                    <ul class="mega-subcol-list">
-                                                        <li><a href="product.html?id=103"><span>کارواش دینامی ۱۴۰ بار بوش</span><span class="mega-item-badge">۲۵٪-</span></a></li>
-                                                        <li><a href="catalog.html?cat=pneumatic"><span>کمپرسور باد ۵۰ لیتری سایلنت</span></a></li>
-                                                        <li><a href="catalog.html?cat=pneumatic"><span>کمپرسور باد فندکی دو سیلندر</span></a></li>
-                                                    </ul>
-                                                </div>
-                                                <div class="mega-subcol">
-                                                    <a href="catalog.html?cat=pneumatic" class="mega-subcol-title">ابزارهای پنوماتیک</a>
-                                                    <ul class="mega-subcol-list">
-                                                        <li><a href="catalog.html?cat=pneumatic"><span>بکس بادی جغجغه‌ای و تفنگی</span></a></li>
-                                                        <li><a href="catalog.html?cat=pneumatic"><span>میخکوب و منگنه‌کوب بادی</span></a></li>
-                                                    </ul>
-                                                </div>
-                                                <div class="mega-subcol">
-                                                    <a href="catalog.html?cat=pneumatic" class="mega-subcol-title">پاشش رنگ و باد</a>
-                                                    <ul class="mega-subcol-list">
-                                                        <li><a href="catalog.html?cat=pneumatic"><span>پیستوله رنگ‌پاش کاسه رو</span></a></li>
-                                                        <li><a href="catalog.html?cat=pneumatic"><span>شیلنگ فنری و بادپاش</span></a></li>
-                                                    </ul>
-                                                </div>
-                                                <a href="product.html?id=103" class="mega-featured-card">
-                                                    <img src="https://images.unsplash.com/photo-1581092160607-ee22621dd758?q=80&w=400&auto=format&fit=crop" alt="کارواش">
-                                                    <div class="mega-featured-info">
-                                                        <span class="mega-featured-tag">💨 موتور القایی</span>
-                                                        <span class="mega-featured-title">کارواش صنعتی دینامی بوش ۱۴۰ بار</span>
-                                                        <span class="mega-featured-price">۶,۹۰۰,۰۰۰ تومان</span>
-                                                    </div>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="mega-pane" id="pane-gardening">
-                                        <div>
-                                            <div class="mega-pane-top-header">
-                                                <a href="catalog.html?cat=gardening" class="mega-pane-main-link">همه محصولات اره موتوری و باغبانی</a>
-                                                <a href="catalog.html?cat=gardening" class="mega-pane-view-all">مشاهده آرشیو کامل (۱۱۰+ کالا) ❯</a>
-                                            </div>
-                                            <div class="mega-pane-columns">
-                                                <div class="mega-subcol">
-                                                    <a href="catalog.html?cat=gardening" class="mega-subcol-title">اره زنجیری و هرس</a>
-                                                    <ul class="mega-subcol-list">
-                                                        <li><a href="catalog.html?cat=gardening"><span>اره موتوری بنزینی ساتی‌دار</span></a></li>
-                                                        <li><a href="catalog.html?cat=gardening"><span>اره زنجیری شارژی دستی</span></a></li>
-                                                        <li><a href="catalog.html?cat=gardening"><span>قیچی باغبانی شارژی و دستی</span></a></li>
-                                                    </ul>
-                                                </div>
-                                                <div class="mega-subcol">
-                                                    <a href="catalog.html?cat=gardening" class="mega-subcol-title">علف‌زن و چمن‌زن</a>
-                                                    <ul class="mega-subcol-list">
-                                                        <li><a href="catalog.html?cat=gardening"><span>علف‌زن دوشی و پشتی بنزینی</span></a></li>
-                                                        <li><a href="catalog.html?cat=gardening"><span>شمشادزن و حاشیه‌زن</span></a></li>
-                                                    </ul>
-                                                </div>
-                                                <div class="mega-subcol">
-                                                    <a href="catalog.html?cat=gardening" class="mega-subcol-title">پمپ آب و سم‌پاش</a>
-                                                    <ul class="mega-subcol-list">
-                                                        <li><a href="catalog.html?cat=gardening"><span>سم‌پاش شارژی دو موتوره</span></a></li>
-                                                        <li><a href="catalog.html?cat=gardening"><span>پمپ آب خانگی و کفکش</span></a></li>
-                                                    </ul>
-                                                </div>
-                                                <a href="catalog.html?cat=gardening" class="mega-featured-card">
-                                                    <img src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?q=80&w=400&auto=format&fit=crop" alt="باغبانی">
-                                                    <div class="mega-featured-info">
-                                                        <span class="mega-featured-tag">🌲 تجهیزات باغبانی</span>
-                                                        <span class="mega-featured-title">انواع اره زنجیری و علف‌زن صنعتی</span>
-                                                        <span class="mega-featured-price">مشاهده لیست قیمت ❯</span>
-                                                    </div>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="mega-pane" id="pane-safety">
-                                        <div>
-                                            <div class="mega-pane-top-header">
-                                                <a href="catalog.html?cat=safety" class="mega-pane-main-link">همه تجهیزات ایمنی و حفاظت فردی</a>
-                                                <a href="catalog.html?cat=safety" class="mega-pane-view-all">مشاهده آرشیو کامل (۸۰+ کالا) ❯</a>
-                                            </div>
-                                            <div class="mega-pane-columns">
-                                                <div class="mega-subcol">
-                                                    <a href="catalog.html?cat=safety" class="mega-subcol-title">کفش و لباس کار</a>
-                                                    <ul class="mega-subcol-list">
-                                                        <li><a href="catalog.html?cat=safety"><span>کفش ایمنی سرپنجه فولادی</span></a></li>
-                                                        <li><a href="catalog.html?cat=safety"><span>لباس کار مهندسی و کارگاهی</span></a></li>
-                                                    </ul>
-                                                </div>
-                                                <div class="mega-subcol">
-                                                    <a href="catalog.html?cat=safety" class="mega-subcol-title">محافظ سر و چشم</a>
-                                                    <ul class="mega-subcol-list">
-                                                        <li><a href="catalog.html?cat=safety"><span>عینک ایمنی ضدبخار و برش</span></a></li>
-                                                        <li><a href="catalog.html?cat=safety"><span>کلاه ایمنی و گوشی صداگیر</span></a></li>
-                                                    </ul>
-                                                </div>
-                                                <div class="mega-subcol">
-                                                    <a href="catalog.html?cat=safety" class="mega-subcol-title">دستکش و کمربند</a>
-                                                    <ul class="mega-subcol-list">
-                                                        <li><a href="catalog.html?cat=safety"><span>دستکش ضدبرش و نسوز</span></a></li>
-                                                        <li><a href="catalog.html?cat=safety"><span>کمربند ایمنی کار در ارتفاع</span></a></li>
-                                                    </ul>
-                                                </div>
-                                                <a href="catalog.html?cat=safety" class="mega-featured-card">
-                                                    <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=400&auto=format&fit=crop" alt="ایمنی">
-                                                    <div class="mega-featured-info">
-                                                        <span class="mega-featured-tag">🦺 ایمنی استاندارد</span>
-                                                        <span class="mega-featured-title">تجهیزات کامل حفاظت فردی کارگاه</span>
-                                                        <span class="mega-featured-price">مشاهده محصولات ❯</span>
-                                                    </div>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="mega-pane" id="pane-accessories">
-                                        <div>
-                                            <div class="mega-pane-top-header">
-                                                <a href="catalog.html?cat=accessories" class="mega-pane-main-link">همه محصولات مته، صفحه برش و جانبی</a>
-                                                <a href="catalog.html?cat=accessories" class="mega-pane-view-all">مشاهده آرشیو کامل (۶۰۰+ کالا) ❯</a>
-                                            </div>
-                                            <div class="mega-pane-columns">
-                                                <div class="mega-subcol">
-                                                    <a href="catalog.html?cat=accessories" class="mega-subcol-title">انواع مته تخصصی</a>
-                                                    <ul class="mega-subcol-list">
-                                                        <li><a href="catalog.html?cat=accessories"><span>ست مته آهن کبالت و تیتانیوم</span></a></li>
-                                                        <li><a href="catalog.html?cat=accessories"><span>مته الماسه و چهارشیار بتن</span></a></li>
-                                                        <li><a href="catalog.html?cat=accessories"><span>مته برگی، گازور و گردبر</span></a></li>
-                                                    </ul>
-                                                </div>
-                                                <div class="mega-subcol">
-                                                    <a href="catalog.html?cat=accessories" class="mega-subcol-title">صفحه برش و ساب</a>
-                                                    <ul class="mega-subcol-list">
-                                                        <li><a href="catalog.html?cat=accessories"><span>صفحه برش آهن و استیل</span></a></li>
-                                                        <li><a href="catalog.html?cat=accessories"><span>صفحه گرانیت‌بر و سرامیک‌بر</span></a></li>
-                                                        <li><a href="catalog.html?cat=accessories"><span>صفحه فلاپ و سنباده دیسکی</span></a></li>
-                                                    </ul>
-                                                </div>
-                                                <div class="mega-subcol">
-                                                    <a href="catalog.html?cat=accessories" class="mega-subcol-title">باتری و شارژر ابزار</a>
-                                                    <ul class="mega-subcol-list">
-                                                        <li><a href="catalog.html?cat=accessories"><span>باتری لیتیوم ۲۰ ولت دیوالت/ماکیتا</span></a></li>
-                                                        <li><a href="catalog.html?cat=accessories"><span>ست نوک پیچ‌گوشتی ضربه‌ای</span></a></li>
-                                                    </ul>
-                                                </div>
-                                                <a href="catalog.html?cat=accessories" class="mega-featured-card">
-                                                    <img src="https://images.unsplash.com/photo-1586864387967-d02ef85d93e8?q=80&w=400&auto=format&fit=crop" alt="مته و جانبی">
-                                                    <div class="mega-featured-info">
-                                                        <span class="mega-featured-tag">⚙️ لوازم مصرفی</span>
-                                                        <span class="mega-featured-title">انواع مته، صفحه برش و باتری یدک</span>
-                                                        <span class="mega-featured-price">مشاهده محصولات ❯</span>
-                                                    </div>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="megamenu-bottom-bar">
-                                <a href="catalog.html?filter=special" class="megamenu-promo-link">🔥 مشاهده ابزارهای دارای تخفیف ویژه امروز با تضمین اصالت بانه</a>
-                                <a href="catalog.html" class="megamenu-all-btn">ورود به کاتالوگ جامع محصولات ❯</a>
-                            </div>
-                        </div>
-                    </li>
-                    <li><a href="catalog.html">کاتالوگ فروشگاه</a></li>
-                    <li><a href="index.html#megaOfferSection">فروش ویژه (مگا آف)</a></li>
-                    <li><a href="index.html#blogSection">مجله ابزارشناسی</a></li>
-                </ul>
+                ${buildNav()}
             </nav>
         </div>
     </div>
@@ -791,80 +552,7 @@ const headerTemplate = `
 
 // ۵. قالب HTML فوتر کامل
 const footerTemplate = `
-<footer class="footer">
-    <div class="footer-container">
-        <div class="footer-features">
-            <div class="feature-item">
-                <img src="https://img.icons8.com/ios-filled/64/ffffff/delivery.png" alt="ارسال سریع" class="feature-icon">
-                <span class="feature-text">ارسال سریع به سراسر کشور (تیپاکس و باربری)</span>
-            </div>
-            <div class="feature-item">
-                <img src="https://img.icons8.com/ios-filled/64/ffffff/guarantee.png" alt="تضمین اصالت" class="feature-icon">
-                <span class="feature-text">تضمین ۱۰۰٪ اصالت فیزیکی کالا</span>
-            </div>
-            <div class="feature-item">
-                <img src="https://img.icons8.com/ios-filled/64/ffffff/return-purchase.png" alt="ضمانت بازگشت" class="feature-icon">
-                <span class="feature-text">۷ روز مهلت تست و بازگشت کالا</span>
-            </div>
-            <div class="feature-item">
-                <img src="https://img.icons8.com/ios-filled/64/ffffff/headset.png" alt="پشتیبانی" class="feature-icon">
-                <span class="feature-text">مشاوره تخصصی پیش از خرید</span>
-            </div>
-        </div>
-
-        <div class="footer-main">
-            <div class="footer-col" style="flex: 1 1 300px;">
-                <img src="image.png" alt="مگا ابزار" class="footer-logo" onerror="this.onerror=null; this.src='https://img.icons8.com/ios-filled/100/e53935/maintenance.png';">
-                <div class="footer-contact">
-                    پاسخگویی از ساعت ۸ صبح تا ۸ شب<br>
-                    شماره تماس: <strong>۰۸۷-۱۲۳۴۵۶۷۸</strong><br>
-                    آدرس فروشگاه مرکزی: <strong>بانه، میدان جهاد، مجتمع تجاری مگا ابزار، پلاک ۱۲</strong>
-                </div>
-                <div class="social-icons">
-                    <a href="https://instagram.com" target="_blank" class="social-btn instagram" title="اینستاگرام مگا ابزار">
-                        <img src="https://img.icons8.com/ios-glyphs/60/ffffff/instagram-new.png" alt="Instagram">
-                    </a>
-                    <a href="https://t.me" target="_blank" class="social-btn telegram" title="کانال تلگرام مگا ابزار">
-                        <img src="https://img.icons8.com/ios-glyphs/60/ffffff/telegram-app.png" alt="Telegram">
-                    </a>
-                    <a href="https://wa.me/988712345678" target="_blank" class="social-btn whatsapp" title="مشاوره واتس‌اپ">
-                        <img src="https://img.icons8.com/ios-glyphs/60/ffffff/whatsapp.png" alt="WhatsApp">
-                    </a>
-                </div>
-            </div>
-            <div class="footer-col">
-                <h4 class="footer-title">دسترسی سریع</h4>
-                <ul class="footer-links">
-                    <li><a href="about.html">درباره مگا ابزار</a></li>
-                    <li><a href="contact.html">تماس با ما</a></li>
-                    <li><a href="faq.html">سوالات متداول</a></li>
-                    <li><a href="contact.html#complaints">ثبت شکایات و پیشنهادات</a></li>
-                    <li><a href="blog.html">وبلاگ آموزشی ابزارشناسی</a></li>
-                </ul>
-            </div>
-            <div class="footer-col">
-                <h4 class="footer-title">راهنمای خرید و ارسال</h4>
-                <ul class="footer-links">
-                    <li><a href="guide.html#order">نحوه ثبت سفارش آنلاین</a></li>
-                    <li><a href="guide.html#shipping">رویه ارسال کالاهای سنگین (باربری)</a></li>
-                    <li><a href="guide.html#payment">شیوه‌های پرداخت و درگاه شاپرک</a></li>
-                    <li><a href="terms.html#return">شرایط بازگشت کالا و گارانتی</a></li>
-                    <li><a href="terms.html">قوانین و حریم خصوصی</a></li>
-                </ul>
-            </div>
-            <div class="footer-col">
-                <h4 class="footer-title">نمادهای اعتماد الکترونیکی</h4>
-                <div class="trust-symbols">
-                    <div class="trust-symbol">نماد اعتماد<br>(e-Namad)</div>
-                    <div class="trust-symbol">نشان ملی<br>(ساماندهی)</div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="footer-bottom">
-        کلیه حقوق مادی و معنوی این سایت متعلق به فروشگاه آنلاین «مگا ابزار» می‌باشد. توسعه اختصاصی بدون فریم‌ورک.
-    </div>
-</footer>
+${buildFooter()}
 
 <div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
 <div class="cart-drawer" id="cartDrawer">
@@ -880,6 +568,7 @@ const footerTemplate = `
             <span>مبلغ قابل پرداخت:</span>
             <span><span id="cartTotalPrice">۰</span> تومان</span>
         </div>
+        <a href="cart.html" class="btn-action" style="justify-content:center; margin-bottom:8px; text-decoration:none;">مشاهده سبد خرید</a>
         <button class="btn-checkout" onclick="window.location.href='checkout.html'">تکمیل خرید و ثبت سفارش</button>
     </div>
 </div>
@@ -892,40 +581,7 @@ const footerTemplate = `
         <button class="cart-close" onclick="toggleCatSheet()">✕</button>
     </div>
     <div class="cat-sheet-body">
-        <div class="cat-sheet-grid">
-            <a href="catalog.html?cat=power-tools" class="cat-sheet-card clickable-item">
-                <img src="https://images.unsplash.com/photo-1504148455328-c376907d081c?q=80&w=200&auto=format&fit=crop" alt="ابزار برقی">
-                <span>ابزار برقی و شارژی</span>
-            </a>
-            <a href="catalog.html?cat=hand-tools" class="cat-sheet-card clickable-item">
-                <img src="https://images.unsplash.com/photo-1530124566582-a618bc2615dc?q=80&w=200&auto=format&fit=crop" alt="ابزار دستی">
-                <span>ابزار دستی و مکانیکی</span>
-            </a>
-            <a href="catalog.html?cat=welding" class="cat-sheet-card clickable-item">
-                <img src="https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?q=80&w=200&auto=format&fit=crop" alt="جوشکاری">
-                <span>اینورتر و جوشکاری</span>
-            </a>
-            <a href="catalog.html?cat=measuring" class="cat-sheet-card clickable-item">
-                <img src="https://images.unsplash.com/photo-1581092335397-9583eb92d232?q=80&w=200&auto=format&fit=crop" alt="ابزار دقیق">
-                <span>تراز لیزری و دقیق</span>
-            </a>
-            <a href="catalog.html?cat=pneumatic" class="cat-sheet-card clickable-item">
-                <img src="https://images.unsplash.com/photo-1572981779307-38b8cabb2407?q=80&w=200&auto=format&fit=crop" alt="ابزار بادی">
-                <span>ابزار بادی و کمپرسور</span>
-            </a>
-            <a href="catalog.html?cat=gardening" class="cat-sheet-card clickable-item">
-                <img src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?q=80&w=200&auto=format&fit=crop" alt="باغبانی">
-                <span>اره موتوری و باغبانی</span>
-            </a>
-            <a href="catalog.html?cat=safety" class="cat-sheet-card clickable-item">
-                <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=200&auto=format&fit=crop" alt="ایمنی">
-                <span>ایمنی و کارگاهی</span>
-            </a>
-            <a href="catalog.html?cat=accessories" class="cat-sheet-card clickable-item">
-                <img src="https://images.unsplash.com/photo-1586864387967-d02ef85d93e8?q=80&w=200&auto=format&fit=crop" alt="جانبی">
-                <span>مته و صفحه برش</span>
-            </a>
-        </div>
+        <div class="cat-sheet-grid">${buildCatSheet()}</div>
         <div class="cat-sheet-theme-box">
             <span>پوسته نمایش سایت:</span>
             <select id="mobileThemeSelector" class="btn-action" style="width: auto; margin: 0;" onchange="applyTheme(this.value)">
@@ -1029,14 +685,14 @@ if (searchInput && liveSearchResults) {
             p.brand.toLowerCase().includes(query)
         );
         if (matched.length === 0) {
-            liveSearchResults.innerHTML = `<div class="live-search-empty">ابزاری با عبارت «${this.value}» یافت نشد.</div>`;
+            liveSearchResults.innerHTML = `<div class="live-search-empty">ابزاری با عبارت «${escapeHTML(this.value)}» یافت نشد.</div>`;
         } else {
             liveSearchResults.innerHTML = matched.map(item => {
                 const imgUrl = (typeof productImage === 'function') ? productImage(item, 200) : item.image;
                 const priceStr = (typeof formatPrice === 'function') ? formatPrice(item.price) : `${toPersianNum(item.price.toLocaleString())} تومان`;
                 return `
                 <a href="product.html?id=${item.id}" class="live-search-item">
-                    <img src="${imgUrl}" alt="${item.title}" class="live-search-img">
+                    <img src="${imgUrl}" alt="${escapeHTML(item.title)}" class="live-search-img">
                     <div class="live-search-info">
                         <h4 class="live-search-title">${item.title}</h4>
                         <div class="live-search-meta">

@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="fa" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تکمیل خرید | مگا ابزار</title>
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('mega_abzar_theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        /* استایل‌های اختصاصی صفحه تسویه حساب (هدر، فوتر و کشوی سبد از layout.js می‌آیند) */
+        .breadcrumb-container { max-width: 1400px; margin: 20px auto 0; padding: 0 30px; font-size: 13px; color: var(--text-muted); display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+        .breadcrumb-container a { color: var(--text-muted); text-decoration: none; }
+        .breadcrumb-container a:hover { color: var(--accent-color); }
+
+        .co-page { max-width: 1400px; margin: 0 auto; padding: 20px 30px 60px; }
+        .co-page > h1 { margin: 0 0 20px; font-size: 24px; font-weight: 800; }
+        .co-layout { display: grid; grid-template-columns: 1fr 380px; gap: 24px; align-items: start; }
+
+        .co-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 22px; margin-bottom: 18px; }
+        .co-card h2 { margin: 0 0 16px; font-size: 17px; font-weight: 800; display: flex; align-items: center; gap: 8px; }
+        .co-card h2 .step { background: var(--accent-color); color: #fff; width: 26px; height: 26px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; }
+
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        .field { display: flex; flex-direction: column; gap: 6px; }
+        .field.full { grid-column: 1 / -1; }
+        .field label { font-size: 13px; font-weight: 700; }
+        .field label i { color: var(--accent-color); font-style: normal; }
+        .field input, .field textarea {
+            background: var(--secondary-bg); color: var(--text-color); border: 1px solid var(--border-color);
+            border-radius: 10px; padding: 11px 13px; font-family: inherit; font-size: 14px; transition: border-color .2s;
+        }
+        .field textarea { min-height: 90px; resize: vertical; }
+        .field input:focus, .field textarea:focus { border-color: var(--accent-color); }
+        .field.invalid input, .field.invalid textarea { border-color: #e53935; }
+        .field .err { color: #e53935; font-size: 12px; min-height: 0; display: none; }
+        .field.invalid .err { display: block; }
+        .field input[inputmode="numeric"], .field input[type="tel"] { direction: ltr; text-align: right; }
+
+        .pay-option { display: flex; gap: 12px; align-items: flex-start; border: 1px solid var(--border-color); border-radius: 12px; padding: 14px; margin-bottom: 10px; cursor: pointer; transition: border-color .2s, background .2s; }
+        .pay-option:hover { border-color: var(--accent-color); }
+        .pay-option input { margin-top: 4px; accent-color: var(--accent-color); }
+        .pay-option.selected { border-color: var(--accent-color); background: var(--accent-soft); }
+        .pay-option strong { display: block; font-size: 14.5px; }
+        .pay-option span { font-size: 12.5px; color: var(--text-muted); line-height: 1.8; }
+
+        .co-summary { position: sticky; top: 150px; }
+        .sum-item { display: grid; grid-template-columns: 56px 1fr; gap: 12px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border-color); }
+        .sum-item:last-of-type { border-bottom: none; }
+        .sum-item img { width: 56px; height: 56px; border-radius: 10px; object-fit: cover; background: var(--image-bg); }
+        .sum-item-title { font-size: 13px; font-weight: 600; line-height: 1.7; }
+        .sum-item-meta { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+        .sum-row { display: flex; justify-content: space-between; gap: 10px; padding: 9px 0; font-size: 14px; color: var(--text-muted); }
+        .sum-row b { color: var(--text-color); font-weight: 700; }
+        .sum-row.saving b { color: #2e9e5b; }
+        .sum-row.total { border-top: 1px dashed var(--border-color); margin-top: 8px; padding-top: 16px; font-size: 16px; color: var(--text-color); font-weight: 800; }
+        .sum-row.total b { font-size: 19px; color: var(--accent-color); }
+        .btn-submit { width: 100%; margin-top: 16px; background: var(--accent-color); color: #fff; border: none; border-radius: 12px; padding: 14px; font-family: inherit; font-size: 15px; font-weight: 800; cursor: pointer; }
+        .btn-submit:hover { filter: brightness(1.08); }
+        .btn-submit:disabled { opacity: .6; cursor: not-allowed; }
+        .form-alert { background: rgba(229,57,53,.12); border: 1px solid #e53935; color: var(--text-color); border-radius: 10px; padding: 12px 14px; font-size: 13.5px; margin-bottom: 16px; line-height: 1.9; }
+
+        .co-empty, .co-done { text-align: center; padding: 60px 20px; background: var(--card-bg); border: 1px dashed var(--border-color); border-radius: 18px; max-width: 640px; margin: 0 auto; }
+        .co-done { border-style: solid; }
+        .co-empty .big, .co-done .big { font-size: 54px; }
+        .co-done h2 { margin: 12px 0 6px; font-size: 22px; }
+        .co-done p { color: var(--text-muted); line-height: 2; margin: 6px 0; }
+        .order-code { display: inline-block; background: var(--accent-soft); color: var(--accent-color); font-weight: 900; letter-spacing: 1px; padding: 6px 16px; border-radius: 10px; margin: 8px 0; direction: ltr; }
+        .pay-box { text-align: right; background: var(--secondary-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px 16px; margin: 16px 0; font-size: 14px; line-height: 2.1; }
+        .co-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 20px; }
+        .co-actions a { display: inline-block; padding: 12px 24px; border-radius: 12px; text-decoration: none; font-weight: 800; font-size: 14px; border: 1px solid var(--border-color); color: var(--text-color); }
+        .co-actions a.primary { background: var(--accent-color); border-color: var(--accent-color); color: #fff; }
+
+        @media (max-width: 992px) {
+            .co-layout { grid-template-columns: 1fr; }
+            .co-summary { position: static; order: -1; }
+            .co-page, .breadcrumb-container { padding-left: 15px; padding-right: 15px; }
+        }
+        @media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <div class="page-transition" id="pageTransition"><img src="image.png" class="transition-logo" alt=""></div>
+    <div id="site-header"></div>
+
+    <nav class="breadcrumb-container" aria-label="مسیر">
+        <a href="index.html">خانه</a><span>/</span>
+        <a href="cart.html">سبد خرید</a><span>/</span>
+        <span style="color: var(--text-color); font-weight: 700;">ثبت سفارش</span>
+    </nav>
+
+    <main class="co-page" id="checkoutRoot"></main>
+
+    <div id="site-footer"></div>
+
+    <script src="products.js"></script>
+    <script src="store.js"></script>
+    <script src="layout.js"></script>
+    <script src="cart.js"></script>
+    <script>
+        const root = document.getElementById('checkoutRoot');
+        const PROFILE_KEY = 'mega_abzar_checkout_profile';
+        let placedOrder = null;
+        let submitting = false;
+
+        // اعداد فارسی/عربی را برای اعتبارسنجی به انگلیسی تبدیل می‌کند
+        const normDigits = s => String(s).replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d));
+
+        function loadProfile() { try { return JSON.parse(localStorage.getItem(PROFILE_KEY) || '{}'); } catch (e) { return {}; } }
+        function saveProfile(p) { try { localStorage.setItem(PROFILE_KEY, JSON.stringify(p)); } catch (e) {} }
+
+        function summaryHTML() {
+            let original = 0, payable = 0;
+            const rows = cart.map(item => {
+                const p = getProduct(item.id);
+                payable += p.price * item.quantity;
+                original += Math.max(p.oldPrice || 0, p.price) * item.quantity;
+                return `<div class="sum-item">
+                    <img src="${escapeHTML(productImage(p, 150))}" alt="${escapeHTML(p.title)}">
+                    <div><div class="sum-item-title">${escapeHTML(p.title)}</div>
+                    <div class="sum-item-meta">${toPersianNum(item.quantity)} × ${formatPrice(p.price)}</div></div>
+                </div>`;
+            }).join('');
+            const ship = calcShipping(cart), cfg = getSettings().shipping;
+            const saving = original - payable;
+            return { ship, grand: payable + ship.fee, html: `
+                ${rows}
+                <div class="sum-row"><span>قیمت کالاها</span><b>${formatPrice(original)}</b></div>
+                ${saving > 0 ? `<div class="sum-row saving"><span>سود شما از تخفیف</span><b>− ${formatPrice(saving)}</b></div>` : ''}
+                <div class="sum-row"><span>هزینه ارسال</span><b>${ship.isFree ? cfg.freeLabel : formatPrice(ship.fee)}</b></div>
+                <div class="sum-row total"><span>مبلغ قابل پرداخت</span><b>${formatPrice(payable + ship.fee)}</b></div>` };
+        }
+
+        function render() {
+            if (placedOrder) { renderDone(); return; }
+            if (!cart.length) {
+                root.innerHTML = `<div class="co-empty"><div class="big">🛒</div><h2>سبد خرید شما خالی است</h2>
+                    <p style="color:var(--text-muted)">برای ثبت سفارش ابتدا محصولی به سبد اضافه کنید.</p>
+                    <div class="co-actions"><a class="primary" href="catalog.html">مشاهده محصولات</a></div></div>`;
+                return;
+            }
+            const methods = getSettings().payment.methods.filter(m => m.enabled);
+            const prof = loadProfile();
+            const sm = summaryHTML();
+            const val = k => escapeHTML(prof[k] || '');
+            root.innerHTML = `
+                <h1>ثبت سفارش</h1>
+                <form id="coForm" class="co-layout" novalidate>
+                    <div>
+                        <div id="formAlert"></div>
+                        <section class="co-card">
+                            <h2><span class="step">۱</span> اطلاعات گیرنده و آدرس</h2>
+                            <div class="form-grid">
+                                <div class="field"><label for="f_name">نام و نام خانوادگی <i>*</i></label><input id="f_name" name="name" autocomplete="name" value="${val('name')}"><span class="err"></span></div>
+                                <div class="field"><label for="f_phone">شماره موبایل <i>*</i></label><input id="f_phone" name="phone" type="tel" inputmode="numeric" autocomplete="tel" placeholder="۰۹۱۲۱۲۳۴۵۶۷" value="${val('phone')}"><span class="err"></span></div>
+                                <div class="field"><label for="f_province">استان <i>*</i></label><input id="f_province" name="province" autocomplete="address-level1" value="${val('province')}"><span class="err"></span></div>
+                                <div class="field"><label for="f_city">شهر <i>*</i></label><input id="f_city" name="city" autocomplete="address-level2" value="${val('city')}"><span class="err"></span></div>
+                                <div class="field full"><label for="f_address">آدرس کامل <i>*</i></label><textarea id="f_address" name="address" autocomplete="street-address">${val('address')}</textarea><span class="err"></span></div>
+                                <div class="field"><label for="f_postal">کد پستی <i>*</i></label><input id="f_postal" name="postal" inputmode="numeric" maxlength="10" autocomplete="postal-code" value="${val('postal')}"><span class="err"></span></div>
+                                <div class="field full"><label for="f_notes">توضیحات سفارش (اختیاری)</label><textarea id="f_notes" name="notes" style="min-height:70px"></textarea></div>
+                            </div>
+                        </section>
+                        <section class="co-card">
+                            <h2><span class="step">۲</span> روش پرداخت</h2>
+                            ${methods.length ? methods.map((m, i) => `
+                                <label class="pay-option${i === 0 ? ' selected' : ''}">
+                                    <input type="radio" name="pay" value="${escapeHTML(m.id)}" ${i === 0 ? 'checked' : ''}>
+                                    <div><strong>${escapeHTML(m.label)}</strong><span>${escapeHTML(m.description || '')}</span></div>
+                                </label>`).join('') : '<div class="form-alert">در حال حاضر هیچ روش پرداختی فعال نیست. لطفاً با فروشگاه تماس بگیرید.</div>'}
+                        </section>
+                    </div>
+                    <aside class="co-card co-summary">
+                        <h2>خلاصه سفارش</h2>
+                        ${sm.html}
+                        <button type="submit" class="btn-submit" id="btnSubmit" ${methods.length ? '' : 'disabled'}>ثبت نهایی سفارش</button>
+                        <a href="cart.html" style="display:block;text-align:center;margin-top:12px;font-size:13px;color:var(--text-muted);text-decoration:none">بازگشت به سبد خرید</a>
+                    </aside>
+                </form>`;
+            document.getElementById('coForm').addEventListener('submit', onSubmit);
+            document.querySelectorAll('.pay-option input').forEach(r => r.addEventListener('change', () => {
+                document.querySelectorAll('.pay-option').forEach(o => o.classList.toggle('selected', o.querySelector('input').checked));
+            }));
+        }
+
+        function setError(id, msg) {
+            const f = document.getElementById(id).closest('.field');
+            f.classList.toggle('invalid', !!msg);
+            f.querySelector('.err').textContent = msg || '';
+            return !msg;
+        }
+
+        function validate(d) {
+            let ok = true;
+            ok = setError('f_name', d.name.trim().length < 3 ? 'نام و نام خانوادگی را کامل وارد کنید.' : '') && ok;
+            ok = setError('f_phone', /^09\d{9}$/.test(normDigits(d.phone).replace(/\s|-/g, '')) ? '' : 'شماره موبایل معتبر نیست (مثال: ۰۹۱۲۱۲۳۴۵۶۷).') && ok;
+            ok = setError('f_province', d.province.trim() ? '' : 'استان را وارد کنید.') && ok;
+            ok = setError('f_city', d.city.trim() ? '' : 'شهر را وارد کنید.') && ok;
+            ok = setError('f_address', d.address.trim().length < 10 ? 'آدرس را کامل‌تر وارد کنید.' : '') && ok;
+            ok = setError('f_postal', /^\d{10}$/.test(normDigits(d.postal)) ? '' : 'کد پستی باید ۱۰ رقم باشد.') && ok;
+            return ok;
+        }
+
+        function onSubmit(e) {
+            e.preventDefault();
+            if (submitting) return;
+            const form = e.target, fd = new FormData(form);
+            const d = Object.fromEntries(['name', 'phone', 'province', 'city', 'address', 'postal', 'notes'].map(k => [k, fd.get(k) || '']));
+            const alertBox = document.getElementById('formAlert');
+            alertBox.innerHTML = '';
+            if (!validate(d)) {
+                const first = form.querySelector('.field.invalid input, .field.invalid textarea');
+                if (first) first.focus();
+                return;
+            }
+            // بررسی دوباره موجودی (ممکن است بعد از افزودن به سبد، ناموجود شده باشد)
+            const bad = cart.filter(i => !getProduct(i.id) || !getProduct(i.id).inStock);
+            if (bad.length) {
+                alertBox.innerHTML = `<div class="form-alert">این کالاها دیگر موجود نیستند: ${bad.map(i => escapeHTML((getProduct(i.id) || {}).title || '')).join('، ')}. لطفاً از <a href="cart.html">سبد خرید</a> حذفشان کنید.</div>`;
+                return;
+            }
+            const method = getSettings().payment.methods.find(m => m.id === fd.get('pay') && m.enabled);
+            if (!method) { alertBox.innerHTML = '<div class="form-alert">روش پرداخت را انتخاب کنید.</div>'; return; }
+
+            submitting = true;
+            document.getElementById('btnSubmit').disabled = true;
+            const ship = calcShipping(cart);
+            const items = cart.map(i => { const p = getProduct(i.id); return { id: p.id, title: p.title, price: p.price, quantity: i.quantity }; });
+            const subtotal = items.reduce((s, i) => s + i.price * i.quantity, 0);
+            const order = {
+                id: 'MA-' + Date.now().toString(36).toUpperCase().slice(-5) + Math.floor(Math.random() * 900 + 100),
+                createdAt: new Date().toISOString(),
+                status: 'new',
+                customer: { name: d.name.trim(), phone: normDigits(d.phone).replace(/\s|-/g, ''), province: d.province.trim(), city: d.city.trim(), address: d.address.trim(), postal: normDigits(d.postal), notes: d.notes.trim() },
+                items, subtotal, shippingFee: ship.fee, total: subtotal + ship.fee,
+                payment: { id: method.id, label: method.label }
+            };
+            const orders = Store.get('orders');
+            orders.unshift(order);
+            if (!Store.set('orders', orders)) {
+                submitting = false;
+                document.getElementById('btnSubmit').disabled = false;
+                alertBox.innerHTML = '<div class="form-alert">ذخیره سفارش ناموفق بود (حافظه مرورگر پر است یا دسترسی بسته است).</div>';
+                return;
+            }
+            saveProfile({ name: order.customer.name, phone: order.customer.phone, province: order.customer.province, city: order.customer.city, address: order.customer.address, postal: order.customer.postal });
+            placedOrder = order;
+            cart = []; saveAndUpdateCart();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            render();
+        }
+
+        function renderDone() {
+            const o = placedOrder;
+            const m = getSettings().payment.methods.find(x => x.id === o.payment.id) || {};
+            let payInfo = '';
+            if (m.id === 'card') {
+                payInfo = `<div class="pay-box"><b>راهنمای پرداخت کارت به کارت</b><br>
+                    مبلغ: <b>${formatPrice(o.total)}</b><br>
+                    ${m.cardNumber ? `شماره کارت: <b style="direction:ltr;display:inline-block">${escapeHTML(m.cardNumber)}</b><br>` : ''}
+                    ${m.cardOwner ? `به نام: <b>${escapeHTML(m.cardOwner)}</b><br>` : ''}
+                    ${m.description ? escapeHTML(m.description) : ''}</div>`;
+            } else if (m.id === 'cod') {
+                payInfo = `<div class="pay-box">مبلغ <b>${formatPrice(o.total)}</b> هنگام تحویل کالا پرداخت می‌شود.</div>`;
+            }
+            root.innerHTML = `<div class="co-done">
+                <div class="big">✅</div>
+                <h2>سفارش شما ثبت شد</h2>
+                <p>کد پیگیری سفارش:</p>
+                <div class="order-code">${escapeHTML(o.id)}</div>
+                <p>همکاران ما برای تأیید سفارش با شماره <b style="direction:ltr;display:inline-block">${escapeHTML(toPersianNum(o.customer.phone))}</b> تماس می‌گیرند.</p>
+                ${payInfo}
+                <p style="font-size:13px">${toPersianNum(o.items.reduce((s, i) => s + i.quantity, 0))} کالا • مبلغ کل ${formatPrice(o.total)}</p>
+                <div class="co-actions"><a class="primary" href="index.html">بازگشت به صفحه اصلی</a><a href="catalog.html">ادامه خرید</a></div>
+            </div>`;
+        }
+
+        // اگر سبد از جای دیگری (کشو یا تب دیگر) عوض شد خلاصه سفارش به‌روز شود، ولی فرم نیمه‌پر پاک نشود
+        window.onCartUpdated = () => {
+            if (placedOrder) return;
+            if (!cart.length || !document.getElementById('coForm')) { render(); return; }
+            const sm = summaryHTML();
+            const aside = document.querySelector('.co-summary');
+            const btn = document.getElementById('btnSubmit');
+            const disabled = btn && btn.disabled;
+            aside.innerHTML = `<h2>خلاصه سفارش</h2>${sm.html}<button type="submit" class="btn-submit" id="btnSubmit" ${disabled ? 'disabled' : ''}>ثبت نهایی سفارش</button>
+                <a href="cart.html" style="display:block;text-align:center;margin-top:12px;font-size:13px;color:var(--text-muted);text-decoration:none">بازگشت به سبد خرید</a>`;
+        };
+        render();
+    </script>
+</body>
+</html>

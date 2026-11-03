@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="fa" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پنل مدیریت | مگا ابزار</title>
+    <meta name="robots" content="noindex, nofollow">
+    <script>
+        (function() {
+            try { document.documentElement.setAttribute('data-theme', localStorage.getItem('mega_abzar_theme') || 'dark'); } catch (e) {}
+        })();
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root, [data-theme="dark"] { --bg:#121212; --panel:#1a1a1a; --card:#222; --accent:#e53935; --accent-soft:rgba(229,57,53,.15); --text:#fff; --muted:#a8a8a8; --border:#333; --ok:#2e9e5b; --warn:#f59e0b; }
+        [data-theme="light"] { --bg:#f5f5f5; --panel:#fff; --card:#fff; --accent:#d32f2f; --accent-soft:rgba(211,47,47,.1); --text:#212529; --muted:#6c757d; --border:#e0e0e0; }
+        [data-theme="navy"] { --bg:#0f172a; --panel:#1e293b; --card:#27354f; --accent:#f59e0b; --accent-soft:rgba(245,158,11,.2); --text:#f8fafc; --muted:#94a3b8; --border:#334155; }
+        * { box-sizing: border-box; }
+        :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+        body { margin: 0; font-family: 'Vazirmatn', Tahoma, sans-serif; background: var(--bg); color: var(--text); font-size: 14px; }
+        button, input, select, textarea { font-family: inherit; font-size: 14px; color: var(--text); }
+        a { color: var(--accent); }
+
+        .shell { display: grid; grid-template-columns: 240px 1fr; min-height: 100vh; }
+        .side { background: var(--panel); border-left: 1px solid var(--border); padding: 18px 12px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+        .side h1 { font-size: 17px; margin: 0 8px 4px; font-weight: 900; }
+        .side .sub { margin: 0 8px 16px; font-size: 12px; color: var(--muted); }
+        .side nav a { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; color: var(--text); text-decoration: none; font-weight: 600; margin-bottom: 2px; cursor: pointer; }
+        .side nav a:hover { background: var(--accent-soft); }
+        .side nav a.active { background: var(--accent); color: #fff; }
+        .side nav .sep { height: 1px; background: var(--border); margin: 10px 4px; }
+        .side nav a .badge { margin-right: auto; background: var(--accent); color: #fff; border-radius: 20px; padding: 0 8px; font-size: 11.5px; font-weight: 800; }
+        .side nav a.active .badge { background: #fff; color: var(--accent); }
+
+        .main { padding: 26px 30px 60px; min-width: 0; }
+        .topbar { display: none; }
+        .page-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 18px; }
+        .page-head h2 { margin: 0; font-size: 22px; font-weight: 900; }
+        .page-head .hint { color: var(--muted); font-size: 13px; margin-top: 4px; }
+        .actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+
+        .btn { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 8px 14px; cursor: pointer; font-weight: 700; transition: border-color .2s, background .2s; white-space: nowrap; }
+        .btn:hover { border-color: var(--accent); }
+        .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+        .btn.danger { color: #ff6b66; }
+        .btn.sm { padding: 4px 10px; font-size: 12.5px; }
+        .btn:disabled { opacity: .4; cursor: not-allowed; }
+
+        .card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 18px; margin-bottom: 18px; }
+        .card h3 { margin: 0 0 14px; font-size: 16px; }
+        .stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; margin-bottom: 18px; }
+        .stat { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 16px; }
+        .stat b { display: block; font-size: 26px; font-weight: 900; margin-top: 4px; }
+        .stat span { color: var(--muted); font-size: 13px; }
+
+        .table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 12px; background: var(--card); }
+        table { width: 100%; border-collapse: collapse; min-width: 640px; }
+        th, td { padding: 10px 12px; text-align: right; border-bottom: 1px solid var(--border); vertical-align: middle; }
+        th { font-size: 12.5px; color: var(--muted); font-weight: 700; background: var(--panel); position: sticky; top: 0; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: var(--accent-soft); }
+        td img.thumb { width: 42px; height: 42px; border-radius: 8px; object-fit: cover; background: var(--panel); display: block; }
+        td .ttl { max-width: 340px; line-height: 1.7; }
+        td.acts { white-space: nowrap; text-align: left; }
+        .empty { text-align: center; color: var(--muted); padding: 34px 10px; }
+        .tag { display: inline-block; background: var(--accent-soft); color: var(--accent); border-radius: 20px; padding: 1px 9px; font-size: 12px; font-weight: 700; margin-left: 4px; }
+        .tag.ok { background: rgba(46,158,91,.15); color: var(--ok); }
+        .tag.off { background: rgba(150,150,150,.18); color: var(--muted); }
+
+        .switch { position: relative; display: inline-block; width: 38px; height: 22px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .switch span { position: absolute; inset: 0; background: #666; border-radius: 22px; cursor: pointer; transition: .2s; }
+        .switch span::before { content: ''; position: absolute; width: 16px; height: 16px; right: 3px; top: 3px; background: #fff; border-radius: 50%; transition: .2s; }
+        .switch input:checked + span { background: var(--ok); }
+        .switch input:checked + span::before { transform: translateX(-16px); }
+        .switch input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+        .search { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 8px 12px; min-width: 220px; }
+        .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+        .field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+        .field.full { grid-column: 1 / -1; }
+        .field > label { font-weight: 700; font-size: 13px; }
+        .field > label i { color: var(--accent); font-style: normal; }
+        .field .help { font-size: 12px; color: var(--muted); line-height: 1.7; }
+        .field input[type=text], .field input[type=number], .field select, .field textarea { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 9px 12px; width: 100%; }
+        .field textarea { min-height: 80px; resize: vertical; line-height: 1.8; }
+        .field textarea.mono { font-family: Consolas, monospace; direction: ltr; text-align: left; min-height: 160px; font-size: 12.5px; }
+        .field input.ltr { direction: ltr; text-align: left; }
+        .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--accent); }
+        .field .check { display: flex; align-items: center; gap: 10px; padding: 6px 0; }
+        .field .checks { display: flex; gap: 14px; flex-wrap: wrap; padding: 6px 0; }
+        .field .checks label { display: flex; gap: 6px; align-items: center; font-weight: 500; }
+        .section-title { grid-column: 1 / -1; margin: 10px 0 0; padding-top: 12px; border-top: 1px dashed var(--border); font-weight: 800; color: var(--accent); }
+        .section-title:first-child { border-top: none; margin-top: 0; padding-top: 0; }
+
+        .modal-back { position: fixed; inset: 0; background: rgba(0,0,0,.6); display: flex; align-items: flex-start; justify-content: center; padding: 30px 14px; overflow-y: auto; z-index: 100; }
+        .modal { background: var(--panel); border: 1px solid var(--border); border-radius: 16px; width: 100%; max-width: 760px; padding: 22px; }
+        .modal h3 { margin: 0 0 16px; font-size: 18px; }
+        .modal .foot { display: flex; gap: 8px; justify-content: flex-start; margin-top: 20px; }
+        .error-box { background: rgba(229,57,53,.12); border: 1px solid #e53935; border-radius: 10px; padding: 10px 14px; margin-bottom: 14px; line-height: 1.9; }
+        .warn-box { background: rgba(245,158,11,.12); border: 1px solid var(--warn); border-radius: 10px; padding: 12px 14px; margin-bottom: 16px; line-height: 1.9; }
+
+        #toast { position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%) translateY(30px); background: var(--ok); color: #fff; padding: 10px 22px; border-radius: 12px; font-weight: 700; opacity: 0; pointer-events: none; transition: .25s; z-index: 200; }
+        #toast.show { opacity: 1; transform: translateX(-50%); }
+        #toast.err { background: #c62828; }
+
+        .order-detail dl { display: grid; grid-template-columns: 130px 1fr; gap: 8px 12px; margin: 0 0 14px; }
+        .order-detail dt { color: var(--muted); }
+        .order-detail dd { margin: 0; line-height: 1.8; }
+        .status-sel { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; padding: 4px 8px; }
+
+        @media (max-width: 900px) {
+            .shell { grid-template-columns: 1fr; }
+            .side { position: fixed; right: 0; top: 0; width: 250px; z-index: 90; transform: translateX(100%); transition: transform .25s; box-shadow: -6px 0 24px rgba(0,0,0,.4); }
+            .side.open { transform: none; }
+            .topbar { display: flex; align-items: center; gap: 10px; padding: 12px 16px; background: var(--panel); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 50; }
+            .main { padding: 18px 14px 50px; }
+            .form-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="topbar"><button class="btn" id="menuBtn" aria-label="منو">☰</button><b>پنل مدیریت مگا ابزار</b></div>
+    <div class="shell">
+        <aside class="side" id="side">
+            <h1>پنل مدیریت</h1>
+            <div class="sub">مگا ابزار</div>
+            <nav id="nav" aria-label="بخش‌های پنل"></nav>
+        </aside>
+        <main class="main" id="view" tabindex="-1"></main>
+    </div>
+    <div id="toast" role="status" aria-live="polite"></div>
+    <div id="modalRoot"></div>
+
+    <script src="products.js"></script>
+    <script src="store.js"></script>
+    <script>
+    // =====================================================================
+    //  پنل مدیریت: همه‌ی صفحه‌ها بر اساس «طرح‌واره» (schema) فیلدها ساخته می‌شوند.
+    //  برای مدیریت یک مجموعه جدید فقط یک schema و یک مدخل در PAGES اضافه کنید.
+    //  خواندن/نوشتن فقط از Store.get / Store.set انجام می‌شود (بعداً به بک‌اند وصل می‌شود).
+    // =====================================================================
+    const $ = (s, r = document) => r.querySelector(s);
+    const E = escapeHTML;
+    const view = $('#view');
+
+    // ---------- ابزارهای عمومی ----------
+    function toast(msg, isErr) {
+        const t = $('#toast'); t.textContent = msg; t.className = 'show' + (isErr ? ' err' : '');
+        clearTimeout(toast._t); toast._t = setTimeout(() => t.className = '', 2200);
+    }
+    const getPath = (o, p) => p.split('.').reduce((a, k) => (a == null ? a : a[k]), o);
+    function setPath(o, p, v) { const ks = p.split('.'); const last = ks.pop(); const t = ks.reduce((a, k) => (a[k] = a[k] ?? {}), o); t[last] = v; }
+    const fmtDate = iso => { try { return new Date(iso).toLocaleString('fa-IR'); } catch (e) { return iso; } };
+    const money = n => toPersianNum(Number(n || 0).toLocaleString('en-US')) + ' ' + getSettings().store.currency;
+    const opts = o => (typeof o === 'function' ? o() : o) || [];
+
+    // ---------- فیلدها ----------
+    // انواع: text, textarea, number, checkbox, select, tags, lines, linkLines, json, ltr(text)
+    function fieldHTML(f, value, idPrefix) {
+        const id = idPrefix + f.key.replace(/\W/g, '_');
+        const req = f.required ? ' <i>*</i>' : '';
+        const label = `<label for="${id}">${E(f.label)}${req}</label>`;
+        const help = f.help ? `<div class="help">${E(f.help)}</div>` : '';
+        const cls = 'field' + (f.full || ['textarea', 'lines', 'linkLines', 'json', 'tags'].includes(f.type) ? ' full' : '');
+        const ro = f.readonly ? ' readonly' : '';
+        let input = '';
+        switch (f.type) {
+            case 'checkbox':
+                return `<div class="${cls}"><div class="check"><label class="switch"><input type="checkbox" id="${id}" ${value ? 'checked' : ''}><span></span></label><label for="${id}" style="font-weight:700">${E(f.label)}</label></div>${help}</div>`;
+            case 'number':
+                input = `<input type="number" id="${id}" value="${E(value ?? '')}" step="${f.step || 1}" ${f.min != null ? `min="${f.min}"` : ''}${ro} class="ltr">`; break;
+            case 'select':
+                input = `<select id="${id}">${opts(f.options).map(o => `<option value="${E(o.value)}" ${String(o.value) === String(value ?? '') ? 'selected' : ''}>${E(o.label)}</option>`).join('')}</select>`; break;
+            case 'textarea':
+                input = `<textarea id="${id}">${E(value ?? '')}</textarea>`; break;
+            case 'tags':
+                input = `<div class="checks" id="${id}">${opts(f.options).map(o => `<label><input type="checkbox" value="${E(o.value)}" ${(value || []).includes(o.value) ? 'checked' : ''}> ${E(o.label)}</label>`).join('')}</div>`; break;
+            case 'lines':
+                input = `<textarea id="${id}">${E((value || []).join('\n'))}</textarea>`; break;
+            case 'linkLines':
+                input = `<textarea id="${id}" class="mono">${E((value || []).map(x => [x.label, x.href, x.style].filter((v, i) => i < 2 || (f.extra && v)).join(' | ')).join('\n'))}</textarea>`; break;
+            case 'json':
+                input = `<textarea id="${id}" class="mono">${E(JSON.stringify(value ?? null, null, 2))}</textarea>`; break;
+            default:
+                input = `<input type="text" id="${id}" value="${E(value ?? '')}"${ro} ${f.ltr ? 'class="ltr"' : ''} ${f.placeholder ? `placeholder="${E(f.placeholder)}"` : ''}>`;
+        }
+        return `<div class="${cls}">${label}${input}${help}</div>`;
+    }
+
+    function readField(f, root, idPrefix) {
+        const id = idPrefix + f.key.replace(/\W/g, '_');
+        const el = root.querySelector('#' + CSS.escape(id));
+        if (!el) return undefined;
+        switch (f.type) {
+            case 'checkbox': return el.checked;
+            case 'number': return el.value === '' ? 0 : Number(el.value);
+            case 'tags': return [...el.querySelectorAll('input:checked')].map(i => i.value);
+            case 'lines': return el.value.split('\n').map(x => x.trim()).filter(Boolean);
+            case 'linkLines':
+                return el.value.split('\n').map(x => x.trim()).filter(Boolean).map(line => {
+                    const [label, href, style] = line.split('|').map(x => x.trim());
+                    const o = { label: label || '', href: href || '' };
+                    if (f.extra) o.style = style === 'primary' ? 'primary' : 'secondary';
+                    return o;
+                });
+            case 'json': try { return JSON.parse(el.value || 'null'); } catch (e) { throw new Error(`«${f.label}»: JSON نامعتبر است (${e.message})`); }
+            default: return el.value.trim();
+        }
+    }
+
+    function collect(fields, base, root, prefix) {
+        const out = JSON.parse(JSON.stringify(base || {}));
+        const errors = [];
+        fields.forEach(f => {
+            if (f.type === 'section') return;
+            try {
+                const v = readField(f, root, prefix);
+                if (v === undefined) return;
+                if (f.required && (v === '' || v == null)) errors.push(`«${f.label}» الزامی است.`);
+                if (f.type === 'number' && f.min != null && v < f.min) errors.push(`«${f.label}» نباید کمتر از ${f.min} باشد.`);
+                setPath(out, f.key, v);
+            } catch (e) { errors.push(e.message); }
+        });
+        return { out, errors };
+    }
+
+    // ---------- مودال ----------
+    function openModal(html, onReady) {
+        const back = document.createElement('div');
+        back.className = 'modal-back';
+        back.innerHTML = `<div class="modal" role="dialog" aria-modal="true">${html}</div>`;
+        $('#modalRoot').appendChild(back);
+        const close = () => { back.remove(); document.removeEventListener('keydown', esc); };
+        const esc = e => { if (e.key === 'Escape') close(); };
+        document.addEventListener('keydown', esc);
+        back.addEventListener('mousedown', e => { if (e.target === back) close(); });
+        const first = back.querySelector('input:not([readonly]):not([type=checkbox]), textarea, select'); if (first) first.focus();
+        onReady && onReady(back, close);
+        return close;
+    }
+
+    // ---------- ویرایشگر لیست (CRUD عمومی) ----------
+    // cfg: {get, set, fields, columns, newItem(list), ordered, searchKeys, noAdd, noDelete, noMove, itemName, lockOnEdit:[keys]}
+    function listEditor(host, cfg) {
+        let query = '';
+        const draw = () => {
+            const list = cfg.get();
+            let rows = list.map((item, i) => ({ item, i }));
+            if (cfg.ordered) rows.sort((a, b) => (a.item.order || 0) - (b.item.order || 0));
+            if (query) rows = rows.filter(r => JSON.stringify(cfg.searchKeys ? cfg.searchKeys.map(k => r.item[k]) : r.item).toLowerCase().includes(query.toLowerCase()));
+            host.innerHTML = `
+                <div class="actions" style="margin-bottom:12px">
+                    ${cfg.searchKeys ? `<input class="search" type="search" placeholder="جستجو..." value="${E(query)}" aria-label="جستجو">` : ''}
+                    ${cfg.noAdd ? '' : `<button class="btn primary" data-act="add">+ افزودن ${E(cfg.itemName || 'مورد')}</button>`}
+                    <span style="color:var(--muted)">${toPersianNum(list.length)} مورد</span>
+                </div>
+                <div class="table-wrap"><table>
+                    <thead><tr>${cfg.columns.map(c => `<th>${E(c.label)}</th>`).join('')}<th></th></tr></thead>
+                    <tbody>${rows.length ? rows.map(({ item, i }, pos) => `<tr data-i="${i}">
+                        ${cfg.columns.map(c => `<td>${cellHTML(c, item)}</td>`).join('')}
+                        <td class="acts">
+                            ${cfg.noMove ? '' : `<button class="btn sm" data-act="up" ${pos === 0 ? 'disabled' : ''} aria-label="بالا">↑</button> <button class="btn sm" data-act="down" ${pos === rows.length - 1 ? 'disabled' : ''} aria-label="پایین">↓</button>`}
+                            <button class="btn sm" data-act="edit">ویرایش</button>
+                            ${cfg.noDelete ? '' : `<button class="btn sm danger" data-act="del">حذف</button>`}
+                        </td></tr>`).join('') : `<tr><td class="empty" colspan="${cfg.columns.length + 1}">موردی وجود ندارد.</td></tr>`}</tbody>
+                </table></div>`;
+        };
+        const cellHTML = (c, item) => {
+            const v = getPath(item, c.key);
+            if (c.type === 'toggle') return `<label class="switch"><input type="checkbox" data-toggle="${E(c.key)}" ${v ? 'checked' : ''} aria-label="${E(c.label)}"><span></span></label>`;
+            if (c.type === 'img') return v ? `<img class="thumb" src="${E(imageUrl(v, 100))}" alt="" loading="lazy">` : '';
+            if (c.type === 'money') return money(v);
+            if (c.type === 'tags') return (v || []).map(t => `<span class="tag">${E(t)}</span>`).join('') || '<span style="color:var(--muted)">—</span>';
+            if (c.render) return c.render(item);
+            return `<div class="ttl">${E(v ?? '')}</div>`;
+        };
+        const save = list => { if (!cfg.set(list)) { toast('ذخیره ناموفق بود', true); return false; } return true; };
+        const renumber = list => { if (cfg.ordered) list.sort((a, b) => (a.order || 0) - (b.order || 0)).forEach((x, k) => x.order = k + 1); };
+
+        function openForm(index) {
+            const list = cfg.get();
+            const isNew = index == null;
+            const item = isNew ? cfg.newItem(list) : list[index];
+            const fields = cfg.fields.map(f => ({ ...f, readonly: f.readonly || (!isNew && (cfg.lockOnEdit || []).includes(f.key)) }));
+            openModal(`<h3>${isNew ? 'افزودن' : 'ویرایش'} ${E(cfg.itemName || 'مورد')}</h3>
+                <div id="formErr"></div>
+                <form id="itemForm"><div class="form-grid">${fields.map(f => f.type === 'section' ? `<div class="section-title">${E(f.label)}</div>` : fieldHTML(f, getPath(item, f.key), 'm_')).join('')}</div>
+                <div class="foot"><button class="btn primary" type="submit">ذخیره</button><button class="btn" type="button" data-close>انصراف</button></div></form>`,
+            (back, close) => {
+                back.querySelector('[data-close]').onclick = close;
+                back.querySelector('#itemForm').onsubmit = e => {
+                    e.preventDefault();
+                    const { out, errors } = collect(fields, item, back, 'm_');
+                    const key = cfg.idKey;
+                    if (key && isNew || (key && !isNew && out[key] !== item[key])) {
+                        if (list.some((x, k) => k !== index && String(x[key]) === String(out[key]))) errors.push(`مقدار «${key}» تکراری است.`);
+                    }
+                    if (cfg.validate) errors.push(...(cfg.validate(out, list, isNew) || []));
+                    if (errors.length) { back.querySelector('#formErr').innerHTML = `<div class="error-box">${errors.map(E).join('<br>')}</div>`; return; }
+                    if (isNew) list.push(out); else list[index] = out;
+                    renumber(list);
+                    if (save(list)) { close(); draw(); toast('ذخیره شد'); cfg.onChange && cfg.onChange(); }
+                };
+            });
+        }
+
+        host.addEventListener('click', e => {
+            const b = e.target.closest('[data-act]'); if (!b) return;
+            const tr = b.closest('tr'); const i = tr ? +tr.dataset.i : null;
+            const list = cfg.get();
+            if (b.dataset.act === 'add') return openForm(null);
+            if (b.dataset.act === 'edit') return openForm(i);
+            if (b.dataset.act === 'del') {
+                if (!confirm('این مورد حذف شود؟')) return;
+                list.splice(i, 1); renumber(list); if (save(list)) { draw(); toast('حذف شد'); cfg.onChange && cfg.onChange(); }
+                return;
+            }
+            if (b.dataset.act === 'up' || b.dataset.act === 'down') {
+                const dir = b.dataset.act === 'up' ? -1 : 1;
+                if (cfg.ordered) {
+                    const sorted = list.map((x, k) => k).sort((a, c) => (list[a].order || 0) - (list[c].order || 0));
+                    const p = sorted.indexOf(i), q = p + dir;
+                    if (q < 0 || q >= sorted.length) return;
+                    [sorted[p], sorted[q]] = [sorted[q], sorted[p]];
+                    sorted.forEach((k, n) => list[k].order = n + 1);
+                } else {
+                    const j = i + dir; if (j < 0 || j >= list.length) return;
+                    [list[i], list[j]] = [list[j], list[i]];
+                }
+                if (save(list)) draw();
+            }
+        });
+        host.addEventListener('change', e => {
+            const t = e.target.closest('[data-toggle]'); if (!t) return;
+            const list = cfg.get(); const i = +t.closest('tr').dataset.i;
+            setPath(list[i], t.dataset.toggle, t.checked);
+            if (save(list)) { toast('ذخیره شد'); cfg.onChange && cfg.onChange(); }
+        });
+        host.addEventListener('input', e => { if (e.target.matches('.search')) { query = e.target.value; const pos = e.target.selectionStart; draw(); const s = host.querySelector('.search'); s.focus(); s.setSelectionRange(pos, pos); } });
+        draw();
+    }
+
+    // ---------- فرم شیء (تنظیمات) ----------
+    function objectForm(host, cfg) {
+        const obj = cfg.get();
+        host.innerHTML = `<div class="card"><div id="oErr"></div><form id="oForm"><div class="form-grid">${cfg.fields.map(f => f.type === 'section' ? `<div class="section-title">${E(f.label)}</div>` : fieldHTML(f, getPath(obj, f.key), 'o_')).join('')}</div>
+            <div class="foot" style="margin-top:18px"><button class="btn primary" type="submit">ذخیره تغییرات</button></div></form></div>`;
+        host.querySelector('#oForm').onsubmit = e => {
+            e.preventDefault();
+            const { out, errors } = collect(cfg.fields, obj, host, 'o_');
+            if (errors.length) { host.querySelector('#oErr').innerHTML = `<div class="error-box">${errors.map(E).join('<br>')}</div>`; return; }
+            if (cfg.set(out)) toast('ذخیره شد'); else toast('ذخیره ناموفق بود', true);
+        };
+    }
+
+    // ---------- طرح‌واره‌ها ----------
+    const TAGS = [{ value: 'offer', label: 'مگا آف (حراج)' }, { value: 'bestselling', label: 'پرفروش‌ترین' }, { value: 'new', label: 'جدید' }];
+    const catOptions = () => getCategories({ all: true }).map(c => ({ value: c.id, label: c.title }));
+    const brandOptions = () => getBrands({ all: true }).map(b => ({ value: b.name, label: b.name }));
+    const typeOptions = () => getSettings().powerTypes.map(t => ({ value: t.value, label: t.value }));
+    const nextNum = (list, k = 'id') => list.reduce((m, x) => Math.max(m, Number(x[k]) || 0), 0) + 1;
+    const nextOrder = list => list.reduce((m, x) => Math.max(m, x.order || 0), 0) + 1;
+    const col = {
+        active: { key: 'active', label: 'نمایش', type: 'toggle' },
+        order: { key: 'order', label: 'ترتیب' }
+    };
+    const collection = name => ({ get: () => Store.get(name), set: v => Store.set(name, v) });
+
+    const SCHEMA = {
+        products: {
+            ...collection('products'), itemName: 'محصول', idKey: 'id', lockOnEdit: ['id'], searchKeys: ['id', 'title', 'brand', 'sku', 'model'], noMove: false,
+            columns: [{ key: 'image', label: '', type: 'img' }, { key: 'id', label: 'کد' }, { key: 'title', label: 'عنوان' }, { key: 'brand', label: 'برند' }, { key: 'price', label: 'قیمت', type: 'money' },
+                      { key: 'active', label: 'نمایش', type: 'toggle' }, { key: 'inStock', label: 'موجود', type: 'toggle' }, { key: 'freeShipping', label: 'ارسال رایگان', type: 'toggle' }],
+            newItem: list => ({ id: nextNum(list), active: true, title: '', pageTitle: '', brand: (getBrands({ all: true })[0] || {}).name || '', category: (getCategories({ all: true })[0] || {}).id || '', type: (getSettings().powerTypes[0] || {}).value || '', price: 0, oldPrice: 0, inStock: true, freeShipping: false, tags: [], rating: '۴.۵', sales: 0, specs: [], image: '', model: '', powerSpec: '', sku: '' }),
+            fields: [
+                { type: 'section', label: 'اطلاعات اصلی' },
+                { key: 'id', label: 'کد محصول', type: 'number', required: true, min: 1, help: 'در URL صفحه محصول استفاده می‌شود و بعد از ساخت قابل تغییر نیست.' },
+                { key: 'title', label: 'عنوان (کاتالوگ و کارت‌ها)', required: true, full: true },
+                { key: 'pageTitle', label: 'عنوان صفحه محصول', full: true, help: 'اختیاری؛ اگر خالی باشد همان عنوان بالا نمایش داده می‌شود.' },
+                { key: 'brand', label: 'برند', type: 'select', options: brandOptions },
+                { key: 'category', label: 'دسته‌بندی', type: 'select', options: catOptions },
+                { key: 'type', label: 'منبع تغذیه', type: 'select', options: typeOptions },
+                { key: 'sku', label: 'کد کالا (SKU)', ltr: true },
+                { key: 'model', label: 'مدل', ltr: true },
+                { key: 'powerSpec', label: 'مشخصه اصلی (توان/ولتاژ)' },
+                { key: 'specs', label: 'ویژگی‌های کارت کاتالوگ', type: 'lines', help: 'هر ویژگی در یک خط.' },
+                { type: 'section', label: 'قیمت' },
+                { key: 'price', label: 'قیمت فروش', type: 'number', required: true, min: 0 },
+                { key: 'oldPrice', label: 'قیمت قبل از تخفیف', type: 'number', min: 0, help: 'اگر از قیمت فروش بیشتر باشد، درصد تخفیف خودکار نمایش داده می‌شود. برای نداشتن تخفیف ۰ بگذارید.' },
+                { type: 'section', label: 'نمایش و ارسال' },
+                { key: 'active', label: 'نمایش در سایت', type: 'checkbox', help: 'خاموش = کاملاً از سایت و سبد حذف می‌شود.' },
+                { key: 'inStock', label: 'موجود در انبار', type: 'checkbox' },
+                { key: 'freeShipping', label: 'ارسال رایگان برای این محصول', type: 'checkbox', help: 'نحوه اثر آن در «تنظیمات ← ارسال» (قانون محصول ارسال رایگان) مشخص می‌شود.' },
+                { key: 'tags', label: 'نمایش در بخش‌های صفحه اصلی', type: 'tags', options: TAGS },
+                { type: 'section', label: 'تصویر و آمار' },
+                { key: 'image', label: 'آدرس تصویر', required: true, ltr: true, full: true, help: 'آدرس کامل تصویر (https://...) یا نام فایل داخل پوشه سایت.' },
+                { key: 'rating', label: 'امتیاز' },
+                { key: 'sales', label: 'امتیاز فروش (برای مرتب‌سازی پرفروش‌ترین)', type: 'number', min: 0 }
+            ],
+            validate: out => (out.oldPrice && out.oldPrice < out.price ? ['قیمت قبل از تخفیف از قیمت فروش کمتر است؛ احتمالاً جابه‌جا وارد شده.'] : [])
+        },
+        categories: {
+            ...collection('categories'), itemName: 'دسته‌بندی', idKey: 'id', lockOnEdit: ['id'], ordered: true, searchKeys: ['id', 'title'],
+            columns: [{ key: 'image', label: '', type: 'img' }, { key: 'icon', label: 'آیکون' }, { key: 'title', label: 'عنوان' }, { key: 'id', label: 'شناسه' }, { key: 'countLabel', label: 'برچسب تعداد' }, col.active, col.order],
+            newItem: list => ({ id: '', title: '', sheetTitle: '', icon: '🔧', image: '', countLabel: '', active: true, order: nextOrder(list), menu: { mainLabel: '', viewAllLabel: 'مشاهده آرشیو کامل', columns: [], featured: null } }),
+            fields: [
+                { key: 'id', label: 'شناسه (انگلیسی)', required: true, ltr: true, help: 'در آدرس کاتالوگ (?cat=...) استفاده می‌شود؛ بعد از ساخت قابل تغییر نیست.' },
+                { key: 'title', label: 'عنوان', required: true },
+                { key: 'sheetTitle', label: 'عنوان کوتاه (موبایل و قرص‌ها)' },
+                { key: 'icon', label: 'آیکون (ایموجی)' },
+                { key: 'countLabel', label: 'برچسب تعداد کارت صفحه اصلی', help: 'متن ثابت است (مثلاً «۳۴۰+ محصول»)، شمارش خودکار نیست.' },
+                { key: 'image', label: 'تصویر دسته', ltr: true, full: true },
+                { key: 'active', label: 'نمایش در سایت', type: 'checkbox' },
+                { key: 'order', label: 'ترتیب', type: 'number', min: 1 },
+                { key: 'menu', label: 'محتوای مگامنو (JSON)', type: 'json', help: 'ساختار: mainLabel, viewAllLabel, columns[{title, link, items[{label, link, badge}]}], featured{link, image, tag, title, priceText}. اگر لینک کارت ویژه به product.html?id=N باشد قیمت زنده از محصول خوانده می‌شود.' }
+            ]
+        },
+        brands: {
+            ...collection('brands'), itemName: 'برند', idKey: 'id', lockOnEdit: ['id'], ordered: true, searchKeys: ['id', 'name', 'faName'],
+            columns: [{ key: 'name', label: 'نام' }, { key: 'faName', label: 'نام فارسی' }, { key: 'id', label: 'شناسه' }, col.active, col.order],
+            newItem: list => ({ id: '', name: '', faName: '', active: true, order: nextOrder(list) }),
+            fields: [
+                { key: 'name', label: 'نام برند (انگلیسی بزرگ)', required: true, ltr: true, help: 'باید با فیلد «برند» محصولات یکی باشد.' },
+                { key: 'id', label: 'شناسه (انگلیسی کوچک)', required: true, ltr: true },
+                { key: 'faName', label: 'نام فارسی' },
+                { key: 'active', label: 'نمایش', type: 'checkbox' },
+                { key: 'order', label: 'ترتیب', type: 'number', min: 1 }
+            ]
+        },
+        slides: {
+            ...collection('slides'), itemName: 'اسلاید', idKey: 'id', lockOnEdit: ['id'], ordered: true,
+            columns: [{ key: 'src', label: '', type: 'img', render: null }, { key: 'title', label: 'عنوان' }, { key: 'type', label: 'نوع' }, col.active, col.order],
+            newItem: list => ({ id: 'slide-' + Date.now().toString(36), type: 'image', src: '', poster: '', alt: '', badge: '', title: '', subtitle: '', buttons: [], active: true, order: nextOrder(list) }),
+            fields: [
+                { key: 'id', label: 'شناسه', ltr: true, readonly: true },
+                { key: 'type', label: 'نوع', type: 'select', options: [{ value: 'image', label: 'تصویر' }, { value: 'video', label: 'ویدیو' }] },
+                { key: 'src', label: 'آدرس تصویر یا ویدیو', required: true, ltr: true, full: true },
+                { key: 'poster', label: 'تصویر پوستر (برای ویدیو)', ltr: true, full: true },
+                { key: 'badge', label: 'برچسب کوچک بالای عنوان' },
+                { key: 'alt', label: 'متن جایگزین تصویر' },
+                { key: 'title', label: 'عنوان', required: true, full: true },
+                { key: 'subtitle', label: 'زیرعنوان', type: 'textarea' },
+                { key: 'buttons', label: 'دکمه‌ها', type: 'linkLines', extra: true, help: 'هر دکمه در یک خط: عنوان | لینک | primary یا secondary' },
+                { key: 'active', label: 'نمایش', type: 'checkbox' },
+                { key: 'order', label: 'ترتیب', type: 'number', min: 1 }
+            ]
+        },
+        banners: {
+            ...collection('banners'), itemName: 'بنر', idKey: 'id', lockOnEdit: ['id'], ordered: true,
+            columns: [{ key: 'image', label: '', type: 'img' }, { key: 'title', label: 'عنوان' }, { key: 'href', label: 'لینک' }, col.active, col.order],
+            newItem: list => ({ id: 'banner-' + Date.now().toString(36), image: '', alt: '', tag: '', title: '', btn: 'مشاهده و خرید', href: 'catalog.html', active: true, order: nextOrder(list) }),
+            fields: [
+                { key: 'id', label: 'شناسه', ltr: true, readonly: true },
+                { key: 'title', label: 'عنوان', required: true },
+                { key: 'tag', label: 'برچسب' },
+                { key: 'btn', label: 'متن دکمه' },
+                { key: 'href', label: 'لینک', required: true, ltr: true },
+                { key: 'image', label: 'آدرس تصویر', required: true, ltr: true, full: true },
+                { key: 'alt', label: 'متن جایگزین تصویر' },
+                { key: 'active', label: 'نمایش', type: 'checkbox' },
+                { key: 'order', label: 'ترتیب', type: 'number', min: 1 }
+            ]
+        },
+        posts: {
+            ...collection('posts'), itemName: 'مقاله', idKey: 'id', lockOnEdit: ['id'], ordered: true,
+            columns: [{ key: 'image', label: '', type: 'img' }, { key: 'title', label: 'عنوان' }, { key: 'meta', label: 'برچسب' }, col.active, col.order],
+            newItem: list => ({ id: nextNum(list), href: 'blog.html', image: '', alt: '', meta: '', title: '', excerpt: '', active: true, order: nextOrder(list) }),
+            fields: [
+                { key: 'id', label: 'شناسه', type: 'number', readonly: true },
+                { key: 'title', label: 'عنوان', required: true, full: true },
+                { key: 'meta', label: 'برچسب (مثلاً راهنمای خرید • ۵ دقیقه)' },
+                { key: 'href', label: 'لینک', ltr: true },
+                { key: 'excerpt', label: 'خلاصه', type: 'textarea' },
+                { key: 'image', label: 'آدرس تصویر', required: true, ltr: true, full: true },
+                { key: 'alt', label: 'متن جایگزین تصویر' },
+                { key: 'active', label: 'نمایش', type: 'checkbox' },
+                { key: 'order', label: 'ترتیب', type: 'number', min: 1 }
+            ]
+        },
+        homeSections: {
+            ...collection('homeSections'), itemName: 'بخش', idKey: 'id', lockOnEdit: ['id', 'type'],
+            columns: [{ key: 'title', label: 'عنوان', render: s => E(s.title || '(بدون عنوان)') }, { key: 'type', label: 'نوع' }, { key: 'filterTag', label: 'برچسب محصولات' }, { key: 'enabled', label: 'نمایش', type: 'toggle' }],
+            newItem: () => ({ id: 'row-' + Date.now().toString(36), type: 'productRow', enabled: true, title: '', viewAllLabel: 'مشاهده همه', viewAllHref: 'catalog.html', filterTag: 'new', limit: 12 }),
+            fields: [
+                { key: 'id', label: 'شناسه', ltr: true, required: true },
+                { key: 'type', label: 'نوع بخش', type: 'select', options: [{ value: 'categories', label: 'دسته‌بندی‌ها' }, { value: 'offer', label: 'مگا آف' }, { value: 'productRow', label: 'ردیف محصولات' }, { value: 'banners', label: 'بنرها' }, { value: 'brands', label: 'برندها' }, { value: 'blog', label: 'مجله' }] },
+                { key: 'enabled', label: 'نمایش در صفحه اصلی', type: 'checkbox' },
+                { key: 'title', label: 'عنوان بخش', full: true },
+                { key: 'tag', label: 'برچسب کوچک (فقط مگا آف)' },
+                { key: 'desc', label: 'توضیح (فقط مگا آف)', full: true },
+                { key: 'filterTag', label: 'نمایش محصولات دارای برچسب', type: 'select', options: [{ value: '', label: 'همه محصولات' }, ...TAGS] },
+                { key: 'limit', label: 'حداکثر تعداد محصول', type: 'number', min: 1 },
+                { key: 'viewAllLabel', label: 'متن لینک «مشاهده همه»' },
+                { key: 'viewAllHref', label: 'آدرس لینک «مشاهده همه»', ltr: true }
+            ]
+        },
+        nav: {
+            ...collection('nav'), itemName: 'آیتم منو',
+            columns: [{ key: 'label', label: 'عنوان' }, { key: 'type', label: 'نوع', render: x => x.type === 'megamenu' ? '<span class="tag">مگامنو</span>' : 'لینک' }, { key: 'href', label: 'لینک' }],
+            newItem: () => ({ type: 'link', label: '', href: '' }),
+            fields: [
+                { key: 'type', label: 'نوع', type: 'select', options: [{ value: 'link', label: 'لینک ساده' }, { value: 'megamenu', label: 'مگامنوی دسته‌بندی‌ها' }] },
+                { key: 'label', label: 'عنوان', required: true },
+                { key: 'href', label: 'لینک', ltr: true }
+            ]
+        },
+        footerFeatures: {
+            get: () => Store.get('footer').features, set: v => { const f = Store.get('footer'); f.features = v; return Store.set('footer', f); }, itemName: 'ویژگی',
+            columns: [{ key: 'text', label: 'متن' }, { key: 'icon', label: 'آیکون', type: 'img' }],
+            newItem: () => ({ icon: '', alt: '', text: '' }),
+            fields: [{ key: 'text', label: 'متن', required: true, full: true }, { key: 'icon', label: 'آدرس آیکون', ltr: true, full: true }, { key: 'alt', label: 'متن جایگزین آیکون' }]
+        },
+        footerSocial: {
+            get: () => Store.get('footer').social, set: v => { const f = Store.get('footer'); f.social = v; return Store.set('footer', f); }, itemName: 'شبکه اجتماعی',
+            columns: [{ key: 'title', label: 'عنوان' }, { key: 'url', label: 'آدرس' }, { key: 'enabled', label: 'نمایش', type: 'toggle' }],
+            newItem: () => ({ id: 'instagram', title: '', url: '', icon: '', enabled: true }),
+            fields: [{ key: 'id', label: 'نوع (instagram / telegram / whatsapp)', ltr: true, required: true, help: 'رنگ دکمه از روی همین نام تعیین می‌شود.' }, { key: 'title', label: 'عنوان' }, { key: 'url', label: 'آدرس', ltr: true, full: true }, { key: 'icon', label: 'آدرس آیکون', ltr: true, full: true }, { key: 'enabled', label: 'نمایش', type: 'checkbox' }]
+        },
+        footerColumns: {
+            get: () => Store.get('footer').columns, set: v => { const f = Store.get('footer'); f.columns = v; return Store.set('footer', f); }, itemName: 'ستون لینک',
+            columns: [{ key: 'title', label: 'عنوان ستون' }, { key: 'links', label: 'لینک‌ها', render: c => toPersianNum((c.links || []).length) + ' لینک' }],
+            newItem: () => ({ title: '', links: [] }),
+            fields: [{ key: 'title', label: 'عنوان ستون', required: true, full: true }, { key: 'links', label: 'لینک‌ها', type: 'linkLines', help: 'هر لینک در یک خط: عنوان | آدرس' }]
+        },
+        powerTypes: {
+            get: () => getSettings().powerTypes, set: v => { const s = Store.get('settings'); s.powerTypes = v; return Store.set('settings', s); }, itemName: 'نوع منبع تغذیه',
+            columns: [{ key: 'value', label: 'مقدار (روی محصولات)' }, { key: 'label', label: 'برچسب فیلتر' }],
+            newItem: () => ({ value: '', label: '' }),
+            fields: [{ key: 'value', label: 'مقدار', required: true, help: 'باید با فیلد «منبع تغذیه» محصولات یکی باشد.' }, { key: 'label', label: 'برچسب در فیلتر کاتالوگ', required: true }]
+        },
+        payment: {
+            get: () => getSettings().payment.methods, set: v => { const s = Store.get('settings'); s.payment = { ...s.payment, methods: v }; return Store.set('settings', s); }, itemName: 'روش پرداخت', idKey: 'id', lockOnEdit: ['id'],
+            columns: [{ key: 'label', label: 'عنوان' }, { key: 'id', label: 'شناسه' }, { key: 'enabled', label: 'فعال', type: 'toggle' }],
+            newItem: () => ({ id: '', label: '', description: '', enabled: true }),
+            fields: [{ key: 'id', label: 'شناسه (cod / card / online ...)', required: true, ltr: true }, { key: 'label', label: 'عنوان', required: true }, { key: 'description', label: 'توضیح برای مشتری', type: 'textarea' },
+                     { key: 'cardNumber', label: 'شماره کارت (فقط کارت به کارت)', ltr: true }, { key: 'cardOwner', label: 'نام صاحب کارت' }, { key: 'enabled', label: 'فعال', type: 'checkbox' }]
+        }
+    };
+
+    const SETTINGS_FIELDS = [
+        { type: 'section', label: 'اطلاعات فروشگاه' },
+        { key: 'store.name', label: 'نام فروشگاه', required: true },
+        { key: 'store.slogan', label: 'شعار' },
+        { key: 'store.phone', label: 'شماره تماس' },
+        { key: 'store.email', label: 'ایمیل', ltr: true },
+        { key: 'store.workingHours', label: 'ساعت پاسخگویی' },
+        { key: 'store.currency', label: 'واحد پول', required: true },
+        { key: 'store.address', label: 'آدرس', full: true },
+        { key: 'store.logo', label: 'آدرس لوگو', ltr: true, full: true },
+        { type: 'section', label: 'ارسال' },
+        { key: 'shipping.enabled', label: 'هزینه ارسال فعال باشد', type: 'checkbox', help: 'اگر خاموش باشد ارسال همه سفارش‌ها رایگان است.' },
+        { key: 'shipping.fee', label: 'هزینه ارسال هر سفارش', type: 'number', min: 0 },
+        { key: 'shipping.freeFromEnabled', label: 'ارسال رایگان بالای یک مبلغ', type: 'checkbox' },
+        { key: 'shipping.freeFrom', label: 'حداقل مبلغ برای ارسال رایگان', type: 'number', min: 0 },
+        { key: 'shipping.productRule', label: 'قانون محصولات «ارسال رایگان»', type: 'select', options: [{ value: 'all', label: 'فقط اگر همه‌ی کالاهای سبد ارسال رایگان باشند' }, { value: 'any', label: 'اگر حتی یک کالای ارسال رایگان در سبد باشد' }] },
+        { key: 'shipping.freeLabel', label: 'متن نمایش ارسال رایگان' },
+        { type: 'section', label: 'مگا آف (تایمر)' },
+        { key: 'offer.countdownEnabled', label: 'نمایش تایمر شمارش معکوس', type: 'checkbox' },
+        { key: 'offer.countdownSeconds', label: 'زمان اولیه تایمر (ثانیه)', type: 'number', min: 0 },
+        { key: 'offer.resetSeconds', label: 'زمان شروع دوباره (ثانیه)', type: 'number', min: 1 },
+        { type: 'section', label: 'کاتالوگ' },
+        { key: 'catalog.pageTitle', label: 'عنوان صفحه کاتالوگ', full: true },
+        { key: 'catalog.allBreadcrumb', label: 'عنوان مسیر «همه محصولات»' },
+        { key: 'catalog.priceMin', label: 'حداقل اسلایدر قیمت', type: 'number', min: 0 },
+        { key: 'catalog.priceMax', label: 'حداکثر اسلایدر قیمت', type: 'number', min: 1 }
+    ];
+
+    // ---------- صفحه‌ها ----------
+    const STATUS = { new: 'جدید', processing: 'در حال پردازش', shipped: 'ارسال شد', delivered: 'تحویل شد', canceled: 'لغو شد' };
+    const head = (title, hint, extra = '') => `<div class="page-head"><div><h2>${title}</h2>${hint ? `<div class="hint">${hint}</div>` : ''}</div><div class="actions">${extra}</div></div>`;
+    const resetBtn = name => `<button class="btn sm danger" data-reset="${name}">بازگرداندن به پیش‌فرض</button>`;
+
+    const PAGES = {
+        dashboard: { title: 'داشبورد', icon: '📊', render() {
+            const prods = getProducts({ all: true }), orders = Store.get('orders');
+            const revenue = orders.filter(o => o.status !== 'canceled').reduce((s, o) => s + o.total, 0);
+            view.innerHTML = head('داشبورد', 'نمای کلی فروشگاه', `<a class="btn" href="index.html" target="_blank" rel="noopener">مشاهده سایت ↗</a>`) + `
+                <div class="stats">
+                    <div class="stat"><span>سفارش‌های جدید</span><b>${toPersianNum(orders.filter(o => o.status === 'new').length)}</b></div>
+                    <div class="stat"><span>کل سفارش‌ها</span><b>${toPersianNum(orders.length)}</b></div>
+                    <div class="stat"><span>مجموع فروش (بدون لغوشده‌ها)</span><b style="font-size:18px">${money(revenue)}</b></div>
+                    <div class="stat"><span>محصولات فعال</span><b>${toPersianNum(prods.filter(p => p.active !== false).length)} / ${toPersianNum(prods.length)}</b></div>
+                    <div class="stat"><span>محصولات ناموجود</span><b>${toPersianNum(prods.filter(p => p.active !== false && !p.inStock).length)}</b></div>
+                    <div class="stat"><span>ارسال رایگان</span><b>${toPersianNum(prods.filter(p => p.freeShipping).length)}</b></div>
+                </div>
+                <div class="card"><h3>آخرین سفارش‌ها</h3>${orders.length ? `<div class="table-wrap"><table><thead><tr><th>کد</th><th>مشتری</th><th>مبلغ</th><th>وضعیت</th><th>تاریخ</th></tr></thead><tbody>${orders.slice(0, 6).map(o => `<tr><td>${E(o.id)}</td><td>${E(o.customer.name)}</td><td>${money(o.total)}</td><td><span class="tag">${E(STATUS[o.status] || o.status)}</span></td><td>${E(fmtDate(o.createdAt))}</td></tr>`).join('')}</tbody></table></div>` : '<div class="empty">هنوز سفارشی ثبت نشده است.</div>'}</div>
+                <div class="warn-box"><b>یادآوری:</b> داده‌ها فعلاً فقط در همین مرورگر ذخیره می‌شوند و این پنل رمز عبور ندارد؛ برای سایت واقعی باید به بک‌اند و احراز هویت وصل شود.</div>`;
+        } },
+        orders: { title: 'سفارش‌ها', icon: '🧾', render() {
+            const draw = () => {
+                const orders = Store.get('orders');
+                view.innerHTML = head('سفارش‌ها', 'سفارش‌هایی که مشتری‌ها از صفحه ثبت سفارش ثبت کرده‌اند.') + (orders.length ? `<div class="table-wrap"><table><thead><tr><th>کد</th><th>تاریخ</th><th>مشتری</th><th>پرداخت</th><th>مبلغ</th><th>وضعیت</th><th></th></tr></thead><tbody>
+                    ${orders.map((o, i) => `<tr data-i="${i}"><td>${E(o.id)}</td><td>${E(fmtDate(o.createdAt))}</td><td>${E(o.customer.name)}<br><span style="color:var(--muted)">${E(toPersianNum(o.customer.phone))}</span></td><td>${E(o.payment.label)}</td><td>${money(o.total)}</td>
+                    <td><select class="status-sel" data-status aria-label="وضعیت">${Object.entries(STATUS).map(([k, v]) => `<option value="${k}" ${o.status === k ? 'selected' : ''}>${v}</option>`).join('')}</select></td>
+                    <td class="acts"><button class="btn sm" data-act="view">جزئیات</button> <button class="btn sm danger" data-act="del">حذف</button></td></tr>`).join('')}</tbody></table></div>` : '<div class="empty card">هنوز سفارشی ثبت نشده است.</div>');
+            };
+            draw();
+            view.onclick = e => {
+                const b = e.target.closest('[data-act]'); if (!b) return;
+                const i = +b.closest('tr').dataset.i, orders = Store.get('orders'), o = orders[i];
+                if (b.dataset.act === 'del') { if (confirm('این سفارش حذف شود؟')) { orders.splice(i, 1); Store.set('orders', orders); draw(); updateBadge(); toast('حذف شد'); } return; }
+                openModal(`<h3>سفارش ${E(o.id)}</h3><div class="order-detail"><dl>
+                    <dt>تاریخ</dt><dd>${E(fmtDate(o.createdAt))}</dd><dt>نام</dt><dd>${E(o.customer.name)}</dd><dt>موبایل</dt><dd>${E(toPersianNum(o.customer.phone))}</dd>
+                    <dt>آدرس</dt><dd>${E(o.customer.province)}، ${E(o.customer.city)}، ${E(o.customer.address)}<br>کد پستی: ${E(toPersianNum(o.customer.postal))}</dd>
+                    ${o.customer.notes ? `<dt>توضیحات</dt><dd>${E(o.customer.notes)}</dd>` : ''}<dt>پرداخت</dt><dd>${E(o.payment.label)}</dd></dl>
+                    <div class="table-wrap"><table><thead><tr><th>کالا</th><th>تعداد</th><th>قیمت واحد</th></tr></thead><tbody>${o.items.map(it => `<tr><td>${E(it.title)}</td><td>${toPersianNum(it.quantity)}</td><td>${money(it.price)}</td></tr>`).join('')}</tbody></table></div>
+                    <dl style="margin-top:14px"><dt>جمع کالاها</dt><dd>${money(o.subtotal)}</dd><dt>هزینه ارسال</dt><dd>${o.shippingFee ? money(o.shippingFee) : 'رایگان'}</dd><dt>مبلغ کل</dt><dd><b>${money(o.total)}</b></dd></dl></div>
+                    <div class="foot"><button class="btn" data-close>بستن</button></div>`, (back, close) => back.querySelector('[data-close]').onclick = close);
+            };
+            view.onchange = e => {
+                const s = e.target.closest('[data-status]'); if (!s) return;
+                const orders = Store.get('orders'); orders[+s.closest('tr').dataset.i].status = s.value; Store.set('orders', orders); updateBadge(); toast('وضعیت ذخیره شد');
+            };
+        } },
+        products: { title: 'محصولات', icon: '📦', render: () => crud('products', 'محصولات', 'قیمت، موجودی، ارسال رایگان و نمایش هر محصول. سه کلید آخر جدول بدون باز کردن فرم ذخیره می‌شوند.') },
+        categories: { title: 'دسته‌بندی‌ها و مگامنو', icon: '🗂️', render: () => crud('categories', 'دسته‌بندی‌ها و مگامنو', 'دسته‌ها در مگامنو، صفحه اصلی، کاتالوگ و موبایل نمایش داده می‌شوند.') },
+        brands: { title: 'برندها', icon: '🏷️', render: () => crud('brands', 'برندها', 'برندهای صفحه اصلی و فیلتر کاتالوگ.') },
+        slides: { title: 'اسلایدر صفحه اصلی', icon: '🖼️', render: () => crud('slides', 'اسلایدر صفحه اصلی', 'اسلایدهای بالای صفحه اصلی.') },
+        banners: { title: 'بنرهای تبلیغاتی', icon: '📣', render: () => crud('banners', 'بنرهای تبلیغاتی', 'بنرهای دوقلوی صفحه اصلی.') },
+        posts: { title: 'مجله', icon: '📰', render: () => crud('posts', 'کارت‌های مجله', 'مقاله‌های نمایش‌داده‌شده در صفحه اصلی.') },
+        homeSections: { title: 'بخش‌های صفحه اصلی', icon: '🧩', render: () => crud('homeSections', 'بخش‌های صفحه اصلی', 'ترتیب نمایش بخش‌ها را با فلش‌ها تغییر دهید و هر بخش را روشن/خاموش کنید.', 'homeSections') },
+        nav: { title: 'منوی هدر', icon: '🧭', render() {
+            view.innerHTML = head('منوی هدر', 'ترتیب و عنوان لینک‌های منوی بالای سایت.', resetBtn('nav') + ' ' + resetBtn('megaBottom')) + '<div id="h1"></div><h3 style="margin:26px 0 12px">نوار پایین مگامنو</h3><div id="h2"></div>';
+            listEditor($('#h1'), SCHEMA.nav);
+            objectForm($('#h2'), { ...collection('megaBottom'), fields: [{ key: 'promoText', label: 'متن لینک تخفیف', full: true }, { key: 'promoHref', label: 'آدرس لینک تخفیف', ltr: true }, { key: 'allLabel', label: 'متن دکمه کاتالوگ' }, { key: 'allHref', label: 'آدرس دکمه کاتالوگ', ltr: true }] });
+        } },
+        footer: { title: 'فوتر', icon: '🦶', render() {
+            view.innerHTML = head('فوتر', 'ویژگی‌ها، ستون‌های لینک، شبکه‌های اجتماعی و متن پایین صفحه.', resetBtn('footer')) + '<h3 style="margin:0 0 12px">نوار ویژگی‌ها</h3><div id="f1"></div><h3 style="margin:26px 0 12px">ستون‌های لینک</h3><div id="f2"></div><h3 style="margin:26px 0 12px">شبکه‌های اجتماعی</h3><div id="f3"></div><h3 style="margin:26px 0 12px">نمادها و متن پایین</h3><div id="f4"></div>';
+            listEditor($('#f1'), SCHEMA.footerFeatures); listEditor($('#f2'), SCHEMA.footerColumns); listEditor($('#f3'), SCHEMA.footerSocial);
+            objectForm($('#f4'), { ...collection('footer'), fields: [{ key: 'trustSymbols', label: 'نمادهای اعتماد', type: 'lines', help: 'هر نماد در یک خط؛ می‌توانید از <br> برای رفتن به خط بعد استفاده کنید.' }, { key: 'copyright', label: 'متن حقوق (پایین فوتر)', type: 'textarea' }] });
+        } },
+        settings: { title: 'تنظیمات فروشگاه', icon: '⚙️', render() {
+            view.innerHTML = head('تنظیمات فروشگاه', 'اطلاعات تماس، قوانین ارسال، تایمر و کاتالوگ.', resetBtn('settings')) + '<div id="s1"></div><h3 style="margin:26px 0 12px">روش‌های پرداخت</h3><div id="s2"></div><h3 style="margin:26px 0 12px">انواع منبع تغذیه (فیلتر کاتالوگ)</h3><div id="s3"></div>';
+            objectForm($('#s1'), { get: () => getSettings(), set: v => Store.set('settings', v), fields: SETTINGS_FIELDS });
+            listEditor($('#s2'), SCHEMA.payment); listEditor($('#s3'), SCHEMA.powerTypes);
+        } },
+        tools: { title: 'پشتیبان‌گیری', icon: '💾', render() {
+            view.innerHTML = head('پشتیبان‌گیری و بازیابی', 'تمام داده‌ها در مرورگر شما ذخیره می‌شوند؛ پشتیبان بگیرید.') + `
+                <div class="warn-box"><b>امنیت:</b> این پنل رمز عبور و کنترل دسترسی ندارد و داده‌ها فقط در localStorage همین مرورگرند (مشتری‌های دیگر تغییرات شما را نمی‌بینند). برای انتشار واقعی باید به بک‌اند با احراز هویت وصل شود و نباید این فایل روی سرور عمومی باشد.</div>
+                <div class="card"><h3>دریافت پشتیبان</h3><p style="color:var(--muted)">همه‌ی داده‌های ذخیره‌شده (محصولات، سفارش‌ها، تنظیمات و ...) در یک فایل JSON.</p><button class="btn primary" id="btnExport">دانلود فایل پشتیبان</button></div>
+                <div class="card"><h3>بازیابی از پشتیبان</h3><p style="color:var(--muted)">داده‌های فعلی با محتوای فایل جایگزین می‌شوند.</p><input type="file" id="fileImport" accept="application/json,.json"></div>
+                <div class="card"><h3>بازگرداندن همه‌چیز به پیش‌فرض</h3><p style="color:var(--muted)">تمام تغییرات و سفارش‌ها پاک می‌شوند و داده‌های اولیه برمی‌گردند.</p><button class="btn danger" id="btnResetAll">پاک کردن همه تغییرات</button></div>`;
+            $('#btnExport').onclick = () => {
+                const all = {}; Store.collections().forEach(c => all[c] = Store.get(c));
+                const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(all, null, 2)], { type: 'application/json' }));
+                a.download = 'mega-abzar-backup-' + new Date().toISOString().slice(0, 10) + '.json'; a.click(); URL.revokeObjectURL(a.href);
+            };
+            $('#fileImport').onchange = e => {
+                const f = e.target.files[0]; if (!f) return;
+                const r = new FileReader();
+                r.onload = () => {
+                    try {
+                        const data = JSON.parse(r.result);
+                        const known = Store.collections();
+                        if (typeof data !== 'object' || Array.isArray(data) || !Object.keys(data).some(k => known.includes(k))) throw new Error('فایل پشتیبان معتبر نیست.');
+                        if (!confirm('داده‌های فعلی با این فایل جایگزین شوند؟')) return;
+                        const clean = {}; known.forEach(k => { if (k in data) clean[k] = data[k]; });
+                        Store.importAll(JSON.stringify(clean)); toast('بازیابی شد'); location.hash = 'dashboard'; updateBadge();
+                    } catch (err) { toast(err.message || 'خواندن فایل ناموفق بود', true); }
+                };
+                r.readAsText(f);
+            };
+            $('#btnResetAll').onclick = () => { if (confirm('همه‌ی تغییرات و سفارش‌ها پاک شود؟ این کار برگشت‌پذیر نیست.')) { Store.reset(); toast('بازگردانی شد'); location.hash = 'dashboard'; updateBadge(); } };
+        } }
+    };
+
+    function crud(name, title, hint) {
+        view.innerHTML = head(title, hint, `<a class="btn" href="index.html" target="_blank" rel="noopener">مشاهده سایت ↗</a> ${resetBtn(name)}`) + '<div id="host"></div>';
+        listEditor($('#host'), SCHEMA[name]);
+    }
+
+    // ---------- ناوبری ----------
+    const NAV_GROUPS = [['dashboard', 'orders'], ['products', 'categories', 'brands'], ['slides', 'banners', 'posts', 'homeSections'], ['nav', 'footer', 'settings'], ['tools']];
+    function renderNav(active) {
+        const unseen = Store.get('orders').filter(o => o.status === 'new').length;
+        $('#nav').innerHTML = NAV_GROUPS.map(g => g.map(k => `<a href="#${k}" data-page="${k}" class="${k === active ? 'active' : ''}"><span aria-hidden="true">${PAGES[k].icon}</span> ${PAGES[k].title}${k === 'orders' && unseen ? `<span class="badge">${toPersianNum(unseen)}</span>` : ''}</a>`).join('')).join('<div class="sep"></div>');
+    }
+    function updateBadge() { renderNav(location.hash.slice(1) in PAGES ? location.hash.slice(1) : 'dashboard'); }
+    function show(key) {
+        if (!(key in PAGES)) key = 'dashboard';
+        view.onclick = view.onchange = null;
+        renderNav(key);
+        $('#side').classList.remove('open');
+        PAGES[key].render();
+        document.title = PAGES[key].title + ' | پنل مدیریت مگا ابزار';
+    }
+    window.addEventListener('hashchange', () => show(location.hash.slice(1)));
+    $('#menuBtn').onclick = () => $('#side').classList.toggle('open');
+    // بازگردانی یک مجموعه به پیش‌فرض (دکمه‌های data-reset)
+    document.addEventListener('click', e => {
+        const b = e.target.closest('[data-reset]'); if (!b) return;
+        const names = { nav: ['nav', 'megaBottom'] }[b.dataset.reset] || [b.dataset.reset];
+        if (!confirm('این بخش به مقدار پیش‌فرض برگردد؟ تغییرات شما در آن پاک می‌شود.')) return;
+        names.forEach(n => Store.reset(n)); toast('بازگردانده شد'); show(location.hash.slice(1));
+    });
+    show(location.hash.slice(1));
+    </script>
+</body>
+</html>
