@@ -12,42 +12,33 @@
     </script>
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        /* استایل‌های اختصاصی صفحه تسویه حساب (هدر، فوتر و کشوی سبد از layout.js می‌آیند) */
         .breadcrumb-container { max-width: 1400px; margin: 20px auto 0; padding: 0 30px; font-size: 13px; color: var(--text-muted); display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
         .breadcrumb-container a { color: var(--text-muted); text-decoration: none; }
         .breadcrumb-container a:hover { color: var(--accent-color); }
-
         .co-page { max-width: 1400px; margin: 0 auto; padding: 20px 30px 60px; }
         .co-page > h1 { margin: 0 0 20px; font-size: 24px; font-weight: 800; }
         .co-layout { display: grid; grid-template-columns: 1fr 380px; gap: 24px; align-items: start; }
-
         .co-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 22px; margin-bottom: 18px; }
         .co-card h2 { margin: 0 0 16px; font-size: 17px; font-weight: 800; display: flex; align-items: center; gap: 8px; }
         .co-card h2 .step { background: var(--accent-color); color: #fff; width: 26px; height: 26px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; }
-
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
         .field { display: flex; flex-direction: column; gap: 6px; }
         .field.full { grid-column: 1 / -1; }
         .field label { font-size: 13px; font-weight: 700; }
         .field label i { color: var(--accent-color); font-style: normal; }
-        .field input, .field textarea {
-            background: var(--secondary-bg); color: var(--text-color); border: 1px solid var(--border-color);
-            border-radius: 10px; padding: 11px 13px; font-family: inherit; font-size: 14px; transition: border-color .2s;
-        }
+        .field input, .field textarea { background: var(--secondary-bg); color: var(--text-color); border: 1px solid var(--border-color); border-radius: 10px; padding: 11px 13px; font-family: inherit; font-size: 14px; transition: border-color .2s; }
         .field textarea { min-height: 90px; resize: vertical; }
         .field input:focus, .field textarea:focus { border-color: var(--accent-color); }
         .field.invalid input, .field.invalid textarea { border-color: #e53935; }
         .field .err { color: #e53935; font-size: 12px; min-height: 0; display: none; }
         .field.invalid .err { display: block; }
         .field input[inputmode="numeric"], .field input[type="tel"] { direction: ltr; text-align: right; }
-
         .pay-option { display: flex; gap: 12px; align-items: flex-start; border: 1px solid var(--border-color); border-radius: 12px; padding: 14px; margin-bottom: 10px; cursor: pointer; transition: border-color .2s, background .2s; }
         .pay-option:hover { border-color: var(--accent-color); }
         .pay-option input { margin-top: 4px; accent-color: var(--accent-color); }
         .pay-option.selected { border-color: var(--accent-color); background: var(--accent-soft); }
         .pay-option strong { display: block; font-size: 14.5px; }
         .pay-option span { font-size: 12.5px; color: var(--text-muted); line-height: 1.8; }
-
         .co-summary { position: sticky; top: 150px; }
         .sum-item { display: grid; grid-template-columns: 56px 1fr; gap: 12px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border-color); }
         .sum-item:last-of-type { border-bottom: none; }
@@ -63,7 +54,6 @@
         .btn-submit:hover { filter: brightness(1.08); }
         .btn-submit:disabled { opacity: .6; cursor: not-allowed; }
         .form-alert { background: rgba(229,57,53,.12); border: 1px solid #e53935; color: var(--text-color); border-radius: 10px; padding: 12px 14px; font-size: 13.5px; margin-bottom: 16px; line-height: 1.9; }
-
         .co-empty, .co-done { text-align: center; padding: 60px 20px; background: var(--card-bg); border: 1px dashed var(--border-color); border-radius: 18px; max-width: 640px; margin: 0 auto; }
         .co-done { border-style: solid; }
         .co-empty .big, .co-done .big { font-size: 54px; }
@@ -71,10 +61,11 @@
         .co-done p { color: var(--text-muted); line-height: 2; margin: 6px 0; }
         .order-code { display: inline-block; background: var(--accent-soft); color: var(--accent-color); font-weight: 900; letter-spacing: 1px; padding: 6px 16px; border-radius: 10px; margin: 8px 0; direction: ltr; }
         .pay-box { text-align: right; background: var(--secondary-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px 16px; margin: 16px 0; font-size: 14px; line-height: 2.1; }
+        .pay-box b[onclick] { background: var(--accent-soft); padding: 2px 8px; border-radius: 6px; cursor: pointer; transition: filter 0.2s; display: inline-block; }
+        .pay-box b[onclick]:hover { filter: brightness(1.2); }
         .co-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 20px; }
         .co-actions a { display: inline-block; padding: 12px 24px; border-radius: 12px; text-decoration: none; font-weight: 800; font-size: 14px; border: 1px solid var(--border-color); color: var(--text-color); }
         .co-actions a.primary { background: var(--accent-color); border-color: var(--accent-color); color: #fff; }
-
         @media (max-width: 992px) {
             .co-layout { grid-template-columns: 1fr; }
             .co-summary { position: static; order: -1; }
@@ -84,19 +75,14 @@
     </style>
 </head>
 <body>
-    <div class="page-transition" id="pageTransition"><img src="image.png" class="transition-logo" alt=""></div>
     <div id="site-header"></div>
-
     <nav class="breadcrumb-container" aria-label="مسیر">
         <a href="index.html">خانه</a><span>/</span>
         <a href="cart.html">سبد خرید</a><span>/</span>
         <span style="color: var(--text-color); font-weight: 700;">ثبت سفارش</span>
     </nav>
-
     <main class="co-page" id="checkoutRoot"></main>
-
     <div id="site-footer"></div>
-
     <script src="products.js"></script>
     <script src="store.js"></script>
     <script src="layout.js"></script>
@@ -107,11 +93,25 @@
         let placedOrder = null;
         let submitting = false;
 
-        // اعداد فارسی/عربی را برای اعتبارسنجی به انگلیسی تبدیل می‌کند
         const normDigits = s => String(s).replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d));
 
         function loadProfile() { try { return JSON.parse(localStorage.getItem(PROFILE_KEY) || '{}'); } catch (e) { return {}; } }
         function saveProfile(p) { try { localStorage.setItem(PROFILE_KEY, JSON.stringify(p)); } catch (e) {} }
+
+        function copyCardNumber(element, cardNumber) {
+            const cleanNumber = normDigits(cardNumber).replace(/\s+/g, '');
+            navigator.clipboard.writeText(cleanNumber).then(() => {
+                const originalText = element.innerHTML;
+                element.innerHTML = '✅ شماره کارت کپی شد!';
+                element.style.color = '#2e9e5b';
+                setTimeout(() => {
+                    element.innerHTML = originalText;
+                    element.style.color = '';
+                }, 2500);
+            }).catch(err => {
+                alert('کپی کردن با خطا مواجه شد.');
+            });
+        }
 
         function summaryHTML() {
             let original = 0, payable = 0;
@@ -170,7 +170,7 @@
                                 <label class="pay-option${i === 0 ? ' selected' : ''}">
                                     <input type="radio" name="pay" value="${escapeHTML(m.id)}" ${i === 0 ? 'checked' : ''}>
                                     <div><strong>${escapeHTML(m.label)}</strong><span>${escapeHTML(m.description || '')}</span></div>
-                                </label>`).join('') : '<div class="form-alert">در حال حاضر هیچ روش پرداختی فعال نیست. لطفاً با فروشگاه تماس بگیرید.</div>'}
+                                </label>`).join('') : '<div class="form-alert">در حال حاضر هیچ روش پرداختی فعال نیست.</div>'}
                         </section>
                     </div>
                     <aside class="co-card co-summary">
@@ -196,7 +196,7 @@
         function validate(d) {
             let ok = true;
             ok = setError('f_name', d.name.trim().length < 3 ? 'نام و نام خانوادگی را کامل وارد کنید.' : '') && ok;
-            ok = setError('f_phone', /^09\d{9}$/.test(normDigits(d.phone).replace(/\s|-/g, '')) ? '' : 'شماره موبایل معتبر نیست (مثال: ۰۹۱۲۱۲۳۴۵۶۷).') && ok;
+            ok = setError('f_phone', /^09\d{9}$/.test(normDigits(d.phone).replace(/\s|-/g, '')) ? '' : 'شماره موبایل معتبر نیست.') && ok;
             ok = setError('f_province', d.province.trim() ? '' : 'استان را وارد کنید.') && ok;
             ok = setError('f_city', d.city.trim() ? '' : 'شهر را وارد کنید.') && ok;
             ok = setError('f_address', d.address.trim().length < 10 ? 'آدرس را کامل‌تر وارد کنید.' : '') && ok;
@@ -216,10 +216,9 @@
                 if (first) first.focus();
                 return;
             }
-            // بررسی دوباره موجودی (ممکن است بعد از افزودن به سبد، ناموجود شده باشد)
             const bad = cart.filter(i => !getProduct(i.id) || !getProduct(i.id).inStock);
             if (bad.length) {
-                alertBox.innerHTML = `<div class="form-alert">این کالاها دیگر موجود نیستند: ${bad.map(i => escapeHTML((getProduct(i.id) || {}).title || '')).join('، ')}. لطفاً از <a href="cart.html">سبد خرید</a> حذفشان کنید.</div>`;
+                alertBox.innerHTML = `<div class="form-alert">این کالاها دیگر موجود نیستند.</div>`;
                 return;
             }
             const method = getSettings().payment.methods.find(m => m.id === fd.get('pay') && m.enabled);
@@ -240,12 +239,7 @@
             };
             const orders = Store.get('orders');
             orders.unshift(order);
-            if (!Store.set('orders', orders)) {
-                submitting = false;
-                document.getElementById('btnSubmit').disabled = false;
-                alertBox.innerHTML = '<div class="form-alert">ذخیره سفارش ناموفق بود (حافظه مرورگر پر است یا دسترسی بسته است).</div>';
-                return;
-            }
+            Store.set('orders', orders);
             saveProfile({ name: order.customer.name, phone: order.customer.phone, province: order.customer.province, city: order.customer.city, address: order.customer.address, postal: order.customer.postal });
             placedOrder = order;
             cart = []; saveAndUpdateCart();
@@ -258,9 +252,9 @@
             const m = getSettings().payment.methods.find(x => x.id === o.payment.id) || {};
             let payInfo = '';
             if (m.id === 'card') {
-                payInfo = `<div class="pay-box"><b>راهنمای پرداخت کارت به کارت</b><br>
+                payInfo = `<div class="pay-box"><b>راهنمای پرداخت کارت به کارت</b> (برای کپی شماره کارت روی آن کلیک کنید)<br>
                     مبلغ: <b>${formatPrice(o.total)}</b><br>
-                    ${m.cardNumber ? `شماره کارت: <b style="direction:ltr;display:inline-block">${escapeHTML(m.cardNumber)}</b><br>` : ''}
+                    ${m.cardNumber ? `شماره کارت: <b style="direction:ltr;display:inline-block" onclick="copyCardNumber(this, '${escapeHTML(m.cardNumber)}')">📋 ${escapeHTML(toPersianNum(m.cardNumber))} (کلیک برای کپی)</b><br>` : ''}
                     ${m.cardOwner ? `به نام: <b>${escapeHTML(m.cardOwner)}</b><br>` : ''}
                     ${m.description ? escapeHTML(m.description) : ''}</div>`;
             } else if (m.id === 'cod') {
@@ -271,14 +265,12 @@
                 <h2>سفارش شما ثبت شد</h2>
                 <p>کد پیگیری سفارش:</p>
                 <div class="order-code">${escapeHTML(o.id)}</div>
-                <p>همکاران ما برای تأیید سفارش با شماره <b style="direction:ltr;display:inline-block">${escapeHTML(toPersianNum(o.customer.phone))}</b> تماس می‌گیرند.</p>
+                <p>همکاران ما با شما تماس می‌گیرند.</p>
                 ${payInfo}
-                <p style="font-size:13px">${toPersianNum(o.items.reduce((s, i) => s + i.quantity, 0))} کالا • مبلغ کل ${formatPrice(o.total)}</p>
                 <div class="co-actions"><a class="primary" href="index.html">بازگشت به صفحه اصلی</a><a href="catalog.html">ادامه خرید</a></div>
             </div>`;
         }
 
-        // اگر سبد از جای دیگری (کشو یا تب دیگر) عوض شد خلاصه سفارش به‌روز شود، ولی فرم نیمه‌پر پاک نشود
         window.onCartUpdated = () => {
             if (placedOrder) return;
             if (!cart.length || !document.getElementById('coForm')) { render(); return; }
