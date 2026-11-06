@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="fa" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>درباره ما | مگا ابزار</title>
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('mega_abzar_theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="site-header"></div>
+
+    <main id="pageRoot"></main>
+
+    <div id="site-footer"></div>
+
+    <script src="products.js"></script>
+    <script src="store.js"></script>
+    <script src="layout.js"></script>
+    <script src="cart.js"></script>
+    <script src="pages.js"></script>
+    <script>renderContentPage('about');</script>
+</body>
+</html>

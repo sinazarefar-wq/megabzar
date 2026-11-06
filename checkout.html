@@ -98,19 +98,24 @@
         function loadProfile() { try { return JSON.parse(localStorage.getItem(PROFILE_KEY) || '{}'); } catch (e) { return {}; } }
         function saveProfile(p) { try { localStorage.setItem(PROFILE_KEY, JSON.stringify(p)); } catch (e) {} }
 
-        function copyCardNumber(element, cardNumber) {
-            const cleanNumber = normDigits(cardNumber).replace(/\s+/g, '');
-            navigator.clipboard.writeText(cleanNumber).then(() => {
+        function copyCardNumber(element) {
+            const cleanNumber = normDigits(element.dataset.card || '').replace(/\s+/g, '');
+            const done = () => {
                 const originalText = element.innerHTML;
                 element.innerHTML = '✅ شماره کارت کپی شد!';
                 element.style.color = '#2e9e5b';
-                setTimeout(() => {
-                    element.innerHTML = originalText;
-                    element.style.color = '';
-                }, 2500);
-            }).catch(err => {
-                alert('کپی کردن با خطا مواجه شد.');
-            });
+                setTimeout(() => { element.innerHTML = originalText; element.style.color = ''; }, 2500);
+            };
+            const fallback = () => {
+                const ta = document.createElement('textarea');
+                ta.value = cleanNumber; ta.style.position = 'fixed'; ta.style.opacity = '0';
+                document.body.appendChild(ta); ta.select();
+                let ok = false; try { ok = document.execCommand('copy'); } catch (e) {}
+                ta.remove();
+                if (ok) done(); else alert('کپی خودکار انجام نشد. شماره کارت: ' + cleanNumber);
+            };
+            if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(cleanNumber).then(done, fallback);
+            else fallback();
         }
 
         function summaryHTML() {
@@ -218,7 +223,7 @@
             }
             const bad = cart.filter(i => !getProduct(i.id) || !getProduct(i.id).inStock);
             if (bad.length) {
-                alertBox.innerHTML = `<div class="form-alert">این کالاها دیگر موجود نیستند.</div>`;
+                alertBox.innerHTML = `<div class="form-alert">این کالاها دیگر موجود نیستند: ${bad.map(i => escapeHTML((getProduct(i.id) || {}).title || 'کالای حذف‌شده')).join('، ')}. لطفاً از <a href="cart.html">سبد خرید</a> حذفشان کنید.</div>`;
                 return;
             }
             const method = getSettings().payment.methods.find(m => m.id === fd.get('pay') && m.enabled);
@@ -239,7 +244,12 @@
             };
             const orders = Store.get('orders');
             orders.unshift(order);
-            Store.set('orders', orders);
+            if (!Store.set('orders', orders)) {
+                submitting = false;
+                document.getElementById('btnSubmit').disabled = false;
+                alertBox.innerHTML = '<div class="form-alert">ذخیره سفارش ناموفق بود (حافظه مرورگر پر است یا دسترسی بسته است). سبد خرید شما حفظ شد.</div>';
+                return;
+            }
             saveProfile({ name: order.customer.name, phone: order.customer.phone, province: order.customer.province, city: order.customer.city, address: order.customer.address, postal: order.customer.postal });
             placedOrder = order;
             cart = []; saveAndUpdateCart();
@@ -254,7 +264,7 @@
             if (m.id === 'card') {
                 payInfo = `<div class="pay-box"><b>راهنمای پرداخت کارت به کارت</b> (برای کپی شماره کارت روی آن کلیک کنید)<br>
                     مبلغ: <b>${formatPrice(o.total)}</b><br>
-                    ${m.cardNumber ? `شماره کارت: <b style="direction:ltr;display:inline-block" onclick="copyCardNumber(this, '${escapeHTML(m.cardNumber)}')">📋 ${escapeHTML(toPersianNum(m.cardNumber))} (کلیک برای کپی)</b><br>` : ''}
+                    ${m.cardNumber ? `شماره کارت: <b style="direction:ltr;display:inline-block" data-card="${escapeHTML(m.cardNumber)}" onclick="copyCardNumber(this)">📋 ${escapeHTML(toPersianNum(m.cardNumber))} (کلیک برای کپی)</b><br>` : ''}
                     ${m.cardOwner ? `به نام: <b>${escapeHTML(m.cardOwner)}</b><br>` : ''}
                     ${m.description ? escapeHTML(m.description) : ''}</div>`;
             } else if (m.id === 'cod') {

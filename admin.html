@@ -162,7 +162,7 @@
         const req = f.required ? ' <i>*</i>' : '';
         const label = `<label for="${id}">${E(f.label)}${req}</label>`;
         const help = f.help ? `<div class="help">${E(f.help)}</div>` : '';
-        const cls = 'field' + (f.full || ['textarea', 'lines', 'linkLines', 'json', 'tags'].includes(f.type) ? ' full' : '');
+        const cls = 'field' + (f.full || ['textarea', 'lines', 'linkLines', 'pairs', 'json', 'tags'].includes(f.type) ? ' full' : '');
         const ro = f.readonly ? ' readonly' : '';
         let input = '';
         switch (f.type) {
@@ -180,6 +180,8 @@
                 input = `<textarea id="${id}">${E((value || []).join('\n'))}</textarea>`; break;
             case 'linkLines':
                 input = `<textarea id="${id}" class="mono">${E((value || []).map(x => [x.label, x.href, x.style].filter((v, i) => i < 2 || (f.extra && v)).join(' | ')).join('\n'))}</textarea>`; break;
+            case 'pairs':
+                input = `<textarea id="${id}" class="mono">${E((value || []).map(x => `${x.label} | ${x.value}`).join('\n'))}</textarea>`; break;
             case 'json':
                 input = `<textarea id="${id}" class="mono">${E(JSON.stringify(value ?? null, null, 2))}</textarea>`; break;
             default:
@@ -203,6 +205,11 @@
                     const o = { label: label || '', href: href || '' };
                     if (f.extra) o.style = style === 'primary' ? 'primary' : 'secondary';
                     return o;
+                });
+            case 'pairs':
+                return el.value.split('\n').map(x => x.trim()).filter(Boolean).map(line => {
+                    const i = line.indexOf('|');
+                    return i < 0 ? { label: line, value: '' } : { label: line.slice(0, i).trim(), value: line.slice(i + 1).trim() };
                 });
             case 'json': try { return JSON.parse(el.value || 'null'); } catch (e) { throw new Error(`«${f.label}»: JSON نامعتبر است (${e.message})`); }
             default: return el.value.trim();
@@ -372,7 +379,7 @@
             ...collection('products'), itemName: 'محصول', idKey: 'id', lockOnEdit: ['id'], searchKeys: ['id', 'title', 'brand', 'sku', 'model'], noMove: false,
             columns: [{ key: 'image', label: '', type: 'img' }, { key: 'id', label: 'کد' }, { key: 'title', label: 'عنوان' }, { key: 'brand', label: 'برند' }, { key: 'price', label: 'قیمت', type: 'money' },
                       { key: 'active', label: 'نمایش', type: 'toggle' }, { key: 'inStock', label: 'موجود', type: 'toggle' }, { key: 'freeShipping', label: 'ارسال رایگان', type: 'toggle' }],
-            newItem: list => ({ id: nextNum(list), active: true, title: '', pageTitle: '', brand: (getBrands({ all: true })[0] || {}).name || '', category: (getCategories({ all: true })[0] || {}).id || '', type: (getSettings().powerTypes[0] || {}).value || '', price: 0, oldPrice: 0, inStock: true, freeShipping: false, tags: [], rating: '۴.۵', sales: 0, specs: [], image: '', model: '', powerSpec: '', sku: '' }),
+            newItem: list => ({ id: nextNum(list), active: true, title: '', pageTitle: '', brand: (getBrands({ all: true })[0] || {}).name || '', category: (getCategories({ all: true })[0] || {}).id || '', type: (getSettings().powerTypes[0] || {}).value || '', price: 0, oldPrice: 0, inStock: true, freeShipping: false, tags: [], rating: '۴.۵', sales: 0, specs: [], image: '', model: '', powerSpec: '', sku: '', gallery: [], highlights: [], description: '', specTable: [], variants: [] }),
             fields: [
                 { type: 'section', label: 'اطلاعات اصلی' },
                 { key: 'id', label: 'کد محصول', type: 'number', required: true, min: 1, help: 'در URL صفحه محصول استفاده می‌شود و بعد از ساخت قابل تغییر نیست.' },
@@ -395,7 +402,13 @@
                 { key: 'tags', label: 'نمایش در بخش‌های صفحه اصلی', type: 'tags', options: TAGS },
                 { type: 'section', label: 'تصویر و آمار' },
                 { key: 'image', label: 'آدرس تصویر', required: true, ltr: true, full: true, help: 'آدرس کامل تصویر (https://...) یا نام فایل داخل پوشه سایت.' },
+                { key: 'gallery', label: 'تصاویر اضافه گالری', type: 'lines', help: 'هر آدرس در یک خط. تصویر اصلی همیشه اول گالری است.' },
                 { key: 'rating', label: 'امتیاز' },
+                { type: 'section', label: 'صفحه محصول' },
+                { key: 'highlights', label: 'ویژگی‌های برجسته', type: 'lines', help: 'هر ویژگی در یک خط. اگر خالی باشد این بخش نمایش داده نمی‌شود.' },
+                { key: 'specTable', label: 'ردیف‌های اضافه جدول مشخصات', type: 'pairs', help: 'هر ردیف در یک خط: عنوان | مقدار. (برند، مدل، توان، منبع تغذیه و کد کالا خودکار هستند.)' },
+                { key: 'description', label: 'متن بررسی تخصصی', type: 'textarea' },
+                { key: 'variants', label: 'انتخاب‌گرها (JSON، فقط نمایشی)', type: 'json', help: 'مثال: [{"title":"گارانتی","options":["۱۸ ماهه","۲۴ ماهه"]}] — فعلاً روی قیمت و سبد اثری ندارد.' },
                 { key: 'sales', label: 'امتیاز فروش (برای مرتب‌سازی پرفروش‌ترین)', type: 'number', min: 0 }
             ],
             validate: out => (out.oldPrice && out.oldPrice < out.price ? ['قیمت قبل از تخفیف از قیمت فروش کمتر است؛ احتمالاً جابه‌جا وارد شده.'] : [])
@@ -465,15 +478,28 @@
         posts: {
             ...collection('posts'), itemName: 'مقاله', idKey: 'id', lockOnEdit: ['id'], ordered: true,
             columns: [{ key: 'image', label: '', type: 'img' }, { key: 'title', label: 'عنوان' }, { key: 'meta', label: 'برچسب' }, col.active, col.order],
-            newItem: list => ({ id: nextNum(list), href: 'blog.html', image: '', alt: '', meta: '', title: '', excerpt: '', active: true, order: nextOrder(list) }),
+            newItem: list => { const id = nextNum(list); return { id, href: 'blog.html?post=' + id, content: '', image: '', alt: '', meta: '', title: '', excerpt: '', active: true, order: nextOrder(list) }; },
             fields: [
                 { key: 'id', label: 'شناسه', type: 'number', readonly: true },
                 { key: 'title', label: 'عنوان', required: true, full: true },
                 { key: 'meta', label: 'برچسب (مثلاً راهنمای خرید • ۵ دقیقه)' },
-                { key: 'href', label: 'لینک', ltr: true },
+                { key: 'href', label: 'لینک (پیش‌فرض: blog.html?post=شناسه)', ltr: true },
                 { key: 'excerpt', label: 'خلاصه', type: 'textarea' },
+                { key: 'content', label: 'متن کامل مقاله', type: 'textarea', help: 'خط خالی = پاراگراف جدید • «## » ابتدای خط = عنوان • «- » = لیست • **پررنگ** • [متن](لینک)' },
                 { key: 'image', label: 'آدرس تصویر', required: true, ltr: true, full: true },
                 { key: 'alt', label: 'متن جایگزین تصویر' },
+                { key: 'active', label: 'نمایش', type: 'checkbox' },
+                { key: 'order', label: 'ترتیب', type: 'number', min: 1 }
+            ]
+        },
+        faq: {
+            ...collection('faq'), itemName: 'سوال', idKey: 'id', lockOnEdit: ['id'], ordered: true, searchKeys: ['q', 'a'],
+            columns: [{ key: 'q', label: 'سوال' }, col.active, col.order],
+            newItem: list => ({ id: nextNum(list), q: '', a: '', active: true, order: nextOrder(list) }),
+            fields: [
+                { key: 'id', label: 'شناسه', type: 'number', readonly: true },
+                { key: 'q', label: 'سوال', required: true, full: true },
+                { key: 'a', label: 'پاسخ', type: 'textarea', required: true, help: 'می‌توانید از {{shipFee}} {{shipRule}} {{phone}} {{payments}} و ... استفاده کنید تا با تنظیمات فروشگاه خودکار به‌روز شوند. قالب: **پررنگ**، «- » لیست، [متن](لینک)' },
                 { key: 'active', label: 'نمایش', type: 'checkbox' },
                 { key: 'order', label: 'ترتیب', type: 'number', min: 1 }
             ]
@@ -566,8 +592,32 @@
         { key: 'catalog.priceMax', label: 'حداکثر اسلایدر قیمت', type: 'number', min: 1 }
     ];
 
+    const pageSectionsSchema = key => ({
+        get: () => (Store.get('pages')[key] || {}).sections || [],
+        set: v => { const all = Store.get('pages'); all[key] = { ...(all[key] || {}), sections: v }; return Store.set('pages', all); },
+        itemName: 'بخش', idKey: 'id', lockOnEdit: ['id'], noDelete: false,
+        columns: [{ key: 'title', label: 'عنوان بخش' }, { key: 'id', label: 'شناسه (لینک #)' }, col.active],
+        newItem: () => ({ id: 'sec-' + Date.now().toString(36), title: '', body: '', active: true }),
+        fields: [
+            { key: 'id', label: 'شناسه (انگلیسی، برای لینک #بخش)', ltr: true, required: true },
+            { key: 'title', label: 'عنوان بخش', required: true, full: true },
+            { key: 'body', label: 'متن', type: 'textarea', required: true, help: 'خط خالی = پاراگراف • «## » = زیرعنوان • «- » = لیست • **پررنگ** • [متن](لینک) • توکن‌ها: {{phone}} {{address}} {{hours}} {{email}} {{shipFee}} {{shipRule}} {{payments}} {{storeName}}' },
+            { key: 'active', label: 'نمایش', type: 'checkbox' }
+        ]
+    });
+    const pageMetaSchema = key => ({
+        get: () => Store.get('pages')[key] || {},
+        set: v => { const all = Store.get('pages'); all[key] = { ...(all[key] || {}), title: v.title, intro: v.intro, metaDescription: v.metaDescription }; return Store.set('pages', all); },
+        fields: [
+            { key: 'title', label: 'عنوان صفحه', required: true, full: true },
+            { key: 'intro', label: 'متن معرفی زیر عنوان', type: 'textarea' },
+            { key: 'metaDescription', label: 'توضیح متا (برای گوگل)', type: 'textarea' }
+        ]
+    });
+
     // ---------- صفحه‌ها ----------
-    const STATUS = { new: 'جدید', processing: 'در حال پردازش', shipped: 'ارسال شد', delivered: 'تحویل شد', canceled: 'لغو شد' };
+    const STATUS = ORDER_STATUS; // از store.js
+    const PAGE_KEYS = { about: 'درباره ما', contact: 'تماس با ما', guide: 'راهنمای خرید و ارسال', terms: 'قوانین و بازگشت کالا' };
     const head = (title, hint, extra = '') => `<div class="page-head"><div><h2>${title}</h2>${hint ? `<div class="hint">${hint}</div>` : ''}</div><div class="actions">${extra}</div></div>`;
     const resetBtn = name => `<button class="btn sm danger" data-reset="${name}">بازگرداندن به پیش‌فرض</button>`;
 
@@ -583,6 +633,7 @@
                     <div class="stat"><span>محصولات فعال</span><b>${toPersianNum(prods.filter(p => p.active !== false).length)} / ${toPersianNum(prods.length)}</b></div>
                     <div class="stat"><span>محصولات ناموجود</span><b>${toPersianNum(prods.filter(p => p.active !== false && !p.inStock).length)}</b></div>
                     <div class="stat"><span>ارسال رایگان</span><b>${toPersianNum(prods.filter(p => p.freeShipping).length)}</b></div>
+                    <div class="stat"><span>پیام‌های خوانده‌نشده</span><b>${toPersianNum(Store.get('messages').filter(m => m.status === 'new').length)}</b></div>
                 </div>
                 <div class="card"><h3>آخرین سفارش‌ها</h3>${orders.length ? `<div class="table-wrap"><table><thead><tr><th>کد</th><th>مشتری</th><th>مبلغ</th><th>وضعیت</th><th>تاریخ</th></tr></thead><tbody>${orders.slice(0, 6).map(o => `<tr><td>${E(o.id)}</td><td>${E(o.customer.name)}</td><td>${money(o.total)}</td><td><span class="tag">${E(STATUS[o.status] || o.status)}</span></td><td>${E(fmtDate(o.createdAt))}</td></tr>`).join('')}</tbody></table></div>` : '<div class="empty">هنوز سفارشی ثبت نشده است.</div>'}</div>
                 <div class="warn-box"><b>یادآوری:</b> داده‌ها فعلاً فقط در همین مرورگر ذخیره می‌شوند و این پنل رمز عبور ندارد؛ برای سایت واقعی باید به بک‌اند و احراز هویت وصل شود.</div>`;
@@ -613,12 +664,47 @@
                 const orders = Store.get('orders'); orders[+s.closest('tr').dataset.i].status = s.value; Store.set('orders', orders); updateBadge(); toast('وضعیت ذخیره شد');
             };
         } },
+        messages: { title: 'پیام‌های مشتریان', icon: '✉️', render() {
+            const TYPES = { contact: 'مشاوره / پرسش', order: 'پیگیری سفارش', complaint: 'شکایت', suggestion: 'پیشنهاد' };
+            const draw = () => {
+                const msgs = Store.get('messages');
+                view.innerHTML = head('پیام‌های مشتریان', 'پیام‌هایی که از فرم صفحه «تماس با ما» ثبت شده‌اند.') + (msgs.length ? `<div class="table-wrap"><table><thead><tr><th>تاریخ</th><th>نام</th><th>موبایل</th><th>نوع</th><th>پیام</th><th>وضعیت</th><th></th></tr></thead><tbody>
+                    ${msgs.map((m, i) => `<tr data-i="${i}"><td>${E(fmtDate(m.createdAt))}</td><td>${E(m.name)}</td><td dir="ltr">${E(m.phone)}</td><td>${E(TYPES[m.type] || m.type || '')}</td><td><div class="ttl">${E((m.message || '').slice(0, 70))}${(m.message || '').length > 70 ? '…' : ''}</div></td>
+                    <td><span class="tag">${m.status === 'new' ? 'خوانده‌نشده' : 'خوانده‌شده'}</span></td>
+                    <td class="acts"><button class="btn sm" data-act="view">مشاهده</button> <button class="btn sm danger" data-act="del">حذف</button></td></tr>`).join('')}</tbody></table></div>` : '<div class="empty card">هنوز پیامی ثبت نشده است.</div>');
+            };
+            draw();
+            view.onclick = e => {
+                const b = e.target.closest('[data-act]'); if (!b) return;
+                const i = +b.closest('tr').dataset.i, msgs = Store.get('messages'), m = msgs[i];
+                if (b.dataset.act === 'del') { if (confirm('این پیام حذف شود؟')) { msgs.splice(i, 1); Store.set('messages', msgs); draw(); updateBadge(); toast('حذف شد'); } return; }
+                if (m.status === 'new') { m.status = 'read'; Store.set('messages', msgs); draw(); updateBadge(); }
+                openModal(`<h3>پیام ${E(m.id || '')}</h3><div class="order-detail"><dl>
+                    <dt>تاریخ</dt><dd>${E(fmtDate(m.createdAt))}</dd><dt>نام</dt><dd>${E(m.name)}</dd>
+                    <dt>موبایل</dt><dd dir="ltr" style="text-align:right"><a href="tel:${E(m.phone)}">${E(m.phone)}</a></dd>
+                    <dt>نوع</dt><dd>${E(TYPES[m.type] || m.type || '')}</dd><dt>متن</dt><dd style="white-space:pre-wrap;line-height:2">${E(m.message)}</dd></dl></div>
+                    <div class="foot"><button class="btn" data-close>بستن</button></div>`, (back, close) => back.querySelector('[data-close]').onclick = close);
+            };
+        } },
+        faq: { title: 'سوالات متداول', icon: '❓', render: () => crud('faq', 'سوالات متداول', 'سوال و پاسخ‌های صفحه FAQ. ترتیب را با فلش‌ها تغییر دهید.') },
+        contentPages: { title: 'صفحات محتوایی', icon: '📄', render() {
+            const sel = (sessionStorage.getItem('adminPageKey') || 'about');
+            const key = sel in PAGE_KEYS ? sel : 'about';
+            view.innerHTML = head('صفحات محتوایی', 'متن صفحات درباره ما، تماس، راهنما و قوانین. اطلاعات تماس (تلفن، آدرس، ساعات کاری) از «تنظیمات» می‌آید و با توکن‌ها در متن قرار می‌گیرد.', resetBtn('pages')) + `
+                <div class="actions" style="margin-bottom:14px"><label for="pgSel" style="font-weight:700">صفحه:</label>
+                <select id="pgSel">${Object.entries(PAGE_KEYS).map(([k, v]) => `<option value="${k}" ${k === key ? 'selected' : ''}>${v}</option>`).join('')}</select>
+                <a class="btn sm" href="${key}.html" target="_blank" rel="noopener">مشاهده صفحه ↗</a></div>
+                <div id="pgMeta"></div><h3 style="margin:26px 0 12px">بخش‌های صفحه</h3><div id="pgSecs"></div>`;
+            $('#pgSel').onchange = e => { try { sessionStorage.setItem('adminPageKey', e.target.value); } catch (_) {} PAGES.contentPages.render(); };
+            objectForm($('#pgMeta'), pageMetaSchema(key));
+            listEditor($('#pgSecs'), pageSectionsSchema(key));
+        } },
         products: { title: 'محصولات', icon: '📦', render: () => crud('products', 'محصولات', 'قیمت، موجودی، ارسال رایگان و نمایش هر محصول. سه کلید آخر جدول بدون باز کردن فرم ذخیره می‌شوند.') },
         categories: { title: 'دسته‌بندی‌ها و مگامنو', icon: '🗂️', render: () => crud('categories', 'دسته‌بندی‌ها و مگامنو', 'دسته‌ها در مگامنو، صفحه اصلی، کاتالوگ و موبایل نمایش داده می‌شوند.') },
         brands: { title: 'برندها', icon: '🏷️', render: () => crud('brands', 'برندها', 'برندهای صفحه اصلی و فیلتر کاتالوگ.') },
         slides: { title: 'اسلایدر صفحه اصلی', icon: '🖼️', render: () => crud('slides', 'اسلایدر صفحه اصلی', 'اسلایدهای بالای صفحه اصلی.') },
         banners: { title: 'بنرهای تبلیغاتی', icon: '📣', render: () => crud('banners', 'بنرهای تبلیغاتی', 'بنرهای دوقلوی صفحه اصلی.') },
-        posts: { title: 'مجله', icon: '📰', render: () => crud('posts', 'کارت‌های مجله', 'مقاله‌های نمایش‌داده‌شده در صفحه اصلی.') },
+        posts: { title: 'مجله', icon: '📰', render: () => crud('posts', 'مقالات مجله', 'کارت‌های صفحه اصلی و صفحه مجله. متن کامل را در فرم ویرایش بنویسید؛ لینک پیش‌فرض blog.html?post=شناسه است.') },
         homeSections: { title: 'بخش‌های صفحه اصلی', icon: '🧩', render: () => crud('homeSections', 'بخش‌های صفحه اصلی', 'ترتیب نمایش بخش‌ها را با فلش‌ها تغییر دهید و هر بخش را روشن/خاموش کنید.', 'homeSections') },
         nav: { title: 'منوی هدر', icon: '🧭', render() {
             view.innerHTML = head('منوی هدر', 'ترتیب و عنوان لینک‌های منوی بالای سایت.', resetBtn('nav') + ' ' + resetBtn('megaBottom')) + '<div id="h1"></div><h3 style="margin:26px 0 12px">نوار پایین مگامنو</h3><div id="h2"></div>';
@@ -671,10 +757,10 @@
     }
 
     // ---------- ناوبری ----------
-    const NAV_GROUPS = [['dashboard', 'orders'], ['products', 'categories', 'brands'], ['slides', 'banners', 'posts', 'homeSections'], ['nav', 'footer', 'settings'], ['tools']];
+    const NAV_GROUPS = [['dashboard', 'orders', 'messages'], ['products', 'categories', 'brands'], ['slides', 'banners', 'posts', 'homeSections'], ['contentPages', 'faq'], ['nav', 'footer', 'settings'], ['tools']];
     function renderNav(active) {
-        const unseen = Store.get('orders').filter(o => o.status === 'new').length;
-        $('#nav').innerHTML = NAV_GROUPS.map(g => g.map(k => `<a href="#${k}" data-page="${k}" class="${k === active ? 'active' : ''}"><span aria-hidden="true">${PAGES[k].icon}</span> ${PAGES[k].title}${k === 'orders' && unseen ? `<span class="badge">${toPersianNum(unseen)}</span>` : ''}</a>`).join('')).join('<div class="sep"></div>');
+        const unseen = Store.get('orders').filter(o => o.status === 'new').length, unreadMsgs = Store.get('messages').filter(m => m.status === 'new').length;
+        $('#nav').innerHTML = NAV_GROUPS.map(g => g.map(k => `<a href="#${k}" data-page="${k}" class="${k === active ? 'active' : ''}"><span aria-hidden="true">${PAGES[k].icon}</span> ${PAGES[k].title}${k === 'orders' && unseen ? `<span class="badge">${toPersianNum(unseen)}</span>` : ''}${k === 'messages' && unreadMsgs ? `<span class="badge">${toPersianNum(unreadMsgs)}</span>` : ''}</a>`).join('')).join('<div class="sep"></div>');
     }
     function updateBadge() { renderNav(location.hash.slice(1) in PAGES ? location.hash.slice(1) : 'dashboard'); }
     function show(key) {
@@ -690,7 +776,7 @@
     // بازگردانی یک مجموعه به پیش‌فرض (دکمه‌های data-reset)
     document.addEventListener('click', e => {
         const b = e.target.closest('[data-reset]'); if (!b) return;
-        const names = { nav: ['nav', 'megaBottom'] }[b.dataset.reset] || [b.dataset.reset];
+        const names = { nav: ['nav', 'megaBottom'], pages: ['pages'] }[b.dataset.reset] || [b.dataset.reset];
         if (!confirm('این بخش به مقدار پیش‌فرض برگردد؟ تغییرات شما در آن پاک می‌شود.')) return;
         names.forEach(n => Store.reset(n)); toast('بازگردانده شد'); show(location.hash.slice(1));
     });

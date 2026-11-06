@@ -108,42 +108,19 @@
             <div class="main-image-container" id="zoomContainer">
                 <img src="https://images.unsplash.com/photo-1504148455328-c376907d081c?q=80&w=800&auto=format&fit=crop" alt="تصویر محصول" class="main-product-img" id="mainProductImg">
             </div>
-            <div class="thumb-list" id="thumbList">
-                <div class="thumb-item active" onclick="changeImage(this, 'https://images.unsplash.com/photo-1504148455328-c376907d081c?q=80&w=800&auto=format&fit=crop')"><img src="https://images.unsplash.com/photo-1504148455328-c376907d081c?q=80&w=200&auto=format&fit=crop" alt=""></div>
-                <div class="thumb-item" onclick="changeImage(this, 'https://images.unsplash.com/photo-1572981779307-38b8cabb2407?q=80&w=800&auto=format&fit=crop')"><img src="https://images.unsplash.com/photo-1572981779307-38b8cabb2407?q=80&w=200&auto=format&fit=crop" alt=""></div>
-                <div class="thumb-item" onclick="changeImage(this, 'https://images.unsplash.com/photo-1581092335397-9583eb92d232?q=80&w=800&auto=format&fit=crop')"><img src="https://images.unsplash.com/photo-1581092335397-9583eb92d232?q=80&w=200&auto=format&fit=crop" alt=""></div>
-                <div class="thumb-item" onclick="changeImage(this, 'https://images.unsplash.com/photo-1586864387967-d02ef85d93e8?q=80&w=800&auto=format&fit=crop')"><img src="https://images.unsplash.com/photo-1586864387967-d02ef85d93e8?q=80&w=200&auto=format&fit=crop" alt=""></div>
-            </div>
+            <div class="thumb-list" id="thumbList"></div>
         </div>
         <div class="product-details-section">
             <span class="product-brand-label" id="prodBrandLabel">برند اصلی: DEWALT</span>
             <h1 class="product-main-title" id="prodMainTitle">دریل چکشی دیوالت مدل DWD024 توان ۶۵۰ وات اورجینال</h1>
             <div class="product-meta-row">
-                <div class="product-rating" id="prodRating">⭐ ۴.۹ (از ۲۸ دیدگاه خریداران)</div>
+                <div class="product-rating" id="prodRating"></div>
                 <div>کد کالا: <strong style="color: var(--text-color);" id="prodSku">MEGA-DW-024</strong></div>
             </div>
-            <div class="variants-box">
-                <span class="variant-title">انتخاب پکیج و متعلقات:</span>
-                <div class="variant-options">
-                    <button class="variant-chip active" onclick="selectVariant(this)">پکیج استاندارد شرکتی</button>
-                    <button class="variant-chip" onclick="selectVariant(this)">پکیج کمبو + ست مته و کیف BMC</button>
-                </div>
-            </div>
-            <div class="variants-box">
-                <span class="variant-title">انتخاب گارانتی و ضمانت اصالت:</span>
-                <div class="variant-options">
-                    <button class="variant-chip active" onclick="selectVariant(this)">گارانتی ۱۸ ماهه مگا ابزار + تضمین اصالت بانه</button>
-                    <button class="variant-chip" onclick="selectVariant(this)">۲۴ ماه ضمانت طلایی تعویض قطعات صنعتی</button>
-                </div>
-            </div>
-            <div>
+                        <div id="variantsWrap"></div>
+            <div id="highlightsWrap">
                 <h4 style="margin: 0 0 10px 0; font-size: 14px;">ویژگی‌های برجسته دستگاه:</h4>
-                <ul class="features-bullet-list" id="prodHighlights">
-                    <li>موتور پرقدرت صنعتی با سیم‌پیچ ۱۰۰٪ مس و سیستم خنک‌کننده پیشرفته</li>
-                    <li>طراحی ارگونومیک، ضد لرزش و بسیار خوش‌دست برای کار طولانی در کارگاه</li>
-                    <li>کلید دیمردار ضدغبار با قابلیت کنترل سرعت دقیق و چپ‌گرد/راست‌گرد</li>
-                    <li>تامین مستقیم از بانه با تضمین ۱۰۰٪ اصالت فیزیکی کالا و مهلت تست ۷ روزه</li>
-                </ul>
+                <ul class="features-bullet-list" id="prodHighlights"></ul>
             </div>
         </div>
         <div class="buy-box">
@@ -173,20 +150,11 @@
             <button class="tab-btn" onclick="switchTab(event, 'tabReviews')">دیدگاه خریداران</button>
         </div>
         <div id="tabSpecs" class="tab-content active">
-            <table class="specs-table" id="specsTableBody">
-                <tr><td>برند سازنده</td><td id="specBrand">دیوالت (DEWALT)</td></tr>
-                <tr><td>مدل دستگاه</td><td id="specModel">DWD024</td></tr>
-                <tr><td>توان و قدرت</td><td id="specPower">۶۵۰ وات واقعی</td></tr>
-                <tr><td>سرعت گردش آزاد</td><td>۰ تا ۲۸۰۰ دور در دقیقه</td></tr>
-                <tr><td>سیستم گیربکس و ضربه</td><td>گیربکس فولادی تقویت‌شده</td></tr>
-                <tr><td>جنس سیم‌پیچ موتور</td><td>۱۰۰٪ مس خالص با پوشش اپوکسی ضدسایش</td></tr>
-                <tr><td>اقلام همراه</td><td>دسته کمکی ۳۶۰ درجه، خط‌کش عمق‌سنج، دفترچه راهنما</td></tr>
-                <tr><td>تضمین اصالت</td><td>واردات مستقیم بانه با هولوگرام اصالت</td></tr>
-            </table>
+            <table class="specs-table" id="specsTableBody"></table>
         </div>
         <div id="tabDesc" class="tab-content">
             <h3 style="margin-top: 0; color: var(--accent-color);" id="descHeading">بررسی تخصصی دریل چکشی دیوالت DWD024</h3>
-            <p style="line-height: 1.9; font-size: 14px; color: var(--text-muted);" id="descBody">این ابزار صنعتی یکی از محبوب‌ترین و بادوام‌ترین دستگاه‌ها در پروژه‌های ساختمانی، نصابی و کارگاه‌های صنعتی است.</p>
+            <p style="line-height: 1.9; font-size: 14px; color: var(--text-muted);" id="descBody"></p>
         </div>
         <div id="tabReviews" class="tab-content">
             <h3 style="margin-top: 0; font-size: 16px;">نظرات ثبت‌شده توسط خریداران</h3>
@@ -244,19 +212,34 @@
             document.getElementById('prodSku').innerText = prod.sku;
             document.getElementById('mainProductImg').src = img;
 
-            const firstThumbImg = document.querySelector('#thumbList .thumb-item img');
-            if (firstThumbImg) {
-                firstThumbImg.src = img;
-                document.querySelector('#thumbList .thumb-item').setAttribute('onclick', `changeImage(this, '${img}')`);
-            }
+            // گالری: تصویر اصلی + تصاویر اضافه محصول (اگر فقط یک تصویر باشد نوار بندانگشتی‌ها مخفی می‌شود)
+            const gallery = [prod.image, ...(prod.gallery || []).filter(g => g && g !== prod.image)];
+            const thumbList = document.getElementById('thumbList');
+            thumbList.style.display = gallery.length > 1 ? '' : 'none';
+            thumbList.innerHTML = gallery.map((g, i) => `<div class="thumb-item${i === 0 ? ' active' : ''}" data-src="${escapeHTML(imageUrl(g, 800))}"><img src="${escapeHTML(imageUrl(g, 200))}" alt="نما ${toPersianNum(i + 1)}"></div>`).join('');
+            thumbList.querySelectorAll('.thumb-item').forEach(t => t.addEventListener('click', () => changeImage(t, t.dataset.src)));
+
+            // امتیاز (فقط مقدار ثبت‌شده برای محصول؛ تعداد دیدگاه ساختگی نمایش داده نمی‌شود)
+            document.getElementById('prodRating').innerText = prod.rating ? `⭐ ${prod.rating}` : '';
+
+            // انتخاب‌گرها (فقط نمایشی)، ویژگی‌های برجسته، جدول مشخصات و توضیحات: همه از داده محصول
+            document.getElementById('variantsWrap').innerHTML = (prod.variants || []).map(v => `
+                <div class="variants-box">
+                    <span class="variant-title">${escapeHTML(v.title)}:</span>
+                    <div class="variant-options">${(v.options || []).map((o, i) => `<button class="variant-chip${i === 0 ? ' active' : ''}" onclick="selectVariant(this)">${escapeHTML(o)}</button>`).join('')}</div>
+                </div>`).join('');
+            const hl = prod.highlights || [];
+            document.getElementById('highlightsWrap').style.display = hl.length ? '' : 'none';
+            document.getElementById('prodHighlights').innerHTML = hl.map(h => `<li>${escapeHTML(h)}</li>`).join('');
+            const typeLabel = (getSettings().powerTypes.find(t => t.value === prod.type) || {}).label || prod.type;
+            const specRows = [['برند سازنده', prod.brand], ['مدل دستگاه', prod.model], ['توان و قدرت', prod.powerSpec], ['منبع تغذیه', typeLabel], ['کد کالا', prod.sku], ...(prod.specTable || []).map(r => [r.label, r.value])].filter(r => r[1]);
+            document.getElementById('specsTableBody').innerHTML = specRows.map(r => `<tr><td>${escapeHTML(r[0])}</td><td>${escapeHTML(r[1])}</td></tr>`).join('');
+            document.getElementById('descBody').innerText = prod.description || 'توضیحات تخصصی برای این محصول هنوز ثبت نشده است.';
 
             document.getElementById('prodOldPrice').innerText = oldPriceText;
             document.getElementById('prodOldPrice').style.display = oldPriceText ? 'block' : 'none';
             document.getElementById('prodNewPrice').innerText = formatPrice(prod.price);
 
-            document.getElementById('specBrand').innerText = prod.brand;
-            document.getElementById('specModel').innerText = prod.model || '—';
-            document.getElementById('specPower').innerText = prod.powerSpec;
             document.getElementById('descHeading').innerText = `بررسی تخصصی ${pageTitle}`;
 
             const stockText = document.getElementById('stockText');
@@ -270,7 +253,7 @@
             const sh = getSettings().shipping;
             document.getElementById('prodShipCost').innerText =
                 !sh.enabled || prod.freeShipping ? 'رایگان'
-                : sh.freeFromEnabled ? `${formatPrice(sh.fee)} (رایگان برای خرید بالای چه ${formatPrice(sh.freeFrom)})`
+                : sh.freeFromEnabled ? `${formatPrice(sh.fee)} (رایگان برای خرید بالای ${formatPrice(sh.freeFrom)})`
                 : formatPrice(sh.fee);
 
             const others = PRODUCTS.filter(x => x.id !== prod.id);
@@ -337,6 +320,43 @@
             const cardWidth = track.firstElementChild.offsetWidth + 14;
             track.scrollBy({ left: direction * (cardWidth * 2), behavior: 'smooth' });
         }
+
+        // اسکرول با درگ و ماتریس شتاب برای ردیف محصولات مشابه (دسکتاپ)
+        window.globalDragFlag = false;
+        document.querySelectorAll('.h-scroll-track').forEach(track => {
+            let isDown = false, startX = 0, startScrollLeft = 0, velX = 0, momentumID = null;
+            track.addEventListener('dragstart', e => e.preventDefault());
+            track.addEventListener('mousedown', e => {
+                if (e.button !== 0) return;
+                isDown = true; window.globalDragFlag = false;
+                track.classList.add('dragging');
+                cancelAnimationFrame(momentumID);
+                startX = e.pageX; startScrollLeft = track.scrollLeft; velX = 0;
+            });
+            track.addEventListener('mousemove', e => {
+                if (!isDown) return;
+                e.preventDefault();
+                const walk = (e.pageX - startX) * 1.35;
+                if (Math.abs(walk) > 6) window.globalDragFlag = true;
+                const prev = track.scrollLeft;
+                track.scrollLeft = startScrollLeft - walk;
+                velX = track.scrollLeft - prev;
+            });
+            const stopDrag = () => {
+                if (!isDown) return;
+                isDown = false; track.classList.remove('dragging');
+                function step() {
+                    if (Math.abs(velX) > 0.5) {
+                        track.scrollLeft += velX; velX *= 0.92;
+                        momentumID = requestAnimationFrame(step);
+                    }
+                }
+                momentumID = requestAnimationFrame(step);
+                setTimeout(() => { window.globalDragFlag = false; }, 60);
+            };
+            track.addEventListener('mouseup', stopDrag);
+            track.addEventListener('mouseleave', stopDrag);
+        });
 
         loadProductFromUrl();
     </script>

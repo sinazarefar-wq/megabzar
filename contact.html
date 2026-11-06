@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="fa" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تماس با ما | مگا ابزار</title>
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('mega_abzar_theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        .field { display: flex; flex-direction: column; gap: 6px; }
+        .field.full { grid-column: 1 / -1; }
+        .field label { font-size: 13px; font-weight: 700; }
+        .field label i { color: var(--accent-color); font-style: normal; }
+        .field input, .field textarea, .field select { background: var(--secondary-bg); color: var(--text-color); border: 1px solid var(--border-color); border-radius: 10px; padding: 11px 13px; font-family: inherit; font-size: 14px; transition: border-color .2s; }
+        .field textarea { min-height: 110px; resize: vertical; }
+        .field input:focus, .field textarea:focus, .field select:focus { border-color: var(--accent-color); }
+        .field.invalid input, .field.invalid textarea, .field.invalid select { border-color: #e53935; }
+        .field .err { color: #e53935; font-size: 12px; display: none; }
+        .field.invalid .err { display: block; }
+        .field input[type="tel"], .field input[inputmode="numeric"] { direction: ltr; text-align: right; }
+        .form-alert { background: rgba(229,57,53,.12); border: 1px solid #e53935; border-radius: 10px; padding: 12px 14px; font-size: 13.5px; margin-bottom: 14px; line-height: 1.9; }
+        .form-ok { background: rgba(46,158,91,.12); border: 1px solid #2e9e5b; border-radius: 10px; padding: 14px 16px; font-size: 14px; margin-bottom: 14px; line-height: 2; }
+        @media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } }
+        .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-bottom: 18px; }
+        .info-box { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 14px; padding: 16px; }
+        .info-box span { display: block; font-size: 12.5px; color: var(--text-muted); margin-bottom: 6px; }
+        .info-box b { font-size: 15px; line-height: 1.9; }
+        .info-box a { color: var(--text-color); text-decoration: none; }
+        .info-box a:hover { color: var(--accent-color); }
+    </style>
+</head>
+<body>
+    <div id="site-header"></div>
+
+    <main id="pageRoot"></main>
+
+    <div id="site-footer"></div>
+
+    <script src="products.js"></script>
+    <script src="store.js"></script>
+    <script src="layout.js"></script>
+    <script src="cart.js"></script>
+    <script src="pages.js"></script>
+    <script>
+        const esc = escapeHTML;
+        const normDigits = s => String(s).replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d));
+        const LAST_KEY = 'mega_abzar_last_message';
+        const TYPES = [{ v: 'contact', l: 'مشاوره / پرسش' }, { v: 'order', l: 'پیگیری سفارش' }, { v: 'complaint', l: 'شکایت' }, { v: 'suggestion', l: 'پیشنهاد' }];
+
+        function infoHTML() {
+            const st = getSettings().store, soc = Store.get('footer').social.filter(x => x.enabled !== false && x.url);
+            const telHref = 'tel:' + normDigits(st.phone).replace(/[^\d+]/g, '');
+            return `<div class="info-grid">
+                <div class="info-box"><span>شماره تماس</span><b><a href="${esc(telHref)}" dir="ltr">${esc(st.phone)}</a></b></div>
+                <div class="info-box"><span>ساعت پاسخگویی</span><b>${esc(st.workingHours)}</b></div>
+                <div class="info-box"><span>آدرس فروشگاه مرکزی</span><b>${esc(st.address)}</b></div>
+                ${st.email ? `<div class="info-box"><span>ایمیل</span><b><a href="mailto:${esc(st.email)}" dir="ltr">${esc(st.email)}</a></b></div>` : ''}
+                ${soc.length ? `<div class="info-box"><span>شبکه‌های اجتماعی</span><b>${soc.map(x => `<a href="${esc(x.url)}" target="_blank" rel="noopener">${esc(x.title || x.id)}</a>`).join('  •  ')}</b></div>` : ''}
+            </div>`;
+        }
+
+        function formHTML() {
+            return `<section class="cp-card" id="complaints">
+                <h2>ثبت پیام، شکایت یا پیشنهاد</h2>
+                <div id="formMsg"></div>
+                <form id="msgForm" novalidate>
+                    <div class="form-grid">
+                        <div class="field"><label for="m_type">موضوع</label><select id="m_type">${TYPES.map(t => `<option value="${t.v}">${esc(t.l)}</option>`).join('')}</select></div>
+                        <div class="field"><label for="m_name">نام و نام خانوادگی <i>*</i></label><input id="m_name" autocomplete="name"><span class="err"></span></div>
+                        <div class="field"><label for="m_phone">شماره موبایل <i>*</i></label><input id="m_phone" type="tel" inputmode="numeric" autocomplete="tel" placeholder="۰۹۱۲۱۲۳۴۵۶۷"><span class="err"></span></div>
+                        <div class="field full"><label for="m_text">پیام شما <i>*</i></label><textarea id="m_text" maxlength="2000"></textarea><span class="err"></span></div>
+                    </div>
+                    <div style="margin-top:16px"><button type="submit" class="cp-btn" id="m_btn">ارسال پیام</button></div>
+                </form>
+            </section>`;
+        }
+
+        function setErr(id, msg) {
+            const f = document.getElementById(id).closest('.field');
+            f.classList.toggle('invalid', !!msg); f.querySelector('.err').textContent = msg || '';
+            return !msg;
+        }
+
+        renderContentPage('contact', { before: infoHTML(), after: formHTML() });
+
+        // اگر قبلاً در صفحه‌ی خرید اطلاعات وارد شده، فرم را پیش‌پر کن
+        try {
+            const prof = JSON.parse(localStorage.getItem('mega_abzar_checkout_profile') || '{}');
+            if (prof.name) document.getElementById('m_name').value = prof.name;
+            if (prof.phone) document.getElementById('m_phone').value = prof.phone;
+        } catch (e) {}
+
+        document.getElementById('msgForm').addEventListener('submit', e => {
+            e.preventDefault();
+            const box = document.getElementById('formMsg'); box.innerHTML = '';
+            const d = { type: document.getElementById('m_type').value, name: document.getElementById('m_name').value.trim(), phone: normDigits(document.getElementById('m_phone').value).replace(/\s|-/g, ''), message: document.getElementById('m_text').value.trim() };
+            let ok = true;
+            ok = setErr('m_name', d.name.length < 3 ? 'نام را کامل وارد کنید.' : '') && ok;
+            ok = setErr('m_phone', /^09\d{9}$/.test(d.phone) ? '' : 'شماره موبایل معتبر نیست.') && ok;
+            ok = setErr('m_text', d.message.length < 10 ? 'پیام را کمی کامل‌تر بنویسید (حداقل ۱۰ حرف).' : '') && ok;
+            if (!ok) return;
+            // جلوگیری از ارسال پشت‌سرهم (نه امنیت واقعی؛ کنترل واقعی سمت سرور لازم است)
+            let last = 0; try { last = +localStorage.getItem(LAST_KEY) || 0; } catch (e) {}
+            if (Date.now() - last < 30000) { box.innerHTML = '<div class="form-alert">لطفاً چند ثانیه بعد دوباره تلاش کنید.</div>'; return; }
+            const list = Store.get('messages');
+            const msg = { id: 'MSG-' + Date.now().toString(36).toUpperCase(), createdAt: new Date().toISOString(), status: 'new', ...d };
+            list.unshift(msg);
+            if (!Store.set('messages', list)) { box.innerHTML = '<div class="form-alert">ثبت پیام ناموفق بود. لطفاً با شماره تلفن تماس بگیرید.</div>'; return; }
+            try { localStorage.setItem(LAST_KEY, String(Date.now())); } catch (e) {}
+            e.target.reset();
+            box.innerHTML = `<div class="form-ok">پیام شما ثبت شد. کد پیگیری پیام: <b dir="ltr">${esc(msg.id)}</b><br>همکاران ما در اولین فرصت با شما تماس می‌گیرند.</div>`;
+        });
+    </script>
+</body>
+</html>

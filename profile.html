@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="fa" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حساب کاربری | مگا ابزار</title>
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('mega_abzar_theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        .field { display: flex; flex-direction: column; gap: 6px; }
+        .field.full { grid-column: 1 / -1; }
+        .field label { font-size: 13px; font-weight: 700; }
+        .field label i { color: var(--accent-color); font-style: normal; }
+        .field input, .field textarea, .field select { background: var(--secondary-bg); color: var(--text-color); border: 1px solid var(--border-color); border-radius: 10px; padding: 11px 13px; font-family: inherit; font-size: 14px; transition: border-color .2s; }
+        .field textarea { min-height: 110px; resize: vertical; }
+        .field input:focus, .field textarea:focus, .field select:focus { border-color: var(--accent-color); }
+        .field.invalid input, .field.invalid textarea, .field.invalid select { border-color: #e53935; }
+        .field .err { color: #e53935; font-size: 12px; display: none; }
+        .field.invalid .err { display: block; }
+        .field input[type="tel"], .field input[inputmode="numeric"] { direction: ltr; text-align: right; }
+        .form-alert { background: rgba(229,57,53,.12); border: 1px solid #e53935; border-radius: 10px; padding: 12px 14px; font-size: 13.5px; margin-bottom: 14px; line-height: 1.9; }
+        .form-ok { background: rgba(46,158,91,.12); border: 1px solid #2e9e5b; border-radius: 10px; padding: 14px 16px; font-size: 14px; margin-bottom: 14px; line-height: 2; }
+        @media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } }
+        .pf-note { background: var(--accent-soft); border: 1px solid var(--accent-color); border-radius: 12px; padding: 12px 16px; font-size: 13.5px; line-height: 2; margin-bottom: 18px; }
+        .pf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items: start; }
+        .pf-grid .cp-card { margin-bottom: 0; }
+        .pf-full { margin-top: 18px; }
+        .ord { border: 1px solid var(--border-color); border-radius: 14px; background: var(--secondary-bg); margin-bottom: 12px; overflow: hidden; }
+        .ord summary { cursor: pointer; padding: 14px 16px; display: grid; grid-template-columns: 1fr auto; gap: 6px 12px; list-style: none; }
+        .ord summary::-webkit-details-marker { display: none; }
+        .ord[open] { border-color: var(--accent-color); }
+        .ord .code { font-weight: 900; direction: ltr; text-align: right; }
+        .ord .sub { color: var(--text-muted); font-size: 12.5px; }
+        .ord .tot { font-weight: 800; text-align: left; }
+        .badge { display: inline-block; border-radius: 20px; padding: 2px 10px; font-size: 12px; font-weight: 800; background: var(--accent-soft); color: var(--accent-color); }
+        .badge.done { background: rgba(46,158,91,.15); color: #2e9e5b; }
+        .badge.off { background: rgba(150,150,150,.2); color: var(--text-muted); }
+        .ord-body { padding: 4px 16px 16px; border-top: 1px dashed var(--border-color); }
+        .steps { display: flex; align-items: center; gap: 0; margin: 14px 0 6px; }
+        .step { flex: 1; text-align: center; font-size: 12px; color: var(--text-muted); position: relative; }
+        .step::before { content: ''; display: block; width: 14px; height: 14px; border-radius: 50%; background: var(--border-color); margin: 0 auto 6px; position: relative; z-index: 1; }
+        .step::after { content: ''; position: absolute; top: 6px; right: 50%; width: 100%; height: 2px; background: var(--border-color); }
+        .step:first-child::after { display: none; }
+        .step.on { color: var(--text-color); font-weight: 700; }
+        .step.on::before, .step.on::after { background: var(--accent-color); }
+        .ord-items { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 13.5px; }
+        .ord-items td { padding: 8px 4px; border-bottom: 1px solid var(--border-color); }
+        .ord-items td:last-child { text-align: left; white-space: nowrap; }
+        .ord-meta { font-size: 13.5px; line-height: 2; color: var(--text-muted); }
+        .ord-meta b { color: var(--text-color); }
+        .ord-actions { margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap; }
+        .cp-btn.sm { padding: 8px 16px; font-size: 13px; border-radius: 10px; }
+        @media (max-width: 900px) { .pf-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <div id="site-header"></div>
+
+    <main id="pageRoot"></main>
+
+    <div id="site-footer"></div>
+
+    <script src="products.js"></script>
+    <script src="store.js"></script>
+    <script src="layout.js"></script>
+    <script src="cart.js"></script>
+    <script src="pages.js"></script>
+    <script>
+        // ===== حساب کاربری (فعلاً بدون ورود واقعی) =====
+        // اطلاعات کاربر در همان کلیدی ذخیره می‌شود که صفحه‌ی ثبت سفارش می‌خواند و می‌نویسد.
+        // وقتی ورود پیامکی (OTP) آمد، فقط توابع getUser/saveUser/getMyOrders باید عوض شوند.
+        const esc = escapeHTML;
+        const PROFILE_KEY = 'mega_abzar_checkout_profile';
+        const normDigits = s => String(s).replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d));
+        const cleanPhone = s => normDigits(s).replace(/\s|-/g, '');
+        const fmtDate = iso => { try { return new Date(iso).toLocaleString('fa-IR'); } catch (e) { return iso; } };
+        const FLOW = ['new', 'processing', 'shipped', 'delivered'];
+
+        function getUser() { try { return JSON.parse(localStorage.getItem(PROFILE_KEY) || '{}') || {}; } catch (e) { return {}; } }
+        function saveUser(u) { try { localStorage.setItem(PROFILE_KEY, JSON.stringify(u)); return true; } catch (e) { return false; } }
+        function clearUser() { try { localStorage.removeItem(PROFILE_KEY); } catch (e) {} }
+        function getMyOrders(u) {
+            if (!u.phone) return [];
+            return Store.get('orders').filter(o => cleanPhone(o.customer.phone) === cleanPhone(u.phone));
+        }
+
+        function orderHTML(o, open) {
+            const st = o.status, canceled = st === 'canceled', idx = FLOW.indexOf(st);
+            const badge = `<span class="badge ${st === 'delivered' ? 'done' : canceled ? 'off' : ''}">${esc(ORDER_STATUS[st] || st)}</span>`;
+            const qty = o.items.reduce((s, i) => s + i.quantity, 0);
+            return `<details class="ord" data-id="${esc(o.id)}" ${open ? 'open' : ''}>
+                <summary>
+                    <span class="code">${esc(o.id)}</span><span class="tot">${formatPrice(o.total)}</span>
+                    <span class="sub">${esc(fmtDate(o.createdAt))} • ${toPersianNum(qty)} کالا</span><span>${badge}</span>
+                </summary>
+                <div class="ord-body">
+                    ${canceled ? '<p class="ord-meta"><b>این سفارش لغو شده است.</b></p>' :
+                      `<div class="steps">${FLOW.map((s, i) => `<div class="step ${i <= idx ? 'on' : ''}">${esc(ORDER_STATUS[s])}</div>`).join('')}</div>`}
+                    <table class="ord-items"><tbody>${o.items.map(i => `<tr><td>${esc(i.title)}</td><td>${toPersianNum(i.quantity)} × ${formatPrice(i.price)}</td></tr>`).join('')}</tbody></table>
+                    <div class="ord-meta">
+                        جمع کالاها: <b>${formatPrice(o.subtotal)}</b> • هزینه ارسال: <b>${o.shippingFee ? formatPrice(o.shippingFee) : 'رایگان'}</b> • مبلغ کل: <b>${formatPrice(o.total)}</b><br>
+                        روش پرداخت: <b>${esc(o.payment.label)}</b><br>
+                        تحویل‌گیرنده: <b>${esc(o.customer.name)}</b> — ${esc(o.customer.province)}، ${esc(o.customer.city)}، ${esc(o.customer.address)} (کد پستی ${esc(toPersianNum(o.customer.postal))})
+                    </div>
+                    <div class="ord-actions"><button class="cp-btn ghost sm" data-reorder="${esc(o.id)}">سفارش مجدد این کالاها</button></div>
+                </div>
+            </details>`;
+        }
+
+        function draw(focusId) {
+            const u = getUser(), mine = getMyOrders(u), hasUser = !!u.phone;
+            setPageMeta('حساب کاربری', 'اطلاعات و سفارش‌های شما');
+            document.getElementById('pageRoot').innerHTML = `<div class="cp-wrap">
+                ${crumbHTML([{ label: 'حساب کاربری' }])}
+                <div class="cp-head"><h1>${hasUser ? 'سلام ' + esc(u.name || '') : 'حساب کاربری'}</h1><p>اطلاعات تحویل و تاریخچه‌ی سفارش‌های شما.</p></div>
+                <div class="pf-note">ورود با کد پیامکی هنوز فعال نشده است. فعلاً اطلاعات و سفارش‌های شما فقط روی همین دستگاه و مرورگر نگهداری می‌شود و در دستگاه دیگر دیده نمی‌شود.</div>
+                <div class="pf-grid">
+                    <section class="cp-card" id="info">
+                        <h2>اطلاعات و آدرس من</h2>
+                        <div id="pfMsg"></div>
+                        <form id="pfForm" novalidate>
+                            <div class="form-grid">
+                                <div class="field"><label for="p_name">نام و نام خانوادگی <i>*</i></label><input id="p_name" autocomplete="name" value="${esc(u.name || '')}"><span class="err"></span></div>
+                                <div class="field"><label for="p_phone">شماره موبایل <i>*</i></label><input id="p_phone" type="tel" inputmode="numeric" autocomplete="tel" value="${esc(u.phone || '')}" placeholder="۰۹۱۲۱۲۳۴۵۶۷"><span class="err"></span></div>
+                                <div class="field"><label for="p_province">استان <i>*</i></label><input id="p_province" autocomplete="address-level1" value="${esc(u.province || '')}"><span class="err"></span></div>
+                                <div class="field"><label for="p_city">شهر <i>*</i></label><input id="p_city" autocomplete="address-level2" value="${esc(u.city || '')}"><span class="err"></span></div>
+                                <div class="field full"><label for="p_address">آدرس کامل <i>*</i></label><textarea id="p_address" style="min-height:80px" autocomplete="street-address">${esc(u.address || '')}</textarea><span class="err"></span></div>
+                                <div class="field"><label for="p_postal">کد پستی <i>*</i></label><input id="p_postal" inputmode="numeric" maxlength="10" autocomplete="postal-code" value="${esc(u.postal || '')}"><span class="err"></span></div>
+                            </div>
+                            <div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap">
+                                <button type="submit" class="cp-btn">ذخیره اطلاعات</button>
+                                ${hasUser ? '<button type="button" class="cp-btn ghost" id="pfClear">پاک کردن اطلاعات از این دستگاه</button>' : ''}
+                            </div>
+                        </form>
+                    </section>
+                    <section class="cp-card" id="track">
+                        <h2>پیگیری سفارش</h2>
+                        <p class="rt" style="margin-top:0"><span style="color:var(--text-muted);font-size:14px;line-height:2">کد پیگیری سفارش و شماره موبایلی که هنگام خرید وارد کرده‌اید را بنویسید.</span></p>
+                        <form id="trForm" novalidate>
+                            <div class="form-grid">
+                                <div class="field full"><label for="t_code">کد پیگیری</label><input id="t_code" dir="ltr" placeholder="MA-XXXXX000" autocomplete="off"></div>
+                                <div class="field full"><label for="t_phone">شماره موبایل</label><input id="t_phone" type="tel" inputmode="numeric" value="${esc(u.phone || '')}"></div>
+                            </div>
+                            <div style="margin-top:14px"><button type="submit" class="cp-btn">پیگیری</button></div>
+                        </form>
+                        <div id="trResult" style="margin-top:16px"></div>
+                    </section>
+                </div>
+                <section class="cp-card pf-full" id="orders">
+                    <h2>سفارش‌های من${mine.length ? ` <span style="color:var(--text-muted);font-size:14px;font-weight:500">(${toPersianNum(mine.length)})</span>` : ''}</h2>
+                    <div id="reorderMsg"></div>
+                    ${!hasUser ? '<div class="cp-empty">برای دیدن سفارش‌ها، اطلاعات خود را (با همان شماره موبایلِ هنگام خرید) ثبت کنید.</div>'
+                        : mine.length ? mine.map(o => orderHTML(o, o.id === focusId)).join('')
+                        : '<div class="cp-empty">هنوز سفارشی با این شماره ثبت نشده است. <a href="catalog.html" style="color:var(--accent-color);font-weight:700">مشاهده محصولات</a></div>'}
+                </section>
+            </div>`;
+            bind();
+            if (location.hash === '#track') { const t = document.getElementById('track'); if (t) setTimeout(() => t.scrollIntoView(), 50); }
+        }
+
+        function setErr(id, msg) {
+            const f = document.getElementById(id).closest('.field');
+            f.classList.toggle('invalid', !!msg); f.querySelector('.err').textContent = msg || '';
+            return !msg;
+        }
+
+        function bind() {
+            document.getElementById('pfForm').addEventListener('submit', e => {
+                e.preventDefault();
+                const v = id => document.getElementById(id).value.trim();
+                const u = { name: v('p_name'), phone: cleanPhone(v('p_phone')), province: v('p_province'), city: v('p_city'), address: v('p_address'), postal: normDigits(v('p_postal')) };
+                let ok = true;
+                ok = setErr('p_name', u.name.length < 3 ? 'نام را کامل وارد کنید.' : '') && ok;
+                ok = setErr('p_phone', /^09\d{9}$/.test(u.phone) ? '' : 'شماره موبایل معتبر نیست.') && ok;
+                ok = setErr('p_province', u.province ? '' : 'استان را وارد کنید.') && ok;
+                ok = setErr('p_city', u.city ? '' : 'شهر را وارد کنید.') && ok;
+                ok = setErr('p_address', u.address.length < 10 ? 'آدرس را کامل‌تر وارد کنید.' : '') && ok;
+                ok = setErr('p_postal', /^\d{10}$/.test(u.postal) ? '' : 'کد پستی باید ۱۰ رقم باشد.') && ok;
+                if (!ok) return;
+                if (!saveUser(u)) { document.getElementById('pfMsg').innerHTML = '<div class="form-alert">ذخیره ناموفق بود (حافظه مرورگر پر است یا دسترسی بسته است).</div>'; return; }
+                draw();
+                document.getElementById('pfMsg').innerHTML = '<div class="form-ok">اطلاعات شما ذخیره شد و در صفحه‌ی ثبت سفارش به‌صورت خودکار پر می‌شود.</div>';
+            });
+            const clr = document.getElementById('pfClear');
+            if (clr) clr.addEventListener('click', () => { if (confirm('اطلاعات ذخیره‌شده از این دستگاه پاک شود؟ (سفارش‌های ثبت‌شده حذف نمی‌شوند)')) { clearUser(); draw(); } });
+
+            document.getElementById('trForm').addEventListener('submit', e => {
+                e.preventDefault();
+                const code = document.getElementById('t_code').value.trim().toUpperCase();
+                const phone = cleanPhone(document.getElementById('t_phone').value);
+                const out = document.getElementById('trResult');
+                const o = Store.get('orders').find(x => x.id.toUpperCase() === code && cleanPhone(x.customer.phone) === phone);
+                // پیام خطا عمداً عمومی است تا مشخص نشود کدام‌یک اشتباه بوده
+                out.innerHTML = o ? orderHTML(o, true) : '<div class="form-alert">سفارشی با این مشخصات پیدا نشد.</div>';
+            });
+
+            }
+
+        // listener کلیک فقط یک‌بار روی ریشه ثابت می‌شود (draw چندبار bind را صدا می‌زند)
+        document.getElementById('pageRoot').addEventListener('click', e => {
+                const b = e.target.closest('[data-reorder]'); if (!b) return;
+                const o = Store.get('orders').find(x => x.id === b.dataset.reorder); if (!o) return;
+                let added = 0; const skipped = [];
+                o.items.forEach(i => {
+                    const p = getProduct(i.id);
+                    if (!p || !p.inStock) { skipped.push(i.title); return; }
+                    const ex = cart.find(c => String(c.id) === String(p.id));
+                    if (ex) ex.quantity += i.quantity; else cart.push({ id: p.id, quantity: i.quantity });
+                    added++;
+                });
+                saveAndUpdateCart();
+                if (added) openCart();
+                document.getElementById('reorderMsg').innerHTML = skipped.length
+                    ? `<div class="form-alert">این کالاها دیگر موجود یا قابل سفارش نیستند و به سبد اضافه نشدند: ${skipped.map(esc).join('، ')}</div>`
+                    : '<div class="form-ok">کالاها به سبد خرید اضافه شد.</div>';
+            });
+
+        draw();
+    </script>
+</body>
+</html>

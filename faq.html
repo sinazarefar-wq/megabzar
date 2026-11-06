@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="fa" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سوالات متداول | مگا ابزار</title>
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('mega_abzar_theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        .faq-search { width: 100%; max-width: 520px; background: var(--card-bg); color: var(--text-color); border: 1px solid var(--border-color); border-radius: 12px; padding: 12px 14px; font-family: inherit; font-size: 14px; margin-bottom: 18px; }
+        .faq-search:focus { border-color: var(--accent-color); }
+        .faq-item { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 14px; margin-bottom: 10px; overflow: hidden; }
+        .faq-item[open] { border-color: var(--accent-color); }
+        .faq-item summary { cursor: pointer; padding: 16px 18px; font-weight: 800; font-size: 15px; list-style: none; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+        .faq-item summary::-webkit-details-marker { display: none; }
+        .faq-item summary::after { content: '+'; font-size: 22px; color: var(--accent-color); line-height: 1; }
+        .faq-item[open] summary::after { content: '−'; }
+        .faq-item .rt { padding: 0 18px 8px; }
+        .faq-more { text-align: center; margin-top: 26px; color: var(--text-muted); }
+    </style>
+</head>
+<body>
+    <div id="site-header"></div>
+
+    <main id="pageRoot"></main>
+
+    <div id="site-footer"></div>
+
+    <script src="products.js"></script>
+    <script src="store.js"></script>
+    <script src="layout.js"></script>
+    <script src="cart.js"></script>
+    <script src="pages.js"></script>
+    <script>
+        const faqs = Store.get('faq').filter(f => f.active !== false).sort((a, b) => (a.order || 0) - (b.order || 0));
+        setPageMeta('سوالات متداول', 'پاسخ پرسش‌های رایج درباره خرید، ارسال، پرداخت و بازگشت کالا');
+        const root = document.getElementById('pageRoot');
+        root.innerHTML = `<div class="cp-wrap" style="max-width:980px">
+            ${crumbHTML([{ label: 'سوالات متداول' }])}
+            <div class="cp-head"><h1>سوالات متداول</h1><p>پاسخ رایج‌ترین پرسش‌ها درباره خرید، ارسال، پرداخت و بازگشت کالا.</p></div>
+            ${faqs.length ? '<input class="faq-search" id="faqSearch" type="search" placeholder="جستجو در سوالات..." aria-label="جستجو در سوالات">' : ''}
+            <div id="faqList"></div>
+            <p class="faq-more">پاسخ پرسش خود را پیدا نکردید؟ <a href="contact.html" style="color:var(--accent-color);font-weight:700">با ما در تماس باشید</a></p>
+        </div>`;
+        function drawFaq(q) {
+            const list = document.getElementById('faqList');
+            const items = faqs.filter(f => !q || (f.q + ' ' + fillTokens(f.a)).toLowerCase().includes(q.toLowerCase()));
+            list.innerHTML = items.length ? items.map(f => `<details class="faq-item"><summary>${escapeHTML(f.q)}</summary><div class="rt">${formatRichText(f.a)}</div></details>`).join('')
+                : '<div class="cp-empty">' + (faqs.length ? 'سوالی با این عبارت پیدا نشد.' : 'هنوز سوالی ثبت نشده است.') + '</div>';
+        }
+        drawFaq('');
+        const s = document.getElementById('faqSearch'); if (s) s.addEventListener('input', () => drawFaq(s.value.trim()));
+    </script>
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="fa" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مجله ابزارشناسی | مگا ابزار</title>
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('mega_abzar_theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        .blog-grid2 { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 18px; }
+        .bcard { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; overflow: hidden; text-decoration: none; color: inherit; display: flex; flex-direction: column; transition: border-color .2s, transform .2s; }
+        .bcard:hover { border-color: var(--accent-color); transform: translateY(-3px); }
+        .bcard .im { aspect-ratio: 16/10; background: var(--image-bg); overflow: hidden; }
+        .bcard .im img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .bcard .bd { padding: 16px; display: flex; flex-direction: column; gap: 8px; }
+        .bcard .mt { font-size: 12px; color: var(--accent-color); font-weight: 700; }
+        .bcard h3 { margin: 0; font-size: 16px; line-height: 1.8; }
+        .bcard p { margin: 0; font-size: 13.5px; color: var(--text-muted); line-height: 1.9; }
+        .article { max-width: 860px; margin: 0 auto; }
+        .article .hero { border-radius: 16px; overflow: hidden; background: var(--image-bg); margin-bottom: 18px; aspect-ratio: 16/8; }
+        .article .hero img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .article .meta { color: var(--accent-color); font-weight: 700; font-size: 13px; margin-bottom: 6px; }
+        .article h1 { margin: 0 0 16px; font-size: 25px; line-height: 1.8; font-weight: 900; }
+        .article .rt p, .article .rt li { font-size: 15.5px; }
+        .article-cta { margin-top: 26px; background: var(--accent-soft); border: 1px solid var(--accent-color); border-radius: 14px; padding: 18px; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+        .related { margin-top: 36px; }
+        .related h2 { font-size: 18px; margin: 0 0 14px; }
+    </style>
+</head>
+<body>
+    <div id="site-header"></div>
+
+    <main id="pageRoot"></main>
+
+    <div id="site-footer"></div>
+
+    <script src="products.js"></script>
+    <script src="store.js"></script>
+    <script src="layout.js"></script>
+    <script src="cart.js"></script>
+    <script src="pages.js"></script>
+    <script>
+        const root = document.getElementById('pageRoot');
+        const posts = getPosts();
+        const postHref = p => 'blog.html?post=' + encodeURIComponent(p.id);
+        const card = p => `<a class="bcard" href="${escapeHTML(postHref(p))}"><div class="im"><img src="${escapeHTML(imageUrl(p.image, 600))}" alt="${escapeHTML(p.alt || p.title)}" loading="lazy"></div>
+            <div class="bd"><span class="mt">${escapeHTML(p.meta)}</span><h3>${escapeHTML(p.title)}</h3><p>${escapeHTML(p.excerpt)}</p></div></a>`;
+        const id = new URLSearchParams(location.search).get('post');
+        const post = id ? posts.find(p => String(p.id) === id) : null;
+
+        if (post) {
+            setPageMeta(post.title, post.excerpt);
+            const others = posts.filter(p => p !== post).slice(0, 3);
+            root.innerHTML = `<div class="cp-wrap">
+                ${crumbHTML([{ label: 'مجله', href: 'blog.html' }, { label: post.title }])}
+                <article class="article">
+                    <div class="hero"><img src="${escapeHTML(imageUrl(post.image, 1200))}" alt="${escapeHTML(post.alt || post.title)}"></div>
+                    <div class="meta">${escapeHTML(post.meta)}</div>
+                    <h1>${escapeHTML(post.title)}</h1>
+                    <div class="rt">${post.content ? formatRichText(post.content) : `<p>${escapeHTML(post.excerpt)}</p>`}</div>
+                    <div class="article-cta"><b>ابزار مناسب پروژه‌ی خود را پیدا کنید</b><a class="cp-btn" href="catalog.html">مشاهده کاتالوگ</a></div>
+                </article>
+                ${others.length ? `<section class="related"><h2>مقاله‌های دیگر</h2><div class="blog-grid2">${others.map(card).join('')}</div></section>` : ''}
+            </div>`;
+        } else {
+            setPageMeta('مجله ابزارشناسی', 'راهنمای خرید و آموزش فنی ابزارآلات صنعتی');
+            root.innerHTML = `<div class="cp-wrap">
+                ${crumbHTML([{ label: 'مجله' }])}
+                <div class="cp-head"><h1>مجله تخصصی و راهنمای خرید</h1><p>${id ? 'مقاله‌ای که دنبالش بودید پیدا نشد؛ مقاله‌های زیر را ببینید.' : 'آموزش فنی و راهنمای انتخاب ابزارآلات صنعتی.'}</p></div>
+                ${posts.length ? `<div class="blog-grid2">${posts.map(card).join('')}</div>` : '<div class="cp-empty">هنوز مقاله‌ای منتشر نشده است.</div>'}
+            </div>`;
+        }
+    </script>
+</body>
+</html>
